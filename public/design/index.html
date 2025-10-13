@@ -1,0 +1,974 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>3 Star Foods</title>
+  <link rel="icon" href="./src/assets/img/favi-icon.svg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+  <link href="./src/assets/css/owl.carousel.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="./src/output.css" rel="stylesheet">
+</head>
+<body>
+    <!-- tsf-header -->
+        <header class="tsf-bg-black home tsf-box-shodow relative">
+            <div class="container-fluid mx-auto px-10">
+                <div class="flex justify-between items-center py-4 pb-14">
+                    <div class="flex justify-start items-center">
+                        <ul class="nav-menu flex justify-between items-center">
+                            <li class="nav-item dropdown">
+                                <a href="about.html" class="nav-link active text-white capitalize pr-14" data-index="1">about</a>
+                                <!-- <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item text-white capitalize">our vision</a>
+                                    <a href="#" class="dropdown-item text-white capitalize">our mission</a>
+                                    <a href="#" class="dropdown-item text-white capitalize">our goals</a>
+                                </div> -->
+                            </li>
+                            <li class="nav-item">
+                                <a href="products.html" class="nav-link text-white capitalize pr-14" data-index="0">our products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="our-dealer.html" class="nav-link text-white capitalize pr-14" data-index="2">our dealers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="contact.html" class="nav-link text-white capitalize" data-index="4">contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="logo-wrap flex justify-center items-center flex-1">
+                        <a href="index.html" class="tsf-logo">
+                            <img src="./src/assets/img/logo.svg" alt="logo">
+                        </a>
+                    </div>
+                    <div class="flex-1 cart-icon">
+                        <ul class="flex justify-end items-center gap-4">
+                            <li>
+                                <a href="#">
+                                    <img src="./src/assets/img/cart.svg" alt="cart" class="pl-4">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="./src/assets/img/user.svg" alt="user" class="pl-4">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="./src/assets/img/search.svg" alt="search" class="pl-4">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu-toggle pl-8">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+    <!-- tsf-banner -->
+        <div class="tsf-banner relative py-20">
+            <div class="container mx-auto px-10">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="tsf-slider col-span-2">
+                        <div id="default-carousel" class="relative w-full" data-carousel="slide">
+                            <div class="relative h-96 overflow-hidden rounded-lg">
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="./src/assets/img/slider01.jpeg" class="absolute block" alt="...">
+                                </div>
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="./src/assets/img/slider02.jpeg" class="absolute block" alt="">
+                                </div>
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="./src/assets/img/slider03.jpeg" class="absolute block" alt="">
+                                </div>
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="./src/assets/img/slider05.jpeg" class="absolute block" alt="">
+                                </div>
+                            </div>
+                            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                    </svg>
+                                    <span class="sr-only">Previous</span>
+                                </span>
+                            </button>
+                            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <span class="sr-only">Next</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tsf-banner-list px-10 rounded-lg">
+                        <h2 class="tsf-dark-color text-4xl font-bold pb-5">Today Deal</h2>
+                        <div class="tsf-banner-list-item tsf-box-shodow">
+                            <div class="flex justify-start items-center tsf-font-bebas border-b border-gray-200 p-5">
+                                <div class="tsf-product-img">
+                                    <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-md h-32 w-32">
+                                </div>
+                                <div class="pl-6">
+                                    <div class="tsf-product-name">
+                                        <a class="text-2xl font-bold capitalize" href="">chicken gizzard</a>
+                                    </div>
+                                    <div class="price text-md mt-2">RS 380.00 - <span class="pre-price text-gray-400">RS 342.00 (per kg)</span></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-start items-center tsf-font-bebas border-b border-gray-200 p-5">
+                                <div class="tsf-product-img">
+                                    <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-md h-32 w-32">
+                                </div>
+                                <div class="pl-6">
+                                    <div class="tsf-product-name">
+                                        <a class="text-2xl font-bold capitalize" href="">chicken gizzard</a>
+                                    </div>
+                                    <div class="price text-md mt-2">RS 380.00 - <span class="pre-price text-gray-400">RS 342.00 (per kg)</span></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-start items-center tsf-font-bebas p-5">
+                                <div class="tsf-product-img">
+                                    <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-md h-32 w-32">
+                                </div>
+                                <div class="pl-6">
+                                    <div class="tsf-product-name">
+                                        <a class="text-2xl font-bold capitalize" href="">chicken gizzard</a>
+                                    </div>
+                                    <div class="price text-md mt-2">RS 380.00 - <span class="pre-price text-gray-400">RS 342.00 (per kg)</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     <!-- tsf-category -->
+        <div class="tsf-category relative tsf-bg-primary py-20 mt-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-category_heading">
+                    <h2 class="tsf-dark-color text-4xl font-bold z-10">explore by category</h2>
+                </div>
+                <div class="grid grid-cols-6 gap-8">
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category01.svg" alt="category01">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category02.svg" alt="category02">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category03.svg" alt="category03">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category04.svg" alt="category04">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category05.svg" alt="category05">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category06.svg" alt="category06">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category04.svg" alt="category04">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category03.svg" alt="category03">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category02.svg" alt="category02">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category03.svg" alt="category03">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category01.svg" alt="category01">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                    <div class="tsf-category-item tsf-bg-white z-10 rounded-full mt-10"> 
+                        <a href="#">
+                            <figure class="rounded-full">
+                                <img src="./src/assets/img/category03.svg" alt="category03">
+                                <figcaption>
+                                    <h3 class="text-2xl font-bold capitalize">ham & cutlet</h3>
+                                </figcaption>       
+                            </figure> 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-product -->
+        <div class="tsf-product py-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-product_heading py-10">
+                    <div class="flex justify-between items-center">
+                        <div class="mb-4">
+                            <ul class="flex flex-wrap -mb-px text-3xl font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="tsf-dark-color" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg tsf-font-bebas" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">bestseller</button>
+                                </li>
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg tsf-font-bebas hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">featured</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tsf-all_more text-right">
+                            <a class="text-3xl capitalize tsf-border_bottom tsf-font-bebas" href="product.html">all products</a>
+                        </div>
+                    </div>
+                    <div id="default-styled-tab-content">
+                        <div class="hidden rounded-lg" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="grid grid-cols-4 gap-6">
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product01.svg" alt="product01" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken sausage bratwurst</a>
+                                            </div>
+                                            <div class="price text-xl font-normal py-4">RS 380.00 - <span class="pre-price tsf-text-color tsf-font-bebas">RS 342.00 (per kg)</span><span class="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">10%</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product02.svg" alt="product02" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">basa fish steaks</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product03.svg" alt="product03" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken drumstick</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken gizzard</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken gizzard</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product03.svg" alt="product03" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken drumstick</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product01.svg" alt="product01" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken sausage bratwurst</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product02.svg" alt="product02" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">basa fish steaks</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden rounded-lg" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                            <div class="grid grid-cols-4 gap-6">
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product04.svg" alt="product04" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken gizzard</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product03.svg" alt="product03" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken drumstick</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product01.svg" alt="product01" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">chicken sausage bratwurst</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="tsf-product_list">
+                                    <figure class="tsf-box-shodow tsf-font-bebas">
+                                        <div class="tsf-product-img">
+                                            <a href="#">
+                                                <img src="./src/assets/img/product02.svg" alt="product02" class="rounded-t-md">
+                                            </a>
+                                        </div>
+                                        <figcaption class="p-5 text-center rounded-t-md">
+                                            <div class="tsf-product-name">
+                                                <a class="text-3xl capitalize" href="">basa fish steaks</a>
+                                            </div>
+                                            <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                            <div class="tsf-add_cart mt-2">
+                                                <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-frozen -->
+        <div class="tsf-frozen py-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-category_heading">
+                    <h2 class="tsf-dark-color text-4xl font-bold pb-10">frozen items</h2>
+                </div>
+                <div class="tsf-frozen_slider relative carousel-navigation">
+                    <div class="owl-carousel">
+                        <div class="item">
+                            <div class="tsf-product_list">
+                                <figure class="tsf-box-shodow tsf-font-bebas">
+                                    <div class="tsf-product-img">
+                                        <a href="#">
+                                            <img src="./src/assets/img/category01.svg" alt="category01" class="rounded-t-md h-96 w-96">
+                                        </a>
+                                    </div>
+                                    <figcaption class="p-5 text-center rounded-t-md">
+                                        <div class="tsf-product-name">
+                                            <a class="text-3xl capitalize" href="">fish sausage</a>
+                                        </div>
+                                        <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                        <div class="tsf-add_cart mt-2">
+                                            <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="tsf-product_list">
+                                <figure class="tsf-box-shodow tsf-font-bebas">
+                                    <div class="tsf-product-img">
+                                        <a href="#">
+                                            <img src="./src/assets/img/category02.svg" alt="category02" class="rounded-t-md h-96 w-96">
+                                        </a>
+                                    </div>
+                                    <figcaption class="p-5 text-center rounded-t-md">
+                                        <div class="tsf-product-name">
+                                            <a class="text-3xl capitalize" href="">Veg burger patty</a>
+                                        </div>
+                                        <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                        <div class="tsf-add_cart mt-2">
+                                            <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="tsf-product_list">
+                                <figure class="tsf-box-shodow tsf-font-bebas">
+                                    <div class="tsf-product-img">
+                                        <a href="#">
+                                            <img src="./src/assets/img/category06.svg" alt="category03" class="rounded-t-md h-96 w-96">
+                                        </a>
+                                    </div>
+                                    <figcaption class="p-5 text-center rounded-t-md">
+                                        <div class="tsf-product-name">
+                                            <a class="text-3xl capitalize" href="">pork bacon</a>
+                                        </div>
+                                        <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                        <div class="tsf-add_cart mt-2">
+                                            <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="tsf-product_list">
+                                <figure class="tsf-box-shodow tsf-font-bebas">
+                                    <div class="tsf-product-img">
+                                        <a href="#">
+                                            <img src="./src/assets/img/category05.svg" alt="category04" class="rounded-t-md h-96 w-96">
+                                        </a>
+                                    </div>
+                                    <figcaption class="p-5 text-center rounded-t-md">
+                                        <div class="tsf-product-name">
+                                            <a class="text-3xl capitalize" href="">buff salami</a>
+                                        </div>
+                                        <div class="price text-xl py-4">RS 380.00 - <span class="pre-price">RS 342.00 (per kg)</span></div>
+                                        <div class="tsf-add_cart mt-2">
+                                            <a class="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-how_order -->
+        <div class="tsf-how_order relative tsf-bg-secondary py-40">
+            <div class="container mx-auto px-10">
+                <div class="tsf-howorder_heading text-center">
+                    <h2 class="tsf-dark-color text-4xl font-bold uppercase text-white">how to order?</h2>
+                    <p class="text-xl mt-5 text-white">We'll show you stores and restaurants nearby you can order from.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-20 mt-20">
+                    <div class="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10">
+                        <div class="order_item rounded-full tsf-bg-red p-10 inline-block">
+                            <img src="./src/assets/img/order01.svg" alt="order01" class="h-10 w-10">
+                        </div>
+                        <div class="order_titlename mt-10">
+                            <h4 class="text-3xl">Choose your product</h4>
+                            <p class="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                        </div>    
+                    </div>
+                    <div class="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-10">
+                        <div class="order_item rounded-full tsf-bg-red p-10 inline-block">
+                            <img src="./src/assets/img/order02.svg" alt="order02" class="h-10 w-10">
+                        </div>
+                        <div class="order_titlename mt-10">
+                            <h4 class="text-3xl">Choose your product</h4>
+                            <p class="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                        </div>    
+                    </div>
+                    <div class="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-5">
+                        <div class="order_item rounded-full tsf-bg-red p-10 inline-block">
+                            <img src="./src/assets/img/order03.svg" alt="order03" class="h-10 w-10">
+                        </div>
+                        <div class="order_titlename mt-10">
+                            <h4 class="text-3xl">Choose your product</h4>
+                            <p class="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-quality -->
+        <div class="tsf-quality py-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-howorder_heading text-left">
+                    <h2 class="tsf-dark-color text-4xl font-bold uppercase text-black">Quality & innovation</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="tsf-qualityitem-left pt-10">
+                        <img src="./src/assets/img/quality01.svg" alt="quality01" class="w-full h-full object-cover rounded-md">
+                    </div>
+                    <div class="tsf-qualityitem-right tsf-bg-gray p-10 mt-10 rounded-md">
+                        <div class="tsf-qualityitem-right-content-list">
+                            <div class="flex items-center gap-10 border-b border-gray-200 pb-10">
+                                <div class="tsf-qualityitem-right-icon">
+                                    <span class="tsf-bg-red text-white w-12 h-12 p-8 text-2xl rounded-full">01</span>
+                                </div>
+                                <div class="tsf-qualityitem-right-content">
+                                    <h3 class="text-3xl font-bold">ISO & PRE-HACCAP Certification</h3>
+                                    <p class="text-md mt-2">We are ISO 22000:2018 Food Safety Certified Company that ensures our products meets international food standards.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10 border-b border-gray-200 pb-10 pt-10">
+                                <div class="tsf-qualityitem-right-icon">
+                                    <span class="tsf-bg-blue text-white w-12 h-12 p-8 text-2xl rounded-full">02</span>
+                                </div>
+                                <div class="tsf-qualityitem-right-content">
+                                    <h3 class="text-3xl font-bold">Halal Certification</h3>
+                                    <p class="text-md mt-2">Our Company is proudly Halal certified, ensuring that all our Chicken and Mutton products meet the highest standards of Halal integrity. Trust us for quality, ethically sourced Halal meat.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10 border-b border-gray-200 pb-10 pt-10">
+                                <div class="tsf-qualityitem-right-icon">
+                                    <span class="tsf-bg-secondary text-white w-12 h-12 p-8 text-2xl rounded-full">03</span>
+                                </div>
+                                <div class="tsf-qualityitem-right-content">
+                                    <h3 class="text-3xl font-bold">QC Laboratory</h3>
+                                    <p class="text-md mt-2">Testing our product in our own QC Laboratory handled by food technician, we ensure that quality product is produced which meets the food safety standards.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-10 pt-10">
+                                <div class="tsf-qualityitem-right-icon">
+                                    <span class="tsf-bg-primary text-white w-12 h-12 p-8 text-2xl rounded-full">04</span>
+                                </div>
+                                <div class="tsf-qualityitem-right-content">
+                                    <h3 class="text-3xl font-bold uppercase">infrastructure</h3>
+                                    <p class="text-md mt-2">Our infrastructure ensures the efficient transformation of raw ingredients into nourishing products, meeting the demands of valued customers.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-testimonial -->
+        <div class="tsf-testimonial relative tsf-bg-blue py-40">
+            <div class="container mx-auto px-10">
+                <div class="tsf-howorder_heading text-left">
+                    <h2 class="text-white text-4xl font-bold uppercase">What our customer say</h2>
+                </div>
+                <div class="grid grid-cols-3 gap-10">
+                    <div class="tsf-testimonialleft col-span-2 pt-10 pr-0">
+                        <div class="tsf-testimonialitem-slider relative carousel-navigation">
+                            <div class="owl-carouse">
+                                <div class="item">
+                                    <div class="tsf-testimonialitem-list">
+                                        <div class="grid grid-cols-3 gap-10">
+                                            <div class="tsf-testimonialitem-img-left">
+                                                <img src="./src/assets/img/testimonial01.svg" alt="testimonial01" class="object-cover w-full h-full rounded-md">
+                                            </div>
+                                            <div class="tsf-testimonialitem-content relative col-span-2 bg-white rounded-md p-10">
+                                                <div class="tsf-testimonialitem-imgquote">
+                                                    <div class="flex items-center">
+                                                        <img src="./src/assets/img/f-star.svg" alt="quote" class="w-8 h-8"> 
+                                                        <img src="./src/assets/img/f-star.svg" alt="quote" class="w-8 h-8">
+                                                        <img src="./src/assets/img/f-star.svg" alt="quote" class="w-8 h-8">
+                                                        <img src="./src/assets/img/f-star.svg" alt="quote" class="w-8 h-8">
+                                                        <img src="./src/assets/img/h-star.svg" alt="quote" class="w-8 h-8">
+                                                    </div>
+                                                </div>
+                                                <p class="text-xl text-black mt-6">Best meat products. On good price. The variety of fresh meat products that they have is just so good. Best for wholesale as well as retail.I get my supplies here every-time.</p>
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="mt-5">
+                                                            <img src="./src/assets/img/user01.svg" alt="user01" class="w-10 h-10 rounded-full">
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="text-md font-bold text-black tsf-font-sora mt-6">Aakash SKYmiester</h3>
+                                                        </div>
+                                                    </div>
+                                                <div class="tsf-testimonialitem-imgquote absolute bottom-5 right-10">
+                                                    <img src="./src/assets/img/quote.svg" alt="quote" class="w-20 h-20 rounded-md">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tsf-testimonialright tsf-bg-red rounded-md p-10">
+                        <div class="tsf-testimonialitem-img-right">
+                            <img src="./src/assets/img/testimonial02.svg" alt="testimonial02" class="w-full h-full object-cover rounded-md">
+                        </div>
+                        <div class="tsf-testimonialitem-content text-center">
+                            <p class="text-md text-white mt-2 pb-5">Satisfied Clients</p>
+                            <h3 class="text-6xl font-bold text-white tsf-font-sora">99%</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-motion -->
+        <div class="tsf-motion py-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-howorder_heading text-left">
+                    <h2 class="tsf-dark-color text-4xl font-bold uppercase text-black">products in motion</h2>
+                </div>
+                <div class="tsf-motionitem-slider relative carousel-navigation pt-10">
+                    <div class="owl-carousel">
+                        <div class="item">
+                            <figure class="tsf-box-shodow tsf-font-bebas rounded-md">
+                                <div class="tsf-motionitem-img">
+                                    <img src="./src/assets/img/motion01.svg" alt="motion01" class="h-80 w-80">
+                                </div>
+                                <figcaption class="p-10 text-center rounded-t-md">
+                                    <div class="tsf-motionitem-name">
+                                        <a class="tsf-button-red uppercase inline-block text-2xl" href="#">add to cart</a>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-faq -->
+        <div class="tsf-faq relative py-20">
+            <div class="container mx-auto px-10">
+                <div class="tsf-category_heading pb-10">
+                    <h2 class="tsf-dark-color text-4xl font-bold text-center tsf-font-sora capitalize">frequently asked questions.</h2>
+                </div>
+                <div class="accordions">
+                    <div class="accordion_item py-2">
+                        <div class="title_tab tsf-box-shodow rounded-full py-5 px-8">
+                            <h3 class="title text-black tsf-font-sora">Freshly cut, freshly packed meat delivered to your doorstep?
+                                <span class="icon"></span>
+                            </h3>
+                        </div>
+                        <div class="inner_content">
+                            <p>In which countries is it possible to shop online?</p>
+                        </div>
+                    </div>
+                    <div class="accordion_item py-2">
+                        <div class="title_tab tsf-box-shodow rounded-full py-5 px-8">
+                            <h3 class="title text-black tsf-font-sora">Freshly cut, freshly packed meat delivered to your doorstep?
+                                <span class="icon"></span>
+                            </h3>
+                        </div>
+                        <div class="inner_content">
+                            <p>In which countries is it possible to shop online?</p>
+                        </div>
+                    </div>
+                    <div class="accordion_item py-2">
+                        <div class="title_tab tsf-box-shodow rounded-full py-5 px-8">
+                            <h3 class="title text-black tsf-font-sora">Freshly cut, freshly packed meat delivered to your doorstep?
+                                <span class="icon"></span>
+                            </h3>
+                        </div>
+                        <div class="inner_content">
+                            <p>In which countries is it possible to shop online?</p>
+                        </div>
+                    </div>
+                    <div class="accordion_item">
+                        <div class="title_tab tsf-box-shodow rounded-full py-5 px-8">
+                            <h3 class="title text-black tsf-font-sora">Freshly cut, freshly packed meat delivered to your doorstep?
+                                <span class="icon"></span>
+                            </h3>
+                        </div>
+                        <div class="inner_content">
+                            <p>In which countries is it possible to shop online?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- tsf-footer  -->
+        <footer class="tsf-footer relative tsf-bg-black lg:pt-40 lg:pb-10 md:pt-20 md:pb-10 sm:pt-20 sm:pb-10">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-3 gap-10">
+                    <div class="footer-left">
+                        <a href="index.html">
+                            <img class="w-40 h-40" src="./src/assets/img/logo.svg" alt="logo">
+                        </a>
+                        <p class="text-white mt-4 line-height-8">
+                            Our wide selection of delectable options ensures there's something for everyone. Join us in savoring the best flavors while contributing to a better food ecosystem.
+                        </p>
+                        <form action="" class="flex items-center mt-8 relative">
+                            <input type="email" placeholder="Email" class="py-5 pl-8 pr-16 w-full rounded-full outline-none">
+                            <img src="./src/assets/img/arrow-right.svg" alt="send" class="h-5 w-5 absolute right-6 z-10">
+                        </form>
+                    </div>
+                    <div class="footer-right col-span-2 ml-20">
+                        <div class="grid grid-cols-3 gap-10">
+                            <div class="footer-right-quicklinks">
+                                <h3 class="text-xl font-bold text-white tsf-font-sora uppercase">Quick Links</h3>
+                                <ul class="mt-10 mr-10">
+                                    <li class="pb-5 text-white capitalize"><a href="index.html">home</a> </li>
+                                    <li class="pb-5 text-white capitalize"><a href="about.html">about</a> </li>
+                                    <li class="pb-5 text-white capitalize"><a href="products.html">products</a> </li>
+                                    <li class="pb-5 text-white capitalize"><a href="our-dealer.html">our dealers</a> </li>
+                                    <li class="pb-5 text-white capitalize"><a href="contact.html">contact</a> </li>
+                                </ul>
+                            </div>
+                            <div class="footer-right-productcategory">
+                                <h3 class="text-xl font-bold text-white tsf-font-sora uppercase">Product Category</h3>
+                                <div class="grid grid-cols-2 gap-10">
+                                    <ul class="mt-10">
+                                        <li class="pb-5 text-white capitalize"><a href="#">ham & cutlet</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">frozen momo</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">salami</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">sausage</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">mutton items</a> </li>
+                                    </ul>
+                                    <ul class="mt-10">
+                                        <li class="pb-5 text-white capitalize"><a href="#">burger patty</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">chicken items</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">buff items</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">pork items</a> </li>
+                                        <li class="pb-5 text-white capitalize"><a href="#">ready to eat</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="footer-right-location ml-20">
+                                <h3 class="text-xl font-bold text-white tsf-font-sora uppercase">Location</h3>
+                                <div class="mt-10">
+                                    <p class="text-white mb-5">
+                                        Tokha-6, Kathmandu, Greenland, Triyog Marg
+                                    </p>
+                                    <p class="text-white mb-5">
+                                        3starmeat@gmail.com
+                                    </p>
+                                    <p class="text-white">
+                                        +977 14988879, 4963659
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-certificate flex items-center justify-between gap-10 mt-10">
+                    <div class="footer-left-social">
+                        <ul class="inline-flex items-center justify-between gap-10">
+                            <li>
+                                <a class="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#"><i class="fa-brands fa-facebook-f text-black"></i></a>
+                            </li>
+                            <li>
+                                <a class="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#"><i class="fa-brands fa-instagram"></i></a>
+                            </li>
+                            <li>
+                                <a class="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#"><i class="fa-brands fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a class="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#"><i class="fa-brands fa-linkedin"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-right-certificate">
+                        <div class="flex items-space-between gap-10">
+                        <img src="./src/assets/img/iso.svg" alt="iso">
+                            <img src="./src/assets/img/certificate.svg" alt="certificate">
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright border-t border-white pt-10 mt-10">
+                    <div class="flex items-center justify-between">
+                        <div class="tsf-copyright">
+                            <p class="text-white">
+                                © 2023 Three Star Foods Private Limited.
+                            </p>
+                        </div>
+                        <div class="tsf-payment">
+                            <div class="flex items-center gap-10">
+                                <div class="tsf-payment-img">
+                                    <img src="./src/assets/img/esewa.svg" alt="esewa">
+                                </div>
+                                <div class="tsf-payment-img">
+                                    <img src="./src/assets/img/khalti.svg" alt="khalti">
+                                </div>
+                                <div class="tsf-payment-img">
+                                    <img src="./src/assets/img/visacard.svg" alt="visacard">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    <script src="src/assets/js/jquery.js"></script>
+    <script src="src/assets/js/owl.carousel.min.js"></script>
+    <script src="src/assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+</html>
