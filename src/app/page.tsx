@@ -1,103 +1,337 @@
-import Image from "next/image";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroCarousel from '../components/HeroCarousel';
+import ProductTabs from '../components/ProductTabs';
+import FrozenItemsCarousel from '../components/FrozenItemsCarousel';
+import TestimonialCarousel from '../components/TestimonialCarousel';
+import MotionCarousel from '../components/MotionCarousel';
+import FAQAccordion from '../components/FAQAccordion';
+import HomeProductTabs from '../components/HomeProductTabs';
+import CartSidebar from '../components/CartSidebar';
+import TodaysDeal from '../components/TodaysDeal';
+import { CartProvider } from '../context/CartContext';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-export default function Home() {
+async function getProductsData() {
+  const filePath = path.join(process.cwd(), 'public', 'data', 'products.json');
+  const file = await fs.readFile(filePath, 'utf8');
+  return JSON.parse(file);
+}
+
+export default async function Home() {
+  const { categories } = await getProductsData();
+  
+  // Get all products and filter by featured/bestseller
+  const allProducts = categories.flatMap(cat => cat.products);
+  const featuredProducts = allProducts.filter(p => p.featured).slice(0, 8);
+  const bestsellerProducts = allProducts.filter(p => p.bestseller).slice(0, 8);
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <CartProvider>
+      <Header variant="home" />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="tsf-banner relative py-20">
+        <div className="container mx-auto px-10">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="tsf-slider col-span-2">
+              <HeroCarousel />
+            </div>
+            <TodaysDeal />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+
+      <div className="tsf-category relative tsf-bg-primary py-20 mt-20">
+        <div className="container mx-auto px-10">
+          <div className="tsf-category_heading">
+            <h2 className="tsf-dark-color text-4xl font-bold z-10">explore by category</h2>
+          </div>
+          <div className="grid grid-cols-6 gap-8">
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category01.svg" alt="category01" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category02.svg" alt="category02" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category03.svg" alt="category03" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category04.svg" alt="category04" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category05.svg" alt="category05" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category06.svg" alt="category06" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category04.svg" alt="category04" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category03.svg" alt="category03" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category02.svg" alt="category02" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category03.svg" alt="category03" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category01.svg" alt="category01" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+              <a href="#">
+                <figure className="rounded-full">
+                  <img src="/images/category03.svg" alt="category03" />
+                  <figcaption>
+                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
+                  </figcaption>
+                </figure>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <HomeProductTabs 
+        bestsellerProducts={bestsellerProducts} 
+        featuredProducts={featuredProducts} 
+      />
+
+      <div className="tsf-frozen py-20">
+        <div className="container mx-auto px-10">
+          <div className="tsf-category_heading">
+            <h2 className="tsf-dark-color text-4xl font-bold pb-10">frozen items</h2>
+          </div>
+          <div className="tsf-frozen_slider relative carousel-navigation">
+            <FrozenItemsCarousel />
+          </div>
+        </div>
+      </div>
+
+      <div className="tsf-how_order relative tsf-bg-secondary py-40">
+        <div className="container mx-auto px-10">
+          <div className="tsf-howorder_heading text-center">
+            <h2 className="tsf-dark-color text-4xl font-bold uppercase text-white">how to order?</h2>
+            <p className="text-xl mt-5 text-white">We'll show you stores and restaurants nearby you can order from.</p>
+          </div>
+          <div className="grid grid-cols-3 gap-20 mt-20">
+            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10">
+              <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
+                <img src="/images/order01.svg" alt="order01" className="h-10 w-10" />
+              </div>
+              <div className="order_titlename mt-10">
+                <h4 className="text-3xl">Choose your product</h4>
+                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+              </div>
+            </div>
+            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-10">
+              <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
+                <img src="/images/order02.svg" alt="order02" className="h-10 w-10" />
+              </div>
+              <div className="order_titlename mt-10">
+                <h4 className="text-3xl">Choose your product</h4>
+                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+              </div>
+            </div>
+            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-5">
+              <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
+                <img src="/images/order03.svg" alt="order03" className="h-10 w-10" />
+              </div>
+              <div className="order_titlename mt-10">
+                <h4 className="text-3xl">Choose your product</h4>
+                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="tsf-quality py-20">
+        <div className="container mx-auto px-10">
+          <div className="tsf-howorder_heading text-left">
+            <h2 className="tsf-dark-color text-4xl font-bold uppercase text-black">Quality & innovation</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-10">
+            <div className="tsf-qualityitem-left pt-10">
+              <img src="/images/quality01.svg" alt="quality01"
+                className="w-full h-full object-cover rounded-md" />
+            </div>
+            <div className="tsf-qualityitem-right tsf-bg-gray p-10 mt-10 rounded-md">
+              <div className="tsf-qualityitem-right-content-list">
+                <div className="flex items-center gap-10 border-b border-gray-200 pb-10">
+                  <div className="tsf-qualityitem-right-icon">
+                    <span className="tsf-bg-red text-white w-12 h-12 p-8 text-2xl rounded-full">01</span>
+                  </div>
+                  <div className="tsf-qualityitem-right-content">
+                    <h3 className="text-3xl font-bold">ISO & PRE-HACCAP Certification</h3>
+                    <p className="text-md mt-2">We are ISO 22000:2018 Food Safety Certified Company that ensures
+                      our products meets international food standards.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-10 border-b border-gray-200 pb-10 pt-10">
+                  <div className="tsf-qualityitem-right-icon">
+                    <span className="tsf-bg-blue text-white w-12 h-12 p-8 text-2xl rounded-full">02</span>
+                  </div>
+                  <div className="tsf-qualityitem-right-content">
+                    <h3 className="text-3xl font-bold">Halal Certification</h3>
+                    <p className="text-md mt-2">Our Company is proudly Halal certified, ensuring that all our
+                      Chicken and Mutton products meet the highest standards of Halal integrity. Trust us
+                      for quality, ethically sourced Halal meat.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-10 border-b border-gray-200 pb-10 pt-10">
+                  <div className="tsf-qualityitem-right-icon">
+                    <span className="tsf-bg-secondary text-white w-12 h-12 p-8 text-2xl rounded-full">03</span>
+                  </div>
+                  <div className="tsf-qualityitem-right-content">
+                    <h3 className="text-3xl font-bold">QC Laboratory</h3>
+                    <p className="text-md mt-2">Testing our product in our own QC Laboratory handled by food
+                      technician, we ensure that quality product is produced which meets the food safety
+                      standards.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-10 pt-10">
+                  <div className="tsf-qualityitem-right-icon">
+                    <span className="tsf-bg-primary text-white w-12 h-12 p-8 text-2xl rounded-full">04</span>
+                  </div>
+                  <div className="tsf-qualityitem-right-content">
+                    <h3 className="text-3xl font-bold uppercase">infrastructure</h3>
+                    <p className="text-md mt-2">Our infrastructure ensures the efficient transformation of raw
+                      ingredients into nourishing products, meeting the demands of valued customers.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="tsf-testimonial relative tsf-bg-blue py-40">
+        <div className="container mx-auto px-10">
+          <div className="tsf-howorder_heading text-left">
+            <h2 className="text-white text-4xl font-bold uppercase">What our customer say</h2>
+          </div>
+          <div className="grid grid-cols-3 gap-10 items-stretch">
+            <div className="tsf-testimonialleft col-span-2 pt-10 pr-0 h-full">
+              <div className="grid grid-cols-3 gap-10 h-full items-stretch">
+                <div className="tsf-testimonialitem-img-left h-full flex">
+                  <img src="/images/testimonial01.svg" alt="testimonial01" className="object-cover w-full h-full rounded-md" />
+                </div>
+                <div className="col-span-2 h-full flex">
+                  <div className="tsf-testimonialitem-slider relative carousel-navigation h-full w-full">
+                    <TestimonialCarousel />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="tsf-testimonialright tsf-bg-red rounded-md p-10">
+              <div className="tsf-testimonialitem-img-right">
+                <img src="/images/testimonial02.svg" alt="testimonial02"
+                  className="w-full h-full object-cover rounded-md" />
+              </div>
+              <div className="tsf-testimonialitem-content text-center">
+                <p className="text-md text-white mt-2 pb-5">Satisfied Clients</p>
+                <h3 className="text-6xl font-bold text-white tsf-font-sora">99%</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="tsf-motion py-20">
+        <div className="container mx-auto px-10">
+          <div className="tsf-howorder_heading text-left">
+            <h2 className="tsf-dark-color text-4xl font-bold uppercase text-black">products in motion</h2>
+          </div>
+          <div className="tsf-motionitem-slider relative carousel-navigation pt-10">
+            <MotionCarousel />
+          </div>
+        </div>
+      </div>
+
+      <FAQAccordion />
+
+      <Footer />
+      
+      <CartSidebar />
+    </CartProvider>
   );
 }
