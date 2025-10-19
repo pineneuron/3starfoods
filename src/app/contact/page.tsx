@@ -1,10 +1,12 @@
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import FAQAccordion from '../../components/FAQAccordion';
+import { CartProvider } from '../../context/CartContext';
+import Image from 'next/image';
 
 export default function ContactPage() {
   return (
-    <>
+    <CartProvider>
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
@@ -24,19 +26,19 @@ export default function ContactPage() {
               <div className="detail-list pt-8">
                 <div className="detail-list-item pb-5">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><img src="/design/src/assets/img/location.svg" alt="location" /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/location.svg" alt="location" width={24} height={24} /></div>
                     <div className="detail-text pl-5"><p className="text-white line-height-10">Tokha-6, Kathmandu, Greenland,<br /> Triyog Marg</p></div>
                   </div>
                 </div>
                 <div className="detail-list-item pb-5">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><img src="/design/src/assets/img/call.svg" alt="call" /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/call.svg" alt="call" width={24} height={24} /></div>
                     <div className="detail-text pl-5"><p className="text-white line-height-10">+977 14988879, 4963659</p></div>
                   </div>
                 </div>
                 <div className="detail-list-item">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><img src="/design/src/assets/img/email.svg" alt="email" /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/email.svg" alt="email" width={24} height={24} /></div>
                     <div className="detail-text pl-5"><p className="text-white line-height-10">3starmeat@gmail.com</p></div>
                   </div>
                 </div>
@@ -61,6 +63,6 @@ export default function ContactPage() {
       <FAQAccordion />
 
       <Footer />
-    </>
+    </CartProvider>
   );
 }

@@ -1,19 +1,19 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroCarousel from '../components/HeroCarousel';
-import ProductTabs from '../components/ProductTabs';
 import FrozenItemsCarousel from '../components/FrozenItemsCarousel';
 import TestimonialCarousel from '../components/TestimonialCarousel';
-import MotionCarousel from '../components/MotionCarousel';
 import FAQAccordion from '../components/FAQAccordion';
 import HomeProductTabs from '../components/HomeProductTabs';
 import CartSidebar from '../components/CartSidebar';
 import TodaysDeal from '../components/TodaysDeal';
 import { CartProvider } from '../context/CartContext';
+import { Category } from '../components/ProductsCatalog';
 import { promises as fs } from 'fs';
 import path from 'path';
+import Image from 'next/image';
 
-async function getProductsData() {
+async function getProductsData(): Promise<{ categories: Category[] }> {
   const filePath = path.join(process.cwd(), 'public', 'data', 'products.json');
   const file = await fs.readFile(filePath, 'utf8');
   return JSON.parse(file);
@@ -21,9 +21,9 @@ async function getProductsData() {
 
 export default async function Home() {
   const { categories } = await getProductsData();
-  
+
   // Get all products and filter by featured/bestseller
-  const allProducts = categories.flatMap(cat => cat.products);
+  const allProducts = categories.flatMap((cat: Category) => cat.products);
   const featuredProducts = allProducts.filter(p => p.featured).slice(0, 8);
   const bestsellerProducts = allProducts.filter(p => p.bestseller).slice(0, 8);
   return (
@@ -47,133 +47,109 @@ export default async function Home() {
             <h2 className="tsf-dark-color text-4xl font-bold z-10">explore by category</h2>
           </div>
           <div className="grid grid-cols-6 gap-8">
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category01.svg" alt="category01" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category01.svg" alt="category01" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category02.svg" alt="category02" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category02.svg" alt="category02" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category03.svg" alt="category03" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category04.svg" alt="category04" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category04.svg" alt="category04" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category05.svg" alt="category05" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category05.svg" alt="category05" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category06.svg" alt="category06" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category06.svg" alt="category06" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category04.svg" alt="category04" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category04.svg" alt="category04" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category03.svg" alt="category03" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="rounded-full">
+                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category02.svg" alt="category02" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category02.svg" alt="category02" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category03.svg" alt="category03" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category01.svg" alt="category01" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category01.svg" alt="category01" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
-            <div className="tsf-category-item tsf-bg-white z-10 rounded-full mt-10">
+            <div className="tsf-category-item mt-10 text-center">
               <a href="#">
-                <figure className="rounded-full">
-                  <img src="/images/category03.svg" alt="category03" />
-                  <figcaption>
-                    <h3 className="text-2xl font-bold capitalize">ham & cutlet</h3>
-                  </figcaption>
-                </figure>
+                <div className="tsf-bg-white rounded-full">
+                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
+                </div>
+                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <HomeProductTabs 
-        bestsellerProducts={bestsellerProducts} 
-        featuredProducts={featuredProducts} 
+      <HomeProductTabs
+        bestsellerProducts={bestsellerProducts}
+        featuredProducts={featuredProducts}
       />
 
       <div className="tsf-frozen py-20">
@@ -191,34 +167,34 @@ export default async function Home() {
         <div className="container mx-auto px-10">
           <div className="tsf-howorder_heading text-center">
             <h2 className="tsf-dark-color text-4xl font-bold uppercase text-white">how to order?</h2>
-            <p className="text-xl mt-5 text-white">We'll show you stores and restaurants nearby you can order from.</p>
+            <p className="text-xl mt-5 text-white">We&apos;ll show you stores and restaurants nearby you can order from.</p>
           </div>
           <div className="grid grid-cols-3 gap-20 mt-20">
             <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10">
               <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
-                <img src="/images/order01.svg" alt="order01" className="h-10 w-10" />
+                <Image src="/images/order01.svg" alt="order01" width={40} height={40} />
               </div>
               <div className="order_titlename mt-10">
                 <h4 className="text-3xl">Choose your product</h4>
-                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                <p className="pt-2">We&apos;ll show you stores and restaurants nearby you can order from.</p>
               </div>
             </div>
-            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-10">
+            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10">
               <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
-                <img src="/images/order02.svg" alt="order02" className="h-10 w-10" />
+                <Image src="/images/order02.svg" alt="order02" width={40} height={40} />
               </div>
               <div className="order_titlename mt-10">
                 <h4 className="text-3xl">Choose your product</h4>
-                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                <p className="pt-2">We&apos;ll show you stores and restaurants nearby you can order from.</p>
               </div>
             </div>
-            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10 mt-5">
+            <div className="tsf-how_orderitem tsf-box-shodow rounded-md tsf-bg-white p-10">
               <div className="order_item rounded-full tsf-bg-red p-10 inline-block">
-                <img src="/images/order03.svg" alt="order03" className="h-10 w-10" />
+                <Image src="/images/order03.svg" alt="order03" width={40} height={40} />
               </div>
               <div className="order_titlename mt-10">
                 <h4 className="text-3xl">Choose your product</h4>
-                <p className="pt-2">We'll show you stores and restaurants nearby you can order from.</p>
+                <p className="pt-2">We&apos;ll show you stores and restaurants nearby you can order from.</p>
               </div>
             </div>
           </div>
@@ -232,8 +208,8 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-2 gap-10">
             <div className="tsf-qualityitem-left pt-10">
-              <img src="/images/quality01.svg" alt="quality01"
-                className="w-full h-full object-cover rounded-md" />
+              <Image src="/images/quality01.svg" alt="quality01"
+                width={708} height={626} className="object-cover rounded-md" />
             </div>
             <div className="tsf-qualityitem-right tsf-bg-gray p-10 mt-10 rounded-md">
               <div className="tsf-qualityitem-right-content-list">
@@ -294,7 +270,7 @@ export default async function Home() {
             <div className="tsf-testimonialleft col-span-2 pt-10 pr-0 h-full">
               <div className="grid grid-cols-3 gap-10 h-full items-stretch">
                 <div className="tsf-testimonialitem-img-left h-full flex">
-                  <img src="/images/testimonial01.svg" alt="testimonial01" className="object-cover w-full h-full rounded-md" />
+                  <Image src="/images/testimonial01.svg" alt="testimonial01" width={300} height={200} className="object-cover rounded-md" />
                 </div>
                 <div className="col-span-2 h-full flex">
                   <div className="tsf-testimonialitem-slider relative carousel-navigation h-full w-full">
@@ -305,8 +281,8 @@ export default async function Home() {
             </div>
             <div className="tsf-testimonialright tsf-bg-red rounded-md p-10">
               <div className="tsf-testimonialitem-img-right">
-                <img src="/images/testimonial02.svg" alt="testimonial02"
-                  className="w-full h-full object-cover rounded-md" />
+                <Image src="/images/testimonial02.svg" alt="testimonial02"
+                  width={300} height={400} className="object-cover rounded-md" />
               </div>
               <div className="tsf-testimonialitem-content text-center">
                 <p className="text-md text-white mt-2 pb-5">Satisfied Clients</p>
@@ -316,7 +292,8 @@ export default async function Home() {
           </div>
         </div>
       </div>
-      <div className="tsf-motion py-20">
+
+      {/* <div className="tsf-motion py-20">
         <div className="container mx-auto px-10">
           <div className="tsf-howorder_heading text-left">
             <h2 className="tsf-dark-color text-4xl font-bold uppercase text-black">products in motion</h2>
@@ -325,12 +302,12 @@ export default async function Home() {
             <MotionCarousel />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <FAQAccordion />
 
       <Footer />
-      
+
       <CartSidebar />
     </CartProvider>
   );

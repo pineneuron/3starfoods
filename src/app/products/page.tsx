@@ -16,7 +16,7 @@ async function getProductsData(): Promise<{ categories: Category[] }> {
 export default async function ProductsPage() {
   const { categories } = await getProductsData();
   return (
-    <>
+    <CartProvider>
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
@@ -27,27 +27,25 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <CartProvider>
-        <StickyTabMenu
-          categories={[
-            { id: 'chicken', icon: '/images/product-tab01.svg' },
-            { id: 'fish', icon: '/images/product-tab02.svg' },
-            { id: 'pork', icon: '/images/product-tab03.svg' },
-            { id: 'mutton', icon: '/images/product-tab04.svg' },
-            { id: 'buff', icon: '/images/product-tab05.svg' }
-          ]}
-        />
+      <StickyTabMenu
+        categories={[
+          { id: 'chicken', icon: '/images/product-tab01.svg' },
+          { id: 'fish', icon: '/images/product-tab02.svg' },
+          { id: 'pork', icon: '/images/product-tab03.svg' },
+          { id: 'mutton', icon: '/images/product-tab04.svg' },
+          { id: 'buff', icon: '/images/product-tab05.svg' }
+        ]}
+      />
 
-        <div className="tsf-our-product py-20">
-          <div className="container mx-auto">
-            <ProductsCatalog categories={categories} />
-          </div>
+      <div className="tsf-our-product py-20">
+        <div className="container mx-auto">
+          <ProductsCatalog categories={categories} />
         </div>
+      </div>
 
-        <CartSidebar />
-      </CartProvider>
+      <CartSidebar />
 
       <Footer />
-    </>
+    </CartProvider>
   );
 }

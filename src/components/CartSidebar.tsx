@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
+import Image from 'next/image';
 
 interface CartSidebarProps {
   initialOpen?: boolean;
@@ -14,7 +15,19 @@ const DELIVERY_FEE = 150;      // Rs. applied when subtotal < MIN_ORDER_AMOUNT
 export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
   const [open, setOpen] = useState<boolean>(initialOpen);
   const [mode, setMode] = useState<'cart' | 'checkout'>('cart');
-  const { items, increment, decrement, removeItem, total, clear } = useCart();
+  const { 
+    items, 
+    increment, 
+    decrement, 
+    removeItem, 
+    subtotal, 
+    total, 
+    discountAmount, 
+    appliedCoupon, 
+    applyCoupon, 
+    removeCoupon, 
+    clear 
+  } = useCart();
 
   // checkout form state (UI only for now)
   const [name, setName] = useState('');
@@ -26,13 +39,16 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
   const [notes, setNotes] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locError, setLocError] = useState<string | null>(null);
-  const [locLoading, setLocLoading] = useState(false);
-  const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [paymentPreviewUrl, setPaymentPreviewUrl] = useState<string | null>(null);
 
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     function toggle(e: Event) {
@@ -53,11 +69,41 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
   }, []);
 
   const hasItems = items.length > 0;
-  const subtotal = total;
-  const belowMinimum = subtotal < MIN_ORDER_AMOUNT;
+  const belowMinimum = total < MIN_ORDER_AMOUNT;
   const deliveryFeeApplied = hasItems && belowMinimum ? DELIVERY_FEE : 0;
-  const grandTotal = subtotal + deliveryFeeApplied;
-  const amountToReachMinimum = Math.max(0, MIN_ORDER_AMOUNT - subtotal);
+  const grandTotal = total + deliveryFeeApplied;
+  const amountToReachMinimum = Math.max(0, MIN_ORDER_AMOUNT - total);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponMessage({ type: 'error', text: 'Please enter a coupon code' });
+      return;
+    }
+
+    setCouponLoading(true);
+    setCouponMessage(null);
+
+    try {
+      const result = await applyCoupon(couponCode.trim());
+      setCouponMessage({ 
+        type: result.success ? 'success' : 'error', 
+        text: result.message 
+      });
+      
+      if (result.success) {
+        setCouponCode('');
+      }
+    } catch {
+      setCouponMessage({ type: 'error', text: 'Error applying coupon. Please try again.' });
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    removeCoupon();
+    setCouponMessage(null);
+  };
 
   function useMyLocation() {
     if (!('geolocation' in navigator)) {
@@ -65,17 +111,14 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
       return;
     }
     setLocError(null);
-    setLocLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
         setCoords({ lat, lng });
-        setLocLoading(false);
       },
       (err) => {
         setLocError(err.message || 'Unable to get your location.');
-        setLocLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
@@ -83,7 +126,6 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
 
   function onPaymentFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] || null;
-    setPaymentProof(file);
     if (file) {
       const url = URL.createObjectURL(file);
       setPaymentPreviewUrl(url);
@@ -124,8 +166,9 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
       if (!res.ok || !data.ok) throw new Error(data?.error || 'Failed to send order');
       setSubmitSuccess(true);
       clear();
-    } catch (e: any) {
-      setSubmitError(e?.message || 'Something went wrong');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Something went wrong';
+      setSubmitError(errorMessage);
     } finally {
       setSubmitLoading(false);
     }
@@ -139,7 +182,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
       />
 
       <aside
-        className={`absolute right-0 top-0 h-full w-[92vw] sm:w-[70vw] lg:w-[30vw] pb-10 bg-white tsf-box-shodow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`absolute right-0 top-0 h-full w-[92vw] sm:w-[70vw] lg:w-[30vw] pb-10 flex flex-col justify-between bg-white tsf-box-shodow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-6 border-b">
           <h3 className="text-lg font-bold tsf-font-sora uppercase">{mode === 'cart' ? 'Your Cart' : 'Checkout'}</h3>
@@ -148,7 +191,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
 
         {mode === 'cart' ? (
           submitSuccess ? (
-            <div className="h-[calc(100%-260px)] overflow-y-auto p-6 flex items-center justify-center text-center">
+            <div className="h-[calc(100%-460px)] overflow-y-auto p-6 flex items-center justify-center text-center">
               <div>
                 <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-green-100 text-green-700 flex items-center justify-center">✓</div>
                 <h4 className="text-md font-semibold tsf-font-sora">Order placed successfully</h4>
@@ -156,25 +199,28 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
               </div>
             </div>
           ) : (
-            <div className="h-[calc(100%-260px)] overflow-y-auto">
+            <div className="h-[calc(100%-460px)] overflow-y-auto">
               {hasItems ? (
                 items.map((it, idx) => (
-                  <div key={it.id} className={`flex items-start gap-4 p-6 ${idx !== 0 ? 'border-t' : ''}`}>
+                  <div key={`${it.id}-${it.variation || 'default'}`} className={`flex items-start gap-4 p-6 ${idx !== 0 ? 'border-t' : ''}`}>
                     <div className="w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
-                      <img src={it.image} alt={it.name} className="w-full h-full object-cover" />
+                      <Image src={it.image} alt={it.name} width={96} height={96} className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between">
                         <div>
                           <h4 className="text-sm font-bold tsf-font-sora uppercase">{it.name}</h4>
+                          {it.variation && (
+                            <p className="text-xs text-blue-600 font-medium mt-1">Variation: {it.variation}</p>
+                          )}
                           <p className="text-xs text-gray-500 mt-1">RS {it.price.toFixed(2)}</p>
                         </div>
-                        <button aria-label="Remove" className="text-gray-400 hover:text-black" onClick={() => removeItem(it.id)}>×</button>
+                        <button aria-label="Remove" className="text-gray-400 hover:text-black" onClick={() => removeItem(it.id, it.variation)}>×</button>
                       </div>
                       <div className="flex items-center gap-2 mt-3">
-                        <button className="w-8 h-8 rounded-full border" onClick={() => decrement(it.id)}>-</button>
+                        <button className="w-8 h-8 rounded-full border" onClick={() => decrement(it.id, it.variation)}>-</button>
                         <span className="w-8 text-center">{it.qty}</span>
-                        <button className="w-8 h-8 rounded-full border" onClick={() => increment(it.id)}>+</button>
+                        <button className="w-8 h-8 rounded-full border" onClick={() => increment(it.id, it.variation)}>+</button>
                       </div>
                     </div>
                   </div>
@@ -244,7 +290,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
                   <h5 className="text-sm font-semibold tsf-font-sora mb-2">Pay to Bank (QR)</h5>
                   <div className="flex items-center gap-3">
                     <div className="w-28 h-28 rounded-md overflow-hidden bg-gray-50 flex items-center justify-center">
-                      <img src="/images/payment-qr.png" alt="payment-qr" className="w-full h-full object-contain" />
+                      <Image src="/images/payment-qr.png" alt="payment-qr" width={112} height={112} className="object-contain" />
                     </div>
                     <div className="text-sm">
                       <div><span className="font-semibold">Account Name:</span> 3 Star Foods Pvt. Ltd.</div>
@@ -258,7 +304,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
                     <input type="file" accept="image/*" onChange={onPaymentFileChange} className="w-full text-sm" />
                     {paymentPreviewUrl && (
                       <div className="mt-2 w-28 h-28 rounded-md overflow-hidden bg-gray-50">
-                        <img src={paymentPreviewUrl} alt="payment-proof" className="w-full h-full object-cover" />
+                        <Image src={paymentPreviewUrl} alt="payment-proof" width={112} height={112} className="object-cover" />
                       </div>
                     )}
                   </div>
@@ -279,10 +325,67 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
                 Add <span className="font-semibold">Rs. {amountToReachMinimum.toFixed(2)}</span> more to reach the minimum order amount (Rs. {MIN_ORDER_AMOUNT}). You can still checkout now; a delivery fee applies.
               </div>
             )}
+            
+            {/* Coupon Section */}
+            <div className="space-y-2">
+              {!appliedCoupon ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                  />
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {couponLoading ? '...' : 'Apply'}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md p-3">
+                  <div>
+                    <p className="text-sm font-medium text-green-800">
+                      {appliedCoupon.coupon.name} ({appliedCoupon.coupon.code})
+                    </p>
+                    <p className="text-xs text-green-600">
+                      -Rs. {appliedCoupon.discountAmount.toFixed(2)} discount
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="text-green-600 hover:text-green-800 text-sm font-medium"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+              
+              {couponMessage && (
+                <div className={`text-sm p-2 rounded-md ${
+                  couponMessage.type === 'success' 
+                    ? 'bg-green-50 text-green-800 border border-green-200' 
+                    : 'bg-red-50 text-red-800 border border-red-200'
+                }`}>
+                  {couponMessage.text}
+                </div>
+              )}
+            </div>
+
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Subtotal</span>
               <span className="font-medium">Rs. {subtotal.toFixed(2)}</span>
             </div>
+            {discountAmount > 0 && (
+              <div className="flex items-center justify-between text-sm text-green-600">
+                <span>Discount ({appliedCoupon?.coupon.code})</span>
+                <span className="font-medium">-Rs. {discountAmount.toFixed(2)}</span>
+              </div>
+            )}
             {deliveryFeeApplied > 0 && (
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Delivery fee</span>

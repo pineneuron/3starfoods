@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useCart } from '../context/CartContext';
+import Image from 'next/image';
 
 interface HeaderProps {
   variant?: 'home' | 'inner';
@@ -10,8 +12,10 @@ interface HeaderProps {
 
 export default function Header({ variant = 'home' }: HeaderProps) {
   const pathname = usePathname();
-  const navRef = useRef<HTMLUListElement>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState<{ width: number; left: number } | null>(null);
+  const { items } = useCart();
+  
+  // Calculate total cart count
+  const cartCount = items.reduce((total, item) => total + item.qty, 0);
   
   const isHome = variant === 'home';
   const headerClass = isHome 
@@ -33,7 +37,8 @@ export default function Header({ variant = 'home' }: HeaderProps) {
       const navIndicator = document.querySelector('.nav-indicator') as HTMLElement;
       if (navIndicator) {
         navIndicator.style.display = 'none';
-        navIndicator.offsetHeight;
+        // Force reflow to ensure the display change takes effect
+        void navIndicator.offsetHeight;
         navIndicator.style.display = '';
       }
     }, 100);
@@ -70,24 +75,29 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 </div>
                 <div className="logo-wrap flex justify-center items-center flex-1">
                     <Link href="/" className="tsf-logo">
-                        <img src="/images/logo.svg" alt="logo" />
+                        <Image src="/images/logo.svg" alt="logo" width={120} height={40} />
                     </Link>
                 </div>
                 <div className="flex-1 cart-icon">
                     <ul className="flex justify-end items-center gap-4">
                         <li>
-                            <a href="#" onClick={openCart}>
-                                <img src={isHome ? '/images/cart.svg' : '/images/cart-b.svg'} alt="cart" className="pl-4" />
+                            <a href="#" onClick={openCart} className="relative">
+                                <Image src={isHome ? '/images/cart.svg' : '/images/cart-b.svg'} alt="cart" width={24} height={24} className="pl-4" />
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-[#ff4900] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                        {cartCount > 99 ? '99+' : cartCount}
+                                    </span>
+                                )}
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <img src={isHome ? '/images/user.svg' : '/images/user-b.svg'} alt="user" className="pl-4" />
+                                <Image src={isHome ? '/images/user.svg' : '/images/user-b.svg'} alt="user" width={24} height={24} className="pl-4" />
                             </a>
                         </li>
                         <li>
-                            <a href="#">
-                                <img src={isHome ? '/images/search.svg' : '/images/search-b.svg'} alt="search" className="pl-4" />
+                            <a href="/api/todays-rate" target="_blank" className={`text-sm font-medium underline ${isHome ? 'text-white' : 'text-black'}`}>
+                                Today&apos;s Rate
                             </a>
                         </li>
                     </ul>

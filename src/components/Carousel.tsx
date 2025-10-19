@@ -1,67 +1,72 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import $ from 'jquery';
-import 'owl.carousel/dist/assets/owl.carousel.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface CarouselProps {
   children: React.ReactNode;
   className?: string;
-  options?: any;
+  options?: {
+    loop?: boolean;
+    margin?: number;
+    nav?: boolean;
+    dots?: boolean;
+    autoplay?: boolean;
+    autoplayTimeout?: number;
+    autoplayHoverPause?: boolean;
+    responsive?: {
+      [key: number]: {
+        items: number;
+      };
+    };
+  };
 }
 
 const Carousel: React.FC<CarouselProps> = ({ children, className = '', options = {} }) => {
-  const carouselRef = useRef<HTMLDivElement>(null);
+  // Convert owl.carousel options to Swiper options
+  const swiperOptions = {
+    modules: [Autoplay, Navigation, Pagination],
+    loop: options.loop ?? true,
+    spaceBetween: options.margin ?? 10,
+    navigation: options.nav ?? true,
+    pagination: options.dots ? { clickable: true } : false,
+    autoplay: options.autoplay ? {
+      delay: options.autoplayTimeout ?? 3000,
+      pauseOnMouseEnter: options.autoplayHoverPause ?? true,
+      disableOnInteraction: false,
+    } : false,
+    breakpoints: options.responsive ? {
+      0: {
+        slidesPerView: options.responsive[0]?.items ?? 1,
+      },
+      600: {
+        slidesPerView: options.responsive[600]?.items ?? 2,
+      },
+      1000: {
+        slidesPerView: options.responsive[1000]?.items ?? 3,
+      },
+    } : {
+      0: { slidesPerView: 1 },
+      600: { slidesPerView: 2 },
+      1000: { slidesPerView: 3 },
+    },
+  };
 
-  useEffect(() => {
-    if (!carouselRef.current || typeof window === 'undefined') return;
-
-    const init = async () => {
-      (window as any).jQuery = $;
-      (window as any).$ = $;
-      await import('owl.carousel');
-
-      const $carousel = $(carouselRef.current as HTMLDivElement);
-
-      const defaultOptions = {
-        loop: true,
-        margin: 10,
-        nav: true,
-        dots: true,
-        autoplay: true,
-        autoplayTimeout: 3000,
-        autoplayHoverPause: true,
-        responsive: {
-          0: { items: 1 },
-          600: { items: 2 },
-          1000: { items: 3 }
-        },
-        ...options
-      };
-
-      $carousel.owlCarousel(defaultOptions as any);
-
-      return () => {
-        if ($carousel.data('owl.carousel')) {
-          $carousel.trigger('destroy.owl.carousel');
-        }
-      };
-    };
-
-    let cleanup: (() => void) | undefined;
-    init().then((fn) => {
-      // dynamic import initializer returns cleanup or undefined
-      if (typeof fn === 'function') cleanup = fn as unknown as () => void;
-    });
-
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, [options]);
+  // Convert children to array if it's not already
+  const childrenArray = Array.isArray(children) ? children : [children];
 
   return (
-    <div ref={carouselRef} className={`owl-carousel ${className}`}>
-      {children}
+    <div className={className}>
+      <Swiper {...swiperOptions}>
+        {childrenArray.map((child, index) => (
+          <SwiperSlide key={index}>
+            {child}
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };

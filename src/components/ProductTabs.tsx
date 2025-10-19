@@ -1,107 +1,78 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import ProductModal from './ProductModal';
+
+export interface ProductVariation {
+  name: string;
+  price: number;
+  discountPercent?: number;
+}
+
+export interface ProductItem {
+  id: string;
+  name: string;
+  price: number;
+  unit: string;
+  discountPercent: number;
+  image: string;
+  images?: string[];
+  shortDescription?: string;
+  variations?: ProductVariation[];
+  defaultVariation?: string;
+  featured?: boolean;
+  bestseller?: boolean;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  products: ProductItem[];
+}
 
 const ProductTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState('bestseller');
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tabs = [
     { id: 'bestseller', label: 'bestseller', content: 'bestseller' },
     { id: 'featured', label: 'featured', content: 'featured' }
   ];
 
-  const bestsellerProducts = [
-    {
-      id: 1,
-      name: 'chicken sausage bratwurst',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      discount: '10%',
-      image: '/images/product01.svg'
-    },
-    {
-      id: 2,
-      name: 'basa fish steaks',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product02.svg'
-    },
-    {
-      id: 3,
-      name: 'chicken drumstick',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product03.svg'
-    },
-    {
-      id: 4,
-      name: 'chicken gizzard',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product04.svg'
-    },
-    {
-      id: 5,
-      name: 'chicken gizzard',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product04.svg'
-    },
-    {
-      id: 6,
-      name: 'chicken drumstick',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product03.svg'
-    },
-    {
-      id: 7,
-      name: 'chicken sausage bratwurst',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product01.svg'
-    },
-    {
-      id: 8,
-      name: 'basa fish steaks',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product02.svg'
-    }
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/data/products.json');
+        const data = await response.json();
+        const allProducts = data.categories.flatMap((cat: Category) => cat.products);
+        setProducts(allProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Fallback to static data if fetch fails
+        setProducts([]);
+      }
+    };
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'chicken gizzard',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product04.svg'
-    },
-    {
-      id: 2,
-      name: 'chicken drumstick',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product03.svg'
-    },
-    {
-      id: 3,
-      name: 'chicken sausage bratwurst',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product01.svg'
-    },
-    {
-      id: 4,
-      name: 'basa fish steaks',
-      price: 'RS 380.00',
-      originalPrice: 'RS 342.00',
-      image: '/images/product02.svg'
-    }
-  ];
+    fetchProducts();
+  }, []);
+
+  const bestsellerProducts = products.filter(p => p.bestseller).slice(0, 8);
+  const featuredProducts = products.filter(p => p.featured).slice(0, 8);
 
   const currentProducts = activeTab === 'bestseller' ? bestsellerProducts : featuredProducts;
+
+  const handleProductClick = (product: ProductItem) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="tsf-product py-20" suppressHydrationWarning>
@@ -137,36 +108,71 @@ const ProductTabs: React.FC = () => {
           <div className="mt-6">
             <div className="rounded-lg">
               <div className="grid grid-cols-4 gap-6">
-                {currentProducts.map((product) => (
-                  <div key={product.id} className="tsf-product_list">
-                    <figure className="tsf-box-shodow tsf-font-bebas">
-                      <div className="tsf-product-img">
-                        <a href="#">
-                          <img src={product.image} alt={product.name} className="rounded-t-md" />
-                        </a>
-                      </div>
-                      <figcaption className="p-5 text-center rounded-t-md">
-                        <div className="tsf-product-name">
-                          <a className="text-3xl capitalize" href="">{product.name}</a>
+                {currentProducts.map((product) => {
+                  const finalPrice = product.discountPercent > 0 
+                    ? product.price * (1 - product.discountPercent / 100)
+                    : product.price;
+                  
+                  return (
+                    <div key={product.id} className="tsf-product_list">
+                      <figure className="tsf-box-shodow tsf-font-bebas">
+                        <div className="tsf-product-img">
+                          <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                            <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
+                          </a>
                         </div>
-                        <div className="price text-xl font-normal py-4">
-                          {product.price} - <span className="pre-price tsf-text-color tsf-font-bebas">{product.originalPrice} (per kg)</span>
-                          {product.discount && (
-                            <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">{product.discount}</span>
-                          )}
-                        </div>
-                        <div className="tsf-add_cart mt-2">
-                          <a className="tsf-button uppercase inline-block text-2xl" href="#">add to cart</a>
-                        </div>
-                      </figcaption>
-                    </figure>
-                  </div>
-                ))}
+                        <figcaption className="p-5 text-center rounded-t-md">
+                          <div className="tsf-product-name">
+                            <a 
+                              className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                              href="#" 
+                              onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
+                            >
+                              {product.name}
+                            </a>
+                          </div>
+                          <div className="price text-xl font-normal py-4">
+                            {product.discountPercent > 0 ? (
+                              <>
+                                <span className="text-red-600 font-bold">Rs. {finalPrice.toFixed(2)}</span>
+                                <span className="line-through text-gray-500 ml-2">Rs. {product.price.toFixed(2)}</span>
+                                <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                                  -{product.discountPercent}%
+                                </span>
+                              </>
+                            ) : (
+                              <span className="font-bold">Rs. {product.price.toFixed(2)}</span>
+                            )}
+                            <span className="block text-sm text-gray-600 mt-1">({product.unit})</span>
+                          </div>
+                          <div className="tsf-add_cart mt-2">
+                            <a 
+                              className="tsf-button uppercase inline-block text-2xl cursor-pointer" 
+                              href="#"
+                              onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
+                            >
+                              view details
+                            </a>
+                          </div>
+                        </figcaption>
+                      </figure>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Product Modal */}
+      {isModalOpen && selectedProduct && (
+        <ProductModal
+          isOpen={isModalOpen}
+          product={selectedProduct}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };

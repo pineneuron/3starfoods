@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Carousel from './Carousel';
+import Image from 'next/image';
 
 const MotionCarousel: React.FC = () => {
   const options = {
@@ -25,7 +26,7 @@ const MotionCarousel: React.FC = () => {
       <div className="item">
         <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
-            <img src="/images/motion01.svg" alt="motion01" className="h-80 w-80" />
+            <Image src="/images/motion01.svg" alt="motion01" width={320} height={320} />
           </div>
           <figcaption className="p-10 text-center rounded-t-md">
             <div className="tsf-motionitem-name">
@@ -37,7 +38,7 @@ const MotionCarousel: React.FC = () => {
       <div className="item">
         <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
-            <img src="/images/motion02.svg" alt="motion02" className="h-80 w-80" />
+            <Image src="/images/motion02.svg" alt="motion02" width={320} height={320} />
           </div>
           <figcaption className="p-10 text-center rounded-t-md">
             <div className="tsf-motionitem-name">
@@ -49,7 +50,7 @@ const MotionCarousel: React.FC = () => {
       <div className="item">
         <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
-            <img src="/images/motion03.svg" alt="motion03" className="h-80 w-80" />
+            <Image src="/images/motion03.svg" alt="motion03" width={320} height={320} />
           </div>
           <figcaption className="p-10 text-center rounded-t-md">
             <div className="tsf-motionitem-name">

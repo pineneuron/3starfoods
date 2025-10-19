@@ -1,7 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useCart } from '../context/CartContext';
+import ProductModal from './ProductModal';
+import Image from 'next/image';
+
+export interface ProductVariation {
+  name: string;
+  price: number;
+  discountPercent?: number;
+}
 
 export interface ProductItem {
   id: string;
@@ -10,6 +17,10 @@ export interface ProductItem {
   unit: string;
   discountPercent: number;
   image: string;
+  images?: string[];
+  shortDescription?: string;
+  variations?: ProductVariation[];
+  defaultVariation?: string;
   featured?: boolean;
   bestseller?: boolean;
 }
@@ -20,68 +31,79 @@ interface HomeProductsProps {
 }
 
 // Wrapper component that safely uses cart context
-function HomeProductsWithCart({ products, type }: HomeProductsProps) {
-  const { addItem } = useCart();
+function HomeProductsWithCart({ products }: HomeProductsProps) {
+  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddToCart = (product: ProductItem) => {
-    addItem({ 
-      id: product.id, 
-      name: product.name, 
-      price: product.price, 
-      unit: product.unit, 
-      discountPercent: product.discountPercent, 
-      image: product.image 
-    }, 1);
-    window.dispatchEvent(new CustomEvent('tsf:cart-open'));
+  const handleProductClick = (product: ProductItem) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {products.map((product) => {
-        const hasDiscount = product.discountPercent > 0;
-        const discountedPrice = hasDiscount
-          ? Math.round(product.price * (1 - product.discountPercent / 100))
-          : product.price;
-        
-        return (
-          <div className="tsf-product_list" key={product.id}>
-            <figure className="tsf-box-shodow tsf-font-bebas">
-              <div className="tsf-product-img">
-                <a href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(product); }}>
-                  <img src={product.image} alt={product.name} className="rounded-t-md" />
-                </a>
-              </div>
-              <figcaption className="p-5 text-center rounded-t-md">
-                <div className="tsf-product-name">
-                  <a className="text-3xl capitalize" href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(product); }}>
-                    {product.name}
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {products.map((product) => {
+          const hasDiscount = product.discountPercent > 0;
+          const discountedPrice = hasDiscount
+            ? Math.round(product.price * (1 - product.discountPercent / 100))
+            : product.price;
+          
+          return (
+            <div className="tsf-product_list" key={product.id}>
+              <figure className="tsf-box-shodow tsf-font-bebas">
+                <div className="tsf-product-img">
+                  <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                    <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
                   </a>
                 </div>
-                <div className="price text-xl font-normal py-4">
-                  RS {product.price.toFixed(2)} -{' '}
-                  <span className="pre-price tsf-text-color tsf-font-bebas">
-                    RS {discountedPrice.toFixed(2)} ({product.unit})
-                  </span>
-                  {hasDiscount && (
-                    <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
-                      {product.discountPercent}%
+                <figcaption className="p-5 text-center rounded-t-md">
+                  <div className="tsf-product-name">
+                    <a 
+                      className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                      href="#" 
+                      onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
+                    >
+                      {product.name}
+                    </a>
+                  </div>
+                  <div className="price text-xl font-normal py-4">
+                    RS {product.price.toFixed(2)} -{' '}
+                    <span className="pre-price tsf-text-color tsf-font-bebas">
+                      RS {discountedPrice.toFixed(2)} ({product.unit})
                     </span>
-                  )}
-                </div>
-                <div className="tsf-add_cart mt-2">
-                  <button 
-                    className="tsf-button uppercase inline-block text-2xl" 
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    add to cart
-                  </button>
-                </div>
-              </figcaption>
-            </figure>
-          </div>
-        );
-      })}
-    </div>
+                    {hasDiscount && (
+                      <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                        {product.discountPercent}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="tsf-add_cart mt-2">
+                    <button 
+                      className="tsf-button uppercase inline-block text-2xl" 
+                      onClick={() => handleProductClick(product)}
+                    >
+                      view details
+                    </button>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
+          );
+        })}
+      </div>
+      
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
+    </>
   );
 }
 
@@ -107,7 +129,7 @@ export default function HomeProducts({ products, type }: HomeProductsProps) {
             <div className="tsf-product_list" key={product.id}>
               <figure className="tsf-box-shodow tsf-font-bebas">
                 <div className="tsf-product-img">
-                  <img src={product.image} alt={product.name} className="rounded-t-md" />
+                  <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md" />
                 </div>
                 <figcaption className="p-5 text-center rounded-t-md">
                   <div className="tsf-product-name">

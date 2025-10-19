@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 const HeroCarousel: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,17 +31,17 @@ const HeroCarousel: React.FC = () => {
     }
   ];
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
+  }, [slides.length]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  }, [slides.length]);
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
+  // const goToSlide = (index: number) => {
+  //   setCurrentSlide(index);
+  // };
 
   useEffect(() => {
     // Auto-play functionality
@@ -53,7 +54,7 @@ const HeroCarousel: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [nextSlide]);
 
   const handleMouseEnter = () => {
     if (intervalRef.current) {
@@ -82,10 +83,12 @@ const HeroCarousel: React.FC = () => {
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <img
+          <Image
             src={slide.src}
             alt={slide.alt}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority={index === 0}
           />
         </div>
       ))}
@@ -120,7 +123,7 @@ const HeroCarousel: React.FC = () => {
       </button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -134,7 +137,7 @@ const HeroCarousel: React.FC = () => {
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

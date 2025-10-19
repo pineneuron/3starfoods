@@ -2,10 +2,11 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import DealersMap from '../../components/DealersMap';
 import DealersList from '../../components/DealersList';
+import { CartProvider } from '../../context/CartContext';
 
 export default function OurDealersPage() {
   return (
-    <>
+    <CartProvider>
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
@@ -48,6 +49,6 @@ export default function OurDealersPage() {
       </div>
 
       <Footer />
-    </>
+    </CartProvider>
   );
 }

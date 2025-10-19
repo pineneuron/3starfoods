@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Carousel from './Carousel';
+import Image from 'next/image';
 
 const TestimonialCarousel: React.FC = () => {
   const options = {
     loop: true,
     margin: 0,
-    nav: false, // match original (no nav arrows)
+    nav: false,
     dots: true,
     autoplay: true,
     autoplayTimeout: 5000,
@@ -29,11 +30,11 @@ const TestimonialCarousel: React.FC = () => {
           <div className="tsf-testimonialitem-content relative bg-white rounded-md p-10 h-full flex flex-col">
               <div className="tsf-testimonialitem-imgquote">
                 <div className="flex items-center justify-start gap-2">
-                  <img src="/images/f-star.svg" alt="quote" className="tsf-star-icon" />
-                  <img src="/images/f-star.svg" alt="quote" className="tsf-star-icon" />
-                  <img src="/images/f-star.svg" alt="quote" className="tsf-star-icon" />
-                  <img src="/images/f-star.svg" alt="quote" className="tsf-star-icon" />
-                  <img src="/images/h-star.svg" alt="quote" className="tsf-star-icon" />
+                  <Image src="/images/f-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
+                  <Image src="/images/f-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
+                  <Image src="/images/f-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
+                  <Image src="/images/f-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
+                  <Image src="/images/h-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
                 </div>
               </div>
               <p className="text-xl text-black mt-6 flex-1">Best meat products. On good price. The
@@ -41,8 +42,8 @@ const TestimonialCarousel: React.FC = () => {
                 wholesale as well as retail.I get my supplies here every-time.</p>
               <div className="flex items-center gap-2">
                 <div className="mt-5">
-                  <img src="/images/user01.svg" alt="user01"
-                    className="w-10 h-10 rounded-full" />
+                  <Image src="/images/user01.svg" alt="user01"
+                    width={40} height={40} className="rounded-full" />
                 </div>
                 <div>
                   <h3 className="text-md font-bold text-black tsf-font-sora mt-6">Aakash
@@ -50,8 +51,8 @@ const TestimonialCarousel: React.FC = () => {
                 </div>
               </div>
               <div className="tsf-testimonialitem-imgquote absolute bottom-5 right-10">
-                <img src="/images/quote.svg" alt="quote"
-                  className="w-20 h-20 rounded-md" />
+                <Image src="/images/quote.svg" alt="quote"
+                  width={80} height={80} className="rounded-md" />
               </div>
             </div>
           </div>

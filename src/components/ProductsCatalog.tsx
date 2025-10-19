@@ -1,7 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useCart } from '../context/CartContext';
+import ProductModal from './ProductModal';
+import Image from 'next/image';
+
+export interface ProductVariation {
+  name: string;
+  price: number;
+  discountPercent?: number;
+}
 
 export interface ProductItem {
   id: string;
@@ -10,6 +17,12 @@ export interface ProductItem {
   unit: string;
   discountPercent: number;
   image: string;
+  images?: string[];
+  shortDescription?: string;
+  variations?: ProductVariation[];
+  defaultVariation?: string;
+  featured?: boolean;
+  bestseller?: boolean;
 }
 
 export interface Category {
@@ -24,7 +37,8 @@ interface ProductsCatalogProps {
 
 export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
   const [activeCategoryId, setActiveCategoryId] = useState<string>(categories[0]?.id ?? '');
-  const { addItem } = useCart();
+  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     function onSetCategory(e: Event) {
@@ -44,9 +58,14 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
     window.dispatchEvent(evt);
   }, [activeCategoryId]);
 
-  function handleAddToCart(p: ProductItem) {
-    addItem({ id: p.id, name: p.name, price: p.price, unit: p.unit, discountPercent: p.discountPercent, image: p.image }, 1);
-    window.dispatchEvent(new CustomEvent('tsf:cart-open'));
+  function handleProductClick(p: ProductItem) {
+    setSelectedProduct(p);
+    setIsModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
   }
 
   return (
@@ -92,13 +111,19 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                   <div className="tsf-product_list" key={p.id}>
                     <figure className="tsf-box-shodow tsf-font-bebas">
                       <div className="tsf-product-img">
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(p); }}>
-                          <img src={p.image} alt={p.name} className="rounded-t-md" />
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(p); }}>
+                          <Image src={p.image} alt={p.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
                         </a>
                       </div>
                       <figcaption className="p-5 text-center rounded-t-md">
                         <div className="tsf-product-name">
-                          <a className="text-3xl capitalize" href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(p); }}>{p.name}</a>
+                          <a 
+                            className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                            href="#" 
+                            onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
+                          >
+                            {p.name}
+                          </a>
                         </div>
                         <div className="price text-xl font-normal py-4">
                           RS {p.price.toFixed(2)} -{' '}
@@ -112,7 +137,13 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                           )}
                         </div>
                         <div className="tsf-add_cart mt-2">
-                          <a className="tsf-button uppercase inline-block text-2xl" href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(p); }}>add to cart</a>
+                          <a 
+                            className="tsf-button uppercase inline-block text-2xl" 
+                            href="#" 
+                            onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
+                          >
+                            view details
+                          </a>
                         </div>
                       </figcaption>
                     </figure>
@@ -123,6 +154,12 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
           </div>
         );
       })}
+      
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </div>
   );
 }

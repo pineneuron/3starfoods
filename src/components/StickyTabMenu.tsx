@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface StickyTabMenuProps {
   categories: { id: string; icon: string }[];
@@ -86,7 +87,7 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
                 data-tabs-target={`#styled-${c.id}`}
                 onClick={() => handleClick(c.id)}
               >
-                <img src={c.icon} alt={`${c.id}-tab`} />
+                <Image src={c.icon} alt={`${c.id}-tab`} width={24} height={24} />
               </button>
             </li>
           ))}

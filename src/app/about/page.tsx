@@ -1,10 +1,11 @@
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import FAQAccordion from '../../components/FAQAccordion';
+import { CartProvider } from '../../context/CartContext';
 
 export default function AboutPage() {
   return (
-    <>
+    <CartProvider>
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
@@ -18,8 +19,6 @@ export default function AboutPage() {
       <FAQAccordion />
 
       <Footer />
-    </>
+    </CartProvider>
   );
 }
-
-

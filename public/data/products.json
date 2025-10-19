@@ -6,42 +6,102 @@
       "products": [
         {
           "id": "chicken-sausage-bratwurst",
-          "name": "chicken sausage bratwurst",
+          "name": "Chicken Sausage Bratwurst",
           "price": 380,
           "unit": "per kg",
           "discountPercent": 10,
           "image": "/images/product01.svg",
+          "images": ["/images/product01.svg", "/images/product02.svg", "/images/product03.svg"],
+          "shortDescription": "Premium quality chicken sausage bratwurst, perfect for grilling and cooking.",
+          "variations": [
+            {
+              "name": "Fresh",
+              "price": 380,
+              "discountPercent": 10
+            },
+            {
+              "name": "Frozen",
+              "price": 360,
+              "discountPercent": 12
+            }
+          ],
+          "defaultVariation": "Fresh",
           "featured": true,
           "bestseller": true
         },
         {
           "id": "chicken-salami",
-          "name": "chicken salami",
+          "name": "Chicken Salami",
           "price": 420,
           "unit": "per kg",
           "discountPercent": 5,
-          "image": "/images/product02.svg"
+          "image": "/images/product02.svg",
+          "images": ["/images/product02.svg", "/images/product01.svg"],
+          "shortDescription": "Delicious chicken salami with authentic taste and premium quality.",
+          "variations": [
+            {
+              "name": "Fresh",
+              "price": 420,
+              "discountPercent": 5
+            },
+            {
+              "name": "Frozen",
+              "price": 400,
+              "discountPercent": 8
+            }
+          ],
+          "defaultVariation": "Fresh"
         },
         {
           "id": "chicken-nuggets",
-          "name": "chicken nuggets",
+          "name": "Chicken Nuggets",
           "price": 520,
           "unit": "per kg",
           "discountPercent": 0,
           "image": "/images/product03.svg",
+          "images": ["/images/product03.svg", "/images/product04.svg"],
+          "shortDescription": "Crispy and tender chicken nuggets, perfect for kids and adults alike.",
+          "variations": [
+            {
+              "name": "Fresh",
+              "price": 520,
+              "discountPercent": 0
+            },
+            {
+              "name": "Frozen",
+              "price": 480,
+              "discountPercent": 5
+            }
+          ],
+          "defaultVariation": "Frozen",
           "bestseller": true
         },
         {
           "id": "chicken-wings",
-          "name": "chicken wings",
+          "name": "Chicken Wings",
           "price": 480,
           "unit": "per kg",
           "discountPercent": 12,
-          "image": "/images/product04.svg"
+          "image": "/images/product04.svg",
+          "images": ["/images/product04.svg", "/images/product01.svg"],
+          "shortDescription": "Juicy and flavorful chicken wings, great for parties and gatherings.",
+          "variations": [
+            {
+              "name": "Fresh",
+              "price": 480,
+              "discountPercent": 12
+            },
+            {
+              "name": "Frozen",
+              "price": 450,
+              "discountPercent": 15
+            }
+          ],
+          "defaultVariation": "Fresh"
         },
         {
           "id": "chicken-drumsticks",
-          "name": "chicken drumsticks",
+          "name": "Chicken Drumsticks",
           "price": 460,
           "unit": "per kg",
           "discountPercent": 8,
@@ -49,7 +109,7 @@
         },
         {
           "id": "chicken-breast",
-          "name": "chicken breast",
+          "name": "Chicken Breast",
           "price": 540,
           "unit": "per kg",
           "discountPercent": 6,
@@ -57,7 +117,7 @@
         },
         {
           "id": "chicken-thighs",
-          "name": "chicken thighs",
+          "name": "Chicken Thighs",
           "price": 500,
           "unit": "per kg",
           "discountPercent": 0,
@@ -65,7 +125,7 @@
         },
         {
           "id": "chicken-legs",
-          "name": "chicken legs",
+          "name": "Chicken Legs",
           "price": 470,
           "unit": "per kg",
           "discountPercent": 5,
@@ -73,7 +133,7 @@
         },
         {
           "id": "chicken-keema",
-          "name": "chicken keema",
+          "name": "Chicken Keema",
           "price": 520,
           "unit": "per kg",
           "discountPercent": 10,
@@ -81,7 +141,7 @@
         },
         {
           "id": "chicken-meatballs",
-          "name": "chicken meatballs",
+          "name": "Chicken Meatballs",
           "price": 560,
           "unit": "per kg",
           "discountPercent": 7,
@@ -89,7 +149,7 @@
         },
         {
           "id": "chicken-cutlets",
-          "name": "chicken cutlets",
+          "name": "Chicken Cutlets",
           "price": 510,
           "unit": "per kg",
           "discountPercent": 4,
@@ -97,7 +157,7 @@
         },
         {
           "id": "chicken-tikka",
-          "name": "chicken tikka",
+          "name": "Chicken Tikka",
           "price": 600,
           "unit": "per kg",
           "discountPercent": 9,
@@ -106,7 +166,7 @@
         },
         {
           "id": "chicken-kebabs",
-          "name": "chicken kebabs",
+          "name": "Chicken Kebabs",
           "price": 580,
           "unit": "per kg",
           "discountPercent": 3,
@@ -115,7 +175,7 @@
         },
         {
           "id": "chicken-supreme",
-          "name": "chicken supreme",
+          "name": "Chicken Supreme",
           "price": 620,
           "unit": "per kg",
           "discountPercent": 0,
@@ -130,7 +190,7 @@
       "products": [
         {
           "id": "salmon-fillet",
-          "name": "salmon fillet",
+          "name": "Salmon Fillet",
           "price": 1200,
           "unit": "per kg",
           "discountPercent": 8,
@@ -140,7 +200,7 @@
         },
         {
           "id": "rohu-cut",
-          "name": "rohu cut",
+          "name": "Rohu Cut",
           "price": 650,
           "unit": "per kg",
           "discountPercent": 0,
@@ -148,7 +208,7 @@
         },
         {
           "id": "catla-steak",
-          "name": "catla steak",
+          "name": "Catla Steak",
           "price": 700,
           "unit": "per kg",
           "discountPercent": 5,
@@ -156,7 +216,7 @@
         },
         {
           "id": "tilapia-cleaned",
-          "name": "tilapia cleaned",
+          "name": "Tilapia Cleaned",
           "price": 480,
           "unit": "per kg",
           "discountPercent": 0,
@@ -164,7 +224,7 @@
         },
         {
           "id": "pomfret-whole",
-          "name": "pomfret whole",
+          "name": "Pomfret Whole",
           "price": 1500,
           "unit": "per kg",
           "discountPercent": 10,
@@ -173,7 +233,7 @@
         },
         {
           "id": "prawns-medium",
-          "name": "prawns medium",
+          "name": "Prawns Medium",
           "price": 1100,
           "unit": "per kg",
           "discountPercent": 6,
@@ -182,7 +242,7 @@
         },
         {
           "id": "hilsa-cut",
-          "name": "hilsa cut",
+          "name": "Hilsa Cut",
           "price": 2000,
           "unit": "per kg",
           "discountPercent": 12,
@@ -191,7 +251,7 @@
         },
         {
           "id": "mackerel-whole",
-          "name": "mackerel whole",
+          "name": "Mackerel Whole",
           "price": 600,
           "unit": "per kg",
           "discountPercent": 4,
@@ -199,7 +259,7 @@
         },
         {
           "id": "tuna-steak",
-          "name": "tuna steak",
+          "name": "Tuna Steak",
           "price": 1300,
           "unit": "per kg",
           "discountPercent": 7,
@@ -208,7 +268,7 @@
         },
         {
           "id": "sardine-cleaned",
-          "name": "sardine cleaned",
+          "name": "Sardine Cleaned",
           "price": 380,
           "unit": "per kg",
           "discountPercent": 2,
@@ -216,7 +276,7 @@
         },
         {
           "id": "surmai-kingfish",
-          "name": "surmai (kingfish)",
+          "name": "Surmai (Kingfish)",
           "price": 1600,
           "unit": "per kg",
           "discountPercent": 0,
@@ -224,7 +284,7 @@
         },
         {
           "id": "rohu-fillet",
-          "name": "rohu fillet",
+          "name": "Rohu Fillet",
           "price": 700,
           "unit": "per kg",
           "discountPercent": 3,
@@ -238,7 +298,7 @@
       "products": [
         {
           "id": "pork-belly",
-          "name": "pork belly",
+          "name": "Pork Belly",
           "price": 900,
           "unit": "per kg",
           "discountPercent": 10,
@@ -247,7 +307,7 @@
         },
         {
           "id": "pork-ribs",
-          "name": "pork ribs",
+          "name": "Pork Ribs",
           "price": 950,
           "unit": "per kg",
           "discountPercent": 6,
@@ -255,7 +315,7 @@
         },
         {
           "id": "pork-chops",
-          "name": "pork chops",
+          "name": "Pork Chops",
           "price": 980,
           "unit": "per kg",
           "discountPercent": 0,
@@ -263,7 +323,7 @@
         },
         {
           "id": "pork-mince",
-          "name": "pork mince",
+          "name": "Pork Mince",
           "price": 840,
           "unit": "per kg",
           "discountPercent": 8,
@@ -271,7 +331,7 @@
         },
         {
           "id": "pork-shoulder",
-          "name": "pork shoulder",
+          "name": "Pork Shoulder",
           "price": 920,
           "unit": "per kg",
           "discountPercent": 5,
@@ -279,7 +339,7 @@
         },
         {
           "id": "pork-loin",
-          "name": "pork loin",
+          "name": "Pork Loin",
           "price": 970,
           "unit": "per kg",
           "discountPercent": 9,
@@ -287,7 +347,7 @@
         },
         {
           "id": "pork-bacon",
-          "name": "pork bacon",
+          "name": "Pork Bacon",
           "price": 1100,
           "unit": "per kg",
           "discountPercent": 7,
@@ -296,7 +356,7 @@
         },
         {
           "id": "pork-ham",
-          "name": "pork ham",
+          "name": "Pork Ham",
           "price": 1050,
           "unit": "per kg",
           "discountPercent": 4,
@@ -305,7 +365,7 @@
         },
         {
           "id": "pork-sausage",
-          "name": "pork sausage",
+          "name": "Pork Sausage",
           "price": 780,
           "unit": "per kg",
           "discountPercent": 0,
@@ -313,7 +373,7 @@
         },
         {
           "id": "pork-spareribs",
-          "name": "pork spareribs",
+          "name": "Pork Spareribs",
           "price": 990,
           "unit": "per kg",
           "discountPercent": 10,
@@ -321,7 +381,7 @@
         },
         {
           "id": "pork-tenderloin",
-          "name": "pork tenderloin",
+          "name": "Pork Tenderloin",
           "price": 1150,
           "unit": "per kg",
           "discountPercent": 3,
@@ -336,7 +396,7 @@
       "products": [
         {
           "id": "mutton-curry-cut",
-          "name": "mutton curry cut",
+          "name": "Mutton Curry Cut",
           "price": 1500,
           "unit": "per kg",
           "discountPercent": 0,
@@ -345,7 +405,7 @@
         },
         {
           "id": "mutton-mince",
-          "name": "mutton mince",
+          "name": "Mutton Mince",
           "price": 1450,
           "unit": "per kg",
           "discountPercent": 6,
@@ -354,7 +414,7 @@
         },
         {
           "id": "mutton-chops",
-          "name": "mutton chops",
+          "name": "Mutton Chops",
           "price": 1600,
           "unit": "per kg",
           "discountPercent": 8,
@@ -363,7 +423,7 @@
         },
         {
           "id": "mutton-shoulder",
-          "name": "mutton shoulder",
+          "name": "Mutton Shoulder",
           "price": 1550,
           "unit": "per kg",
           "discountPercent": 5,
@@ -371,7 +431,7 @@
         },
         {
           "id": "mutton-leg",
-          "name": "mutton leg",
+          "name": "Mutton Leg",
           "price": 1700,
           "unit": "per kg",
           "discountPercent": 0,
@@ -379,7 +439,7 @@
         },
         {
           "id": "mutton-ribs",
-          "name": "mutton ribs",
+          "name": "Mutton Ribs",
           "price": 1650,
           "unit": "per kg",
           "discountPercent": 9,
@@ -387,7 +447,7 @@
         },
         {
           "id": "mutton-biryani-cut",
-          "name": "mutton biryani cut",
+          "name": "Mutton Biryani Cut",
           "price": 1520,
           "unit": "per kg",
           "discountPercent": 4,
@@ -395,7 +455,7 @@
         },
         {
           "id": "mutton-keema",
-          "name": "mutton keema",
+          "name": "Mutton Keema",
           "price": 1480,
           "unit": "per kg",
           "discountPercent": 7,
@@ -403,7 +463,7 @@
         },
         {
           "id": "mutton-boneless",
-          "name": "mutton boneless",
+          "name": "Mutton Boneless",
           "price": 1750,
           "unit": "per kg",
           "discountPercent": 10,
@@ -412,7 +472,7 @@
         },
         {
           "id": "mutton-trotters",
-          "name": "mutton trotters",
+          "name": "Mutton Trotters",
           "price": 1200,
           "unit": "per kg",
           "discountPercent": 3,
@@ -420,7 +480,7 @@
         },
         {
           "id": "mutton-liver",
-          "name": "mutton liver",
+          "name": "Mutton Liver",
           "price": 1300,
           "unit": "per kg",
           "discountPercent": 0,
@@ -434,7 +494,7 @@
       "products": [
         {
           "id": "buff-mince",
-          "name": "buff mince",
+          "name": "Buff Mince",
           "price": 550,
           "unit": "per kg",
           "discountPercent": 7,
@@ -443,7 +503,7 @@
         },
         {
           "id": "buff-boneless",
-          "name": "buff boneless",
+          "name": "Buff Boneless",
           "price": 700,
           "unit": "per kg",
           "discountPercent": 5,
@@ -452,7 +512,7 @@
         },
         {
           "id": "buff-stew-cut",
-          "name": "buff stew cut",
+          "name": "Buff Stew Cut",
           "price": 620,
           "unit": "per kg",
           "discountPercent": 4,
@@ -460,7 +520,7 @@
         },
         {
           "id": "buff-curry-cut",
-          "name": "buff curry cut",
+          "name": "Buff Curry Cut",
           "price": 600,
           "unit": "per kg",
           "discountPercent": 0,
@@ -468,7 +528,7 @@
         },
         {
           "id": "buff-keema",
-          "name": "buff keema",
+          "name": "Buff Keema",
           "price": 570,
           "unit": "per kg",
           "discountPercent": 6,
@@ -476,7 +536,7 @@
         },
         {
           "id": "buff-sausage",
-          "name": "buff sausage",
+          "name": "Buff Sausage",
           "price": 650,
           "unit": "per kg",
           "discountPercent": 8,
@@ -485,7 +545,7 @@
         },
         {
           "id": "buff-meatballs",
-          "name": "buff meatballs",
+          "name": "Buff Meatballs",
           "price": 680,
           "unit": "per kg",
           "discountPercent": 10,
@@ -493,7 +553,7 @@
         },
         {
           "id": "buff-ribs",
-          "name": "buff ribs",
+          "name": "Buff Ribs",
           "price": 720,
           "unit": "per kg",
           "discountPercent": 9,
@@ -501,7 +561,7 @@
         },
         {
           "id": "buff-liver",
-          "name": "buff liver",
+          "name": "Buff Liver",
           "price": 500,
           "unit": "per kg",
           "discountPercent": 3,
@@ -509,7 +569,7 @@
         },
         {
           "id": "buff-heart",
-          "name": "buff heart",
+          "name": "Buff Heart",
           "price": 520,
           "unit": "per kg",
           "discountPercent": 2,
@@ -517,7 +577,7 @@
         },
         {
           "id": "buff-tenderloin",
-          "name": "buff tenderloin",
+          "name": "Buff Tenderloin",
           "price": 950,
           "unit": "per kg",
           "discountPercent": 0,
@@ -532,7 +592,7 @@
       "products": [
         {
           "id": "frozen-peas",
-          "name": "frozen peas",
+          "name": "Frozen Peas",
           "price": 180,
           "unit": "per kg",
           "discountPercent": 0,
@@ -540,7 +600,7 @@
         },
         {
           "id": "frozen-corn",
-          "name": "frozen corn",
+          "name": "Frozen Corn",
           "price": 160,
           "unit": "per kg",
           "discountPercent": 5,
@@ -548,7 +608,7 @@
         },
         {
           "id": "frozen-mixed-veg",
-          "name": "frozen mixed veg",
+          "name": "Frozen Mixed Veg",
           "price": 200,
           "unit": "per kg",
           "discountPercent": 8,
@@ -556,7 +616,7 @@
         },
         {
           "id": "frozen-broccoli",
-          "name": "frozen broccoli",
+          "name": "Frozen Broccoli",
           "price": 240,
           "unit": "per kg",
           "discountPercent": 6,
@@ -564,7 +624,7 @@
         },
         {
           "id": "frozen-spinach",
-          "name": "frozen spinach",
+          "name": "Frozen Spinach",
           "price": 210,
           "unit": "per kg",
           "discountPercent": 4,
@@ -572,7 +632,7 @@
         },
         {
           "id": "frozen-carrots",
-          "name": "frozen carrots",
+          "name": "Frozen Carrots",
           "price": 170,
           "unit": "per kg",
           "discountPercent": 0,
@@ -580,7 +640,7 @@
         },
         {
           "id": "frozen-cauliflower",
-          "name": "frozen cauliflower",
+          "name": "Frozen Cauliflower",
           "price": 230,
           "unit": "per kg",
           "discountPercent": 7,
@@ -588,7 +648,7 @@
         },
         {
           "id": "frozen-beans",
-          "name": "frozen beans",
+          "name": "Frozen Beans",
           "price": 190,
           "unit": "per kg",
           "discountPercent": 3,
@@ -596,7 +656,7 @@
         },
         {
           "id": "frozen-edamame",
-          "name": "frozen edamame",
+          "name": "Frozen Edamame",
           "price": 260,
           "unit": "per kg",
           "discountPercent": 9,
@@ -604,7 +664,7 @@
         },
         {
           "id": "frozen-baby-corn",
-          "name": "frozen baby corn",
+          "name": "Frozen Baby Corn",
           "price": 220,
           "unit": "per kg",
           "discountPercent": 5,
@@ -612,7 +672,7 @@
         },
         {
           "id": "frozen-mushrooms",
-          "name": "frozen mushrooms",
+          "name": "Frozen Mushrooms",
           "price": 300,
           "unit": "per kg",
           "discountPercent": 0,

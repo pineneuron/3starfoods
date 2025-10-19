@@ -26,10 +26,10 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         {children}
-        <script src="/design/src/assets/js/jquery.js"></script>
-        <script src="/design/src/assets/js/main.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="/design/src/assets/js/jquery.js" defer></script>
+        <script src="/design/src/assets/js/main.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
       </body>
     </html>
   );

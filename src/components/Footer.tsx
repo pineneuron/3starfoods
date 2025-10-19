@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -7,14 +8,14 @@ export default function Footer() {
         <div className="grid grid-cols-3 gap-10">
           <div className="footer-left">
             <Link href="/">
-              <img className="w-40 h-40" src="/design/src/assets/img/logo.svg" alt="logo" />
+              <Image className="w-40 h-40" src="/design/src/assets/img/logo.svg" alt="logo" width={160} height={160} />
             </Link>
             <p className="text-white mt-4 line-height-8">
               Our wide selection of delectable options ensures there&apos;s something for everyone. Join us in savoring the best flavors while contributing to a better food ecosystem.
             </p>
             <form action="" className="flex items-center mt-8 relative">
               <input type="email" placeholder="Email" className="py-5 pl-8 pr-16 w-full rounded-full outline-none" />
-              <img src="/design/src/assets/img/arrow-right.svg" alt="send" className="h-5 w-5 absolute right-6 z-10" />
+              <Image src="/design/src/assets/img/arrow-right.svg" alt="send" width={20} height={20} className="absolute right-6 z-10" />
             </form>
           </div>
           <div className="footer-right col-span-2 ml-20">
@@ -92,8 +93,8 @@ export default function Footer() {
           </div>
           <div className="footer-right-certificate">
             <div className="flex items-space-between gap-10">
-              <img src="/design/src/assets/img/iso.svg" alt="iso" />
-              <img src="/design/src/assets/img/certificate.svg" alt="certificate" />
+              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={60} height={60} />
+              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={60} height={60} />
             </div>
           </div>
         </div>
@@ -107,13 +108,13 @@ export default function Footer() {
             <div className="tsf-payment">
               <div className="flex items-center gap-10">
                 <div className="tsf-payment-img">
-                  <img src="/design/src/assets/img/esewa.svg" alt="esewa" />
+                  <Image src="/design/src/assets/img/esewa.svg" alt="esewa" width={60} height={40} />
                 </div>
                 <div className="tsf-payment-img">
-                  <img src="/design/src/assets/img/khalti.svg" alt="khalti" />
+                  <Image src="/design/src/assets/img/khalti.svg" alt="khalti" width={60} height={40} />
                 </div>
                 <div className="tsf-payment-img">
-                  <img src="/design/src/assets/img/visacard.svg" alt="visacard" />
+                  <Image src="/design/src/assets/img/visacard.svg" alt="visacard" width={60} height={40} />
                 </div>
               </div>
             </div>

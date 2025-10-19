@@ -2,7 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Carousel from './Carousel';
-import { useCart } from '../context/CartContext';
+import ProductModal from './ProductModal';
+import Image from 'next/image';
+
+interface ProductVariation {
+  name: string;
+  price: number;
+  discountPercent?: number;
+}
 
 interface FrozenProduct {
   id: string;
@@ -11,29 +18,33 @@ interface FrozenProduct {
   unit: string;
   discountPercent: number;
   image: string;
+  images?: string[];
+  shortDescription?: string;
+  variations?: ProductVariation[];
+  defaultVariation?: string;
 }
 
 // Wrapper component that safely uses cart context
 function FrozenItemsWithCart({ products }: { products: FrozenProduct[] }) {
-  const { addItem } = useCart();
+  const [selectedProduct, setSelectedProduct] = useState<FrozenProduct | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddToCart = (product: FrozenProduct) => {
-    addItem({ 
-      id: product.id, 
-      name: product.name, 
-      price: product.price, 
-      unit: product.unit, 
-      discountPercent: product.discountPercent, 
-      image: product.image 
-    }, 1);
-    window.dispatchEvent(new CustomEvent('tsf:cart-open'));
+  const handleProductClick = (product: FrozenProduct) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
   };
 
   const options = {
     loop: true,
     margin: 20,
-    nav: true,
-    dots: true,
+    nav: false,
+    dots: false,
     autoplay: true,
     autoplayTimeout: 4000,
     autoplayHoverPause: true,
@@ -45,55 +56,67 @@ function FrozenItemsWithCart({ products }: { products: FrozenProduct[] }) {
   };
 
   return (
-    <Carousel options={options}>
-      {products.map((product) => {
-        const hasDiscount = product.discountPercent > 0;
-        const discountedPrice = hasDiscount
-          ? Math.round(product.price * (1 - product.discountPercent / 100))
-          : product.price;
+    <>
+      <Carousel options={options}>
+        {products.map((product) => {
+          const hasDiscount = product.discountPercent > 0;
+          const discountedPrice = hasDiscount
+            ? Math.round(product.price * (1 - product.discountPercent / 100))
+            : product.price;
 
-        return (
-          <div className="item" key={product.id}>
-            <div className="tsf-product_list">
-              <figure className="tsf-box-shodow tsf-font-bebas">
-                <div className="tsf-product-img">
-                  <a href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(product); }}>
-                    <img src={product.image} alt={product.name}
-                      className="rounded-t-md h-96 w-96" />
-                  </a>
-                </div>
-                <figcaption className="p-5 text-center rounded-t-md">
-                  <div className="tsf-product-name">
-                    <a className="text-3xl capitalize" href="#" onClick={(e) => { e.preventDefault(); handleAddToCart(product); }}>
-                      {product.name}
+          return (
+            <div className="item" key={product.id}>
+              <div className="tsf-product_list">
+                <figure className="tsf-box-shodow tsf-font-bebas">
+                  <div className="tsf-product-img">
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                      <Image src={product.image} alt={product.name}
+                        width={384} height={384} className="rounded-t-md cursor-pointer" />
                     </a>
                   </div>
-                  <div className="price text-xl py-4">
-                    RS {product.price.toFixed(2)} -{' '}
-                    <span className="pre-price">
-                      RS {discountedPrice.toFixed(2)} ({product.unit})
-                    </span>
-                    {hasDiscount && (
-                      <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
-                        {product.discountPercent}%
+                  <figcaption className="p-5 text-center rounded-t-md">
+                    <div className="tsf-product-name">
+                      <a 
+                        className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
+                      >
+                        {product.name}
+                      </a>
+                    </div>
+                    <div className="price text-xl py-4">
+                      RS {product.price.toFixed(2)} -{' '}
+                      <span className="pre-price">
+                        RS {discountedPrice.toFixed(2)} ({product.unit})
                       </span>
-                    )}
-                  </div>
-                  <div className="tsf-add_cart mt-2">
-                    <button 
-                      className="tsf-button uppercase inline-block text-2xl" 
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      add to cart
-                    </button>
-                  </div>
-                </figcaption>
-              </figure>
+                      {hasDiscount && (
+                        <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                          {product.discountPercent}%
+                        </span>
+                      )}
+                    </div>
+                    <div className="tsf-add_cart mt-2">
+                      <button 
+                        className="tsf-button uppercase inline-block text-2xl" 
+                        onClick={() => handleProductClick(product)}
+                      >
+                        view details
+                      </button>
+                    </div>
+                  </figcaption>
+                </figure>
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </Carousel>
+          );
+        })}
+      </Carousel>
+      
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
+    </>
   );
 }
 
@@ -111,7 +134,7 @@ const FrozenItemsCarousel: React.FC = () => {
         const data = await response.json();
         
         // Find vegetable category (frozen items)
-        const vegetableCategory = data.categories.find((cat: any) => cat.id === 'vegetable');
+        const vegetableCategory = data.categories.find((cat: { id: string; products: FrozenProduct[] }) => cat.id === 'vegetable');
         if (vegetableCategory) {
           setFrozenProducts(vegetableCategory.products.slice(0, 8)); // Take first 8 items
         }
@@ -188,8 +211,8 @@ const FrozenItemsCarousel: React.FC = () => {
               <div className="tsf-product_list">
                 <figure className="tsf-box-shodow tsf-font-bebas">
                   <div className="tsf-product-img">
-                    <img src={product.image} alt={product.name}
-                      className="rounded-t-md h-96 w-96" />
+                    <Image src={product.image} alt={product.name}
+                      width={384} height={384} className="rounded-t-md" />
                   </div>
                   <figcaption className="p-5 text-center rounded-t-md">
                     <div className="tsf-product-name">
