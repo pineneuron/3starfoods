@@ -20,11 +20,6 @@ const HeroCarousel: React.FC = () => {
       alt: 'Quality Food Items'
     },
     {
-      id: 3,
-      src: '/images/slider03.jpeg',
-      alt: 'Premium Selection'
-    },
-    {
       id: 4,
       src: '/images/slider05.jpeg',
       alt: 'Best Deals'
