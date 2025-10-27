@@ -72,6 +72,11 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                             <Link href="/contact" className={getLinkClass('/contact')} data-index="4">contact</Link>
                         </li>
                     </ul>
+                    <div className="menu-toggle pl-8">
+                        <div className="bar"></div>
+                        <div className="bar"></div>
+                        <div className="bar"></div>
+                    </div>
                 </div>
                 <div className="logo-wrap flex justify-center items-center flex-1">
                     <Link href="/" className="tsf-logo">
@@ -101,11 +106,6 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                             </a>
                         </li>
                     </ul>
-                </div>
-                <div className="menu-toggle pl-8">
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
                 </div>
             </div>
         </div>

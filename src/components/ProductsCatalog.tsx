@@ -110,15 +110,17 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                 return (
                   <div className="tsf-product_list" key={p.id}>
                     <figure className="tsf-box-shodow tsf-font-bebas">
-                      <div className="tsf-product-img">
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(p); }}>
-                          <Image src={p.image} alt={p.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
-                        </a>
+                      <div className="tsf-wrapper">
+                        <div className="tsf-product-img">
+                          <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(p); }}>
+                            <Image src={p.image} alt={p.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
+                          </a>
+                        </div>
                       </div>
                       <figcaption className="p-5 text-center rounded-t-md">
                         <div className="tsf-product-name">
                           <a 
-                            className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                            className="text-3xl capitalize cursor-pointer" 
                             href="#" 
                             onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
                           >
@@ -138,7 +140,7 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                         </div>
                         <div className="tsf-add_cart mt-2">
                           <a 
-                            className="tsf-button uppercase inline-block text-2xl" 
+                            className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer" 
                             href="#" 
                             onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
                           >

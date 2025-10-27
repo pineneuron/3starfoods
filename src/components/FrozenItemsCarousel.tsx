@@ -68,16 +68,18 @@ function FrozenItemsWithCart({ products }: { products: FrozenProduct[] }) {
             <div className="item" key={product.id}>
               <div className="tsf-product_list">
                 <figure className="tsf-box-shodow tsf-font-bebas">
-                  <div className="tsf-product-img">
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
-                      <Image src={product.image} alt={product.name}
-                        width={384} height={384} className="rounded-t-md cursor-pointer" />
-                    </a>
+                  <div className="tsf-wrapper"> 
+                    <div className="tsf-product-img">
+                      <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                        <Image src={product.image} alt={product.name}
+                          width={384} height={384} className="rounded-t-md cursor-pointer" />
+                      </a>
+                    </div>
                   </div>
                   <figcaption className="p-5 text-center rounded-t-md">
                     <div className="tsf-product-name">
                       <a 
-                        className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                        className="text-3xl capitalize cursor-pointer" 
                         href="#" 
                         onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
                       >
@@ -97,7 +99,7 @@ function FrozenItemsWithCart({ products }: { products: FrozenProduct[] }) {
                     </div>
                     <div className="tsf-add_cart mt-2">
                       <button 
-                        className="tsf-button uppercase inline-block text-2xl" 
+                        className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer" 
                         onClick={() => handleProductClick(product)}
                       >
                         view details
@@ -210,9 +212,11 @@ const FrozenItemsCarousel: React.FC = () => {
             <div className="item" key={product.id}>
               <div className="tsf-product_list">
                 <figure className="tsf-box-shodow tsf-font-bebas">
-                  <div className="tsf-product-img">
-                    <Image src={product.image} alt={product.name}
-                      width={384} height={384} className="rounded-t-md" />
+                  <div className="tsf-wrapper">
+                    <div className="tsf-product-img">
+                      <Image src={product.image} alt={product.name}
+                        width={384} height={384} className="rounded-t-md" />
+                    </div>
                   </div>
                   <figcaption className="p-5 text-center rounded-t-md">
                     <div className="tsf-product-name">
@@ -230,7 +234,7 @@ const FrozenItemsCarousel: React.FC = () => {
                       )}
                     </div>
                     <div className="tsf-add_cart mt-2">
-                      <button className="tsf-button uppercase inline-block text-2xl" disabled>
+                      <button className="tsf-button uppercase inline-block text-2xl cursor-pointer" disabled>
                         add to cart
                       </button>
                     </div>

@@ -47,10 +47,16 @@ h1,h2,h3,h4,h5,h6 {
 .tsf-blue-color {
     color: #030E55;
 }
+.tsf-red-color {
+    color: #FF4900;
+}
 .tsf-bg-blue {
     background: #030E55;
 }
 .tsf-bg-red {
+    background: #FF4900;
+}
+.tsf-bg-red:hover {
     background: #FF4900;
 }
 .tsf-text-color {
@@ -103,6 +109,41 @@ header.home::before {
   width: 45px;
   height: 45px;
 }
+
+/* add to cart */
+ .holographic-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+.holographic-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    0deg, 
+    transparent, 
+    transparent 30%, 
+    rgba(0,255,255,0.3)
+  );
+  transform: rotate(-45deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+.holographic-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+}
+
+.holographic-card:hover::before {
+  opacity: 1;
+  transform: rotate(-45deg) translateY(100%);
+}
+
 .tsf-banner .tsf-slider .h-96 {
   height: 550px;
   width: 100%;
@@ -128,7 +169,8 @@ header.home::before {
     height: 100px;
     z-index: 1;
 }
-.tsf-how_order::before {
+.tsf-how_order::before,
+.tsf-about-video::before {
   content: '';
   background: url(../src/assets/img/bg-covertop.png) no-repeat center;
   position: absolute;
@@ -139,7 +181,8 @@ header.home::before {
   z-index: 1;
   rotate: 180deg;
 }
-.tsf-how_order::after {
+.tsf-how_order::after,
+.tsf-about-video::after {
   content: '';
   background: url(../src/assets/img/bg-covertop.png) no-repeat center;
   position: absolute;
@@ -304,7 +347,7 @@ header.home::before {
 .inner_content {
   width: 100%;
   height: auto;
-  display: none;
+  display: block;
   p {
     width: 98%;
     margin: auto;
@@ -325,10 +368,11 @@ header.home::before {
   }
 }
 .tsf-category-item img {
-  height: 230px;
-  width: 230px;
+  height: 220px;
   object-fit: none;
-  padding: 50px;
+  padding: 5px;
+  background: #fff;
+  border-radius: 100%;
 }
 .tsf-category figure,
 .tsf-motion figure { 
@@ -530,9 +574,29 @@ body.sticky-header {
   color: #FF5F6D;
   padding-left: 25px;
 }
-/* media screen */
-@media screen and (max-width: 1600px) {
 
+/* tsf-product-img  */
+.tsf-wrapper {
+    overflow: hidden;
+}
+.tsf-product-img {
+    transition: all 0.3s ease;
+}
+.tsf-product-img:hover {
+    transform: scale(1.1);
+}
+.tsf-product-name a {
+  transition: all 0.3s ease;
+}
+.tsf-product-name a:hover {
+    color: #FF4900;
+    transition: all 0.3s ease;
+}
+/* media screen */
+@media screen and (max-width: 1540px) {
+.tsf-category .grid-cols-6 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
 }
 @media screen and (max-width: 1300px) {
   .tsf-our-product .grid-cols-4 {
@@ -545,10 +609,13 @@ body.sticky-header {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .tsf-how_order .grid-cols-3 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   .tsf-quality .tsf-qualityitem-left img {
     object-fit: contain;
+  }
+  .tsf-category .grid-cols-6 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -592,6 +659,9 @@ body.sticky-header {
   .tsf-faq::after {
     display: none;
   }
+  .tsf-category .grid-cols-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -601,6 +671,12 @@ body.sticky-header {
 }
 
 @media screen and (max-width: 992px) {
+  .tsf-banner .gap-4 {
+    gap: calc(var(--spacing) * 10);
+  }
+  .tsf-banner-list.px-10 {
+    padding-inline: calc(var(--spacing) * 0);
+  }
   .tsf-logo.mr-60 {
     margin-right: calc(var(--spacing) * 0);
   }
@@ -712,13 +788,25 @@ body.sticky-header {
     display: grid;
     margin-top: 20px;
   }
+  .tsf-category .grid-cols-6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tsf-category_heading {
+    margin-bottom: 40px;
+  }
 }
 
 @media screen and (max-width: 580px) {
   .tsf-our-product .grid-cols-4,
-  .tsf-product .grid-cols-4 {
+  .tsf-product .grid-cols-4,
+  .tsf-category .grid-cols-6 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+  .tsf-category_heading {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 480px) {
 }
 
 @media screen and (max-width: 380px) {

@@ -116,15 +116,17 @@ const ProductTabs: React.FC = () => {
                   return (
                     <div key={product.id} className="tsf-product_list">
                       <figure className="tsf-box-shodow tsf-font-bebas">
-                        <div className="tsf-product-img">
-                          <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
-                            <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
-                          </a>
+                        <div className="tsf-wrapper">
+                          <div className="tsf-product-img">
+                            <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
+                              <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
+                            </a>
+                          </div>
                         </div>
                         <figcaption className="p-5 text-center rounded-t-md">
                           <div className="tsf-product-name">
                             <a 
-                              className="text-3xl capitalize cursor-pointer hover:text-blue-600" 
+                              className="text-3xl capitalize cursor-pointer" 
                               href="#" 
                               onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
                             >

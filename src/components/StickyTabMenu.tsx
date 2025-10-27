@@ -87,7 +87,7 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
                 data-tabs-target={`#styled-${c.id}`}
                 onClick={() => handleClick(c.id)}
               >
-                <Image src={c.icon} alt={`${c.id}-tab`} width={24} height={24} />
+                <Image src={c.icon} alt={`${c.id}-tab`} width={60} height={60} />
               </button>
             </li>
           ))}

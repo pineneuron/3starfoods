@@ -397,7 +397,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
               <span className="font-bold">Rs. {grandTotal.toFixed(2)}</span>
             </div>
             {mode === 'cart' ? (
-              <button className="w-full tsf-bg-blue text-white rounded-full py-4 text-lg font-semibold" onClick={() => setMode('checkout')}>Checkout</button>
+              <button className="w-full tsf-bg-blue text-white rounded-full py-4 text-lg font-semibold cursor-pointer" onClick={() => setMode('checkout')}>Checkout</button>
             ) : (
               <div className="flex gap-3">
                 <button className="flex-1 border rounded-full py-4 text-lg" onClick={() => setMode('cart')}>Back</button>

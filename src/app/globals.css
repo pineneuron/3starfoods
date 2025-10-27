@@ -352,7 +352,7 @@ header.home::before {
 .inner_content {
   width: 100%;
   height: auto;
-  display: none;
+  display: block;
 
   p {
     width: 98%;
@@ -377,7 +377,7 @@ header.home::before {
 
 .tsf-category-item img {
   height: 230px;
-  width: 230px;
+  width: 220px;
   object-fit: none;
   padding: 50px;
 }

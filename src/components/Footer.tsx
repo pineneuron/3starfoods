@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
         <div className="social-certificate flex items-center justify-between gap-10 mt-10">
           <div className="footer-left-social">
-            <ul className="inline-flex items-center justify-between gap-10">
+            <ul className="inline-flex items-center justify-between gap-6">
               <li>
                 <a className="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#">
                   <i className="fa-brands fa-facebook-f text-black"></i>
@@ -93,8 +93,8 @@ export default function Footer() {
           </div>
           <div className="footer-right-certificate">
             <div className="flex items-space-between gap-10">
-              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={60} height={60} />
-              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={60} height={60} />
+              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={90} height={90} />
+              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={90} height={90} />
             </div>
           </div>
         </div>

@@ -11,17 +11,17 @@ const HeroCarousel: React.FC = () => {
   const slides = [
     {
       id: 1,
-      src: '/images/slider01.jpeg',
+      src: '/images/slider01.png',
       alt: 'Fresh Meat Products'
     },
     {
       id: 2,
-      src: '/images/slider02.jpeg',
+      src: '/images/slider02.png',
       alt: 'Quality Food Items'
     },
     {
       id: 4,
-      src: '/images/slider05.jpeg',
+      src: '/images/slider03.png',
       alt: 'Best Deals'
     }
   ];

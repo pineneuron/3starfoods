@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../../public/design/src/input.css";
 
 export const metadata: Metadata = {
   title: "3 Star Foods",
