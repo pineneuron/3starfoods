@@ -181,6 +181,10 @@ header.home::before {
   z-index: 1;
 }
 
+.tsf-testimonial .swiper {
+  height: 100%;
+}
+
 .tsf-testimonial::before {
   content: '';
   background: url(/images/bg-covertop.png) no-repeat center / cover;

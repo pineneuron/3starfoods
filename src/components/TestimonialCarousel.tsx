@@ -7,7 +7,7 @@ import Image from 'next/image';
 const TestimonialCarousel: React.FC = () => {
   const options = {
     loop: true,
-    margin: 0,
+    margin: 10,
     nav: false,
     dots: true,
     autoplay: true,
