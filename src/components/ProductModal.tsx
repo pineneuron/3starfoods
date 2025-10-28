@@ -173,7 +173,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
 
               {/* Price */}
               <div className="mb-4">
-                <span className="text-3xl font-bold text-green-600">
+                <span className="text-2xl font-bold tsf-red-color">
                   Rs. {finalPrice.toFixed(2)}
                 </span>
                 {currentDiscount > 0 && (
@@ -242,7 +242,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
             {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
-              className="w-full py-3 px-4 bg-[#030e55] text-white font-bebas uppercase text-lg font-bold border-none rounded-3xl"
+              className="holographic-card w-full py-3 px-4 bg-[#030e55] text-white font-bebas uppercase text-lg font-bold border-none rounded-full cursor-pointer"
             >
               Add to Cart - Rs. {(finalPrice * quantity).toFixed(2)}
             </button>

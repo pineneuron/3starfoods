@@ -68,9 +68,6 @@ const FAQAccordion: React.FC = () => {
                   <span className={`icon transition-transform duration-300 ${
                     openItems.includes(item.id) ? 'rotate-0' : '-rotate-90'
                   }`}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
                   </span>
                 </h3>
               </div>
