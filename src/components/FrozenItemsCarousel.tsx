@@ -14,6 +14,7 @@ interface ProductVariation {
 interface FrozenProduct {
   id: string;
   name: string;
+  slug: string;
   price: number;
   unit: string;
   discountPercent: number;
@@ -22,6 +23,8 @@ interface FrozenProduct {
   shortDescription?: string;
   variations?: ProductVariation[];
   defaultVariation?: string;
+  featured?: boolean;
+  bestseller?: boolean;
 }
 
 // Wrapper component that safely uses cart context
@@ -131,53 +134,24 @@ const FrozenItemsCarousel: React.FC = () => {
     
     // Load frozen products from the JSON file
     const loadFrozenProducts = async () => {
-      try {
-        const response = await fetch('/data/products.json');
-        const data = await response.json();
-        
-        // Find vegetable category (frozen items)
-        const vegetableCategory = data.categories.find((cat: { id: string; products: FrozenProduct[] }) => cat.id === 'vegetable');
-        if (vegetableCategory) {
-          setFrozenProducts(vegetableCategory.products.slice(0, 8)); // Take first 8 items
-        }
-      } catch (error) {
-        console.error('Error loading frozen products:', error);
-        // Fallback to static products if JSON fails
-        setFrozenProducts([
-          {
-            id: 'frozen-peas',
-            name: 'frozen peas',
-            price: 180,
-            unit: 'per kg',
-            discountPercent: 0,
-            image: '/images/category01.svg'
-          },
-          {
-            id: 'frozen-corn',
-            name: 'frozen corn',
-            price: 160,
-            unit: 'per kg',
-            discountPercent: 5,
-            image: '/images/category02.svg'
-          },
-          {
-            id: 'frozen-mixed-veg',
-            name: 'frozen mixed veg',
-            price: 200,
-            unit: 'per kg',
-            discountPercent: 8,
-            image: '/images/category06.svg'
-          },
-          {
-            id: 'frozen-broccoli',
-            name: 'frozen broccoli',
-            price: 240,
-            unit: 'per kg',
-            discountPercent: 6,
-            image: '/images/category05.svg'
-          }
-        ]);
+      const response = await fetch('/data/products.json');
+      const data = await response.json();
+      
+      // Find frozen snacks and vegetarian categories for frozen items
+      const frozenSnacksCategory = data.categories.find((cat: { id: string; products: FrozenProduct[] }) => cat.id === 'frozen-snacks');
+      const vegetarianCategory = data.categories.find((cat: { id: string; products: FrozenProduct[] }) => cat.id === 'vegetarian');
+      
+      let frozenItems: FrozenProduct[] = [];
+      
+      if (frozenSnacksCategory) {
+        frozenItems = [...frozenItems, ...frozenSnacksCategory.products];
       }
+      if (vegetarianCategory) {
+        frozenItems = [...frozenItems, ...vegetarianCategory.products];
+      }
+      
+      // Take first 8 items from combined frozen items
+      setFrozenProducts(frozenItems.slice(0, 8));
     };
 
     loadFrozenProducts();

@@ -7,6 +7,7 @@ import FAQAccordion from '../components/FAQAccordion';
 import HomeProductTabs from '../components/HomeProductTabs';
 import CartSidebar from '../components/CartSidebar';
 import TodaysDeal from '../components/TodaysDeal';
+import CategoryGrid from '../components/CategoryGrid';
 import { CartProvider } from '../context/CartContext';
 import { Category } from '../components/ProductsCatalog';
 import { promises as fs } from 'fs';
@@ -41,111 +42,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className="tsf-category relative tsf-bg-primary py-20 mt-20">
-        <div className="container mx-auto px-10">
-          <div className="tsf-category_heading">
-            <h2 className="tsf-dark-color text-4xl font-bold z-10">explore by category</h2>
-          </div>
-          <div className="grid grid-cols-6 gap-8">
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category01.svg" alt="category01" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category02.svg" alt="category02" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">frozen momo</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">salami</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category04.svg" alt="category04" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">sausage</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category05.svg" alt="category05" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">mutton items</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category06.svg" alt="category06" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">burger patty</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category04.svg" alt="category04" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">chicken items</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">buff items</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category02.svg" alt="category02" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">pork items</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">ready to eat</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category01.svg" alt="category01" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
-              </a>
-            </div>
-            <div className="tsf-category-item mt-10 m-auto text-center">
-              <a href="#">
-                <div className="rounded-full">
-                  <Image src="/images/category03.svg" alt="category03" width={60} height={60} />
-                </div>
-                <h3 className="text-2xl font-bold capitalize mt-4">ham & cutlet</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CategoryGrid />
 
       <HomeProductTabs
         bestsellerProducts={bestsellerProducts}
@@ -155,7 +52,7 @@ export default async function Home() {
       <div className="tsf-frozen pb-20">
         <div className="container mx-auto px-10">
           <div className="tsf-category_heading">
-            <h2 className="tsf-dark-color text-4xl font-bold pb-10">frozen items</h2>
+            <h2 className="tsf-dark-color text-4xl font-bold pb-10">Frozen Items</h2>
           </div>
           <div className="tsf-frozen_slider relative carousel-navigation">
             <FrozenItemsCarousel />

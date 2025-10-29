@@ -13,6 +13,7 @@ interface ProductVariation {
 interface DealProduct {
   id: string;
   name: string;
+  slug: string;
   price: number;
   unit: string;
   discountPercent: number;
@@ -21,6 +22,8 @@ interface DealProduct {
   shortDescription?: string;
   variations?: ProductVariation[];
   defaultVariation?: string;
+  featured?: boolean;
+  bestseller?: boolean;
 }
 
 // Wrapper component that safely uses cart context
@@ -58,7 +61,7 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
               >
                 <div className="tsf-product-img">
                   <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
-                    <Image src={product.image} alt={product.name} width={128} height={128} className="rounded-md cursor-pointer" />
+                    <Image src={product.image} alt={product.name} width={120} height={120} className="rounded-md cursor-pointer" />
                   </a>
                 </div>
                 <div className="pl-6 flex-1">
@@ -107,48 +110,19 @@ const TodaysDeal: React.FC = () => {
     
     // Load today's deal products from the JSON file
     const loadDealProducts = async () => {
-      try {
-        const response = await fetch('/data/products.json');
-        const data = await response.json();
-        
-        // Get products with high discounts (today's deals)
-        const allProducts = data.categories.flatMap((cat: { products: DealProduct[] }) => cat.products);
-        const highDiscountProducts = allProducts
-          .filter((product: DealProduct) => product.discountPercent >= 8) // Products with 8% or more discount
-          .sort((a: DealProduct, b: DealProduct) => b.discountPercent - a.discountPercent) // Sort by highest discount
-          .slice(0, 3); // Take top 3 deals
-        
-        setDealProducts(highDiscountProducts);
-      } catch (error) {
-        console.error('Error loading deal products:', error);
-        // Fallback to static products if JSON fails
-        setDealProducts([
-          {
-            id: 'chicken-gizzard',
-            name: 'chicken gizzard',
-            price: 380,
-            unit: 'per kg',
-            discountPercent: 10,
-            image: '/images/product04.svg'
-          },
-          {
-            id: 'chicken-wings',
-            name: 'chicken wings',
-            price: 480,
-            unit: 'per kg',
-            discountPercent: 12,
-            image: '/images/product04.svg'
-          },
-          {
-            id: 'chicken-sausage',
-            name: 'chicken sausage',
-            price: 380,
-            unit: 'per kg',
-            discountPercent: 10,
-            image: '/images/product04.svg'
-          }
-        ]);
-      }
+      const response = await fetch('/data/products.json');
+      const data = await response.json();
+      
+      // Get bestseller products for today's deals (only with real images)
+      const allProducts = data.categories.flatMap((cat: { products: DealProduct[] }) => cat.products);
+      const bestsellerProducts = allProducts
+        .filter((product: DealProduct) => 
+          product.bestseller === true && 
+          product.image !== '/images/placeholder.png'
+        )
+        .slice(0, 3); // Take top 3 bestsellers with real images
+      
+      setDealProducts(bestsellerProducts);
     };
 
     loadDealProducts();
@@ -173,7 +147,7 @@ const TodaysDeal: React.FC = () => {
                 className={`flex justify-start items-center tsf-font-bebas p-5 ${!isLast ? 'border-b border-gray-200' : ''}`}
               >
                 <div className="tsf-product-img">
-                  <Image src={product.image} alt={product.name} width={128} height={128} className="rounded-md" />
+                  <Image src={product.image} alt={product.name} width={120} height={120} className="rounded-md" />
                 </div>
                 <div className="pl-6 flex-1">
                   <div className="tsf-product-name">
