@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db'
-import { OrderStatus, PaymentStatus, CouponType } from '@prisma/client'
+import { OrderStatus, CouponType } from '@prisma/client'
 
 export type Coordinates = { lat: number; lng: number } | null | undefined
 

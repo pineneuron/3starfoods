@@ -145,32 +145,23 @@ function categorizeProducts(products: JsonProduct[]): JsonCategory[] {
     const categories = product.name.toLowerCase()
     
     let categoryId = 'other'
-    let categoryName = 'Other Items'
     
     if (categories.includes('chicken') || categories.includes('breast') || categories.includes('leg') || categories.includes('drumstick') || categories.includes('gizzard') || categories.includes('liver') || categories.includes('mince') || categories.includes('back bone') || categories.includes('lolly')) {
       categoryId = 'chicken'
-      categoryName = 'Chicken Items'
     } else if (categories.includes('mutton') || categories.includes('buff') || categories.includes('vutton') || categories.includes('boka')) {
       categoryId = 'mutton-buff'
-      categoryName = 'Mutton & Buff Items'
     } else if (categories.includes('pork') || categories.includes('bacon') || categories.includes('ham')) {
       categoryId = 'pork'
-      categoryName = 'Pork Items'
     } else if (categories.includes('fish') || categories.includes('basa')) {
       categoryId = 'fish'
-      categoryName = 'Fish Items'
     } else if (categories.includes('veg') || categories.includes('vegetable') || categories.includes('peas') || categories.includes('corn')) {
       categoryId = 'vegetarian'
-      categoryName = 'Vegetarian Items'
     } else if (categories.includes('momo') || categories.includes('dumpling')) {
       categoryId = 'momo'
-      categoryName = 'Mo:Mo & Dumplings'
     } else if (categories.includes('nugget') || categories.includes('cutlet') || categories.includes('burger') || categories.includes('ball')) {
       categoryId = 'ready-to-cook'
-      categoryName = 'Ready to Cook'
     } else if (categories.includes('french') || categories.includes('fry') || categories.includes('tikki')) {
       categoryId = 'frozen-snacks'
-      categoryName = 'Frozen Snacks'
     }
     
     if (!categoryMap.has(categoryId)) {

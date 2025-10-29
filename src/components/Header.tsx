@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '../context/CartContext';
+import MaintenanceModal from './MaintenanceModal';
 import Image from 'next/image';
 
 interface HeaderProps {
@@ -109,6 +110,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 </div>
             </div>
         </div>
+      <MaintenanceModal />
     </header>
   );
 }

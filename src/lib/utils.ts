@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/db'
-import { ProductService, OrderService, CouponService, CustomerService } from '@/lib/services'
 
 // ===========================================
 // DATABASE UTILITIES

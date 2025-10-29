@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db'
-import { ProductService, OrderService, CouponService, CustomerService } from '@/lib/services'
+import { ProductService, CouponService } from '@/lib/services'
 import { CouponType } from '@prisma/client'
-import { DatabaseUtils, ValidationUtils, PricingUtils, ErrorUtils } from '@/lib/utils'
+import { DatabaseUtils, ErrorUtils } from '@/lib/utils'
 
 // Types for JSON data
 type JsonProduct = {
