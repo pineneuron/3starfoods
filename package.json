@@ -6,9 +6,21 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "dotenv -e .env.local -- prisma generate",
+    "db:push": "dotenv -e .env.local -- prisma db push",
+    "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "db:migrate:deploy": "dotenv -e .env.local -- prisma migrate deploy",
+    "db:seed": "tsx src/lib/scripts/seed.ts",
+    "db:migrate:json": "tsx src/lib/scripts/migrate-json.ts",
+    "db:reset": "tsx src/lib/scripts/reset.ts",
+    "db:studio": "dotenv -e .env.local -- prisma studio",
+    "db:backup": "tsx src/lib/scripts/backup.ts",
+    "health": "tsx src/lib/scripts/health-check.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "cloudinary": "^2.8.0",
     "jspdf": "^3.0.3",
     "leaflet": "^1.9.4",
     "next": "15.5.4",
@@ -23,9 +35,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "prisma": "^6.18.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
