@@ -11,17 +11,22 @@ const HeroCarousel: React.FC = () => {
   const slides = [
     {
       id: 1,
-      src: '/images/slider01.png',
+      src: '/images/hero/hero-1.png',
       alt: 'Fresh Meat Products'
     },
     {
       id: 2,
-      src: '/images/slider02.png',
+      src: '/images/hero/hero-2.png',
       alt: 'Quality Food Items'
     },
     {
+      id: 3,
+      src: '/images/hero/hero-3.png',
+      alt: 'Best Deals'
+    },
+    {
       id: 4,
-      src: '/images/slider03.png',
+      src: '/images/hero/hero-4.png',
       alt: 'Best Deals'
     }
   ];
@@ -66,7 +71,7 @@ const HeroCarousel: React.FC = () => {
   return (
     <div 
       ref={carouselRef}
-      className="relative w-full h-96 overflow-hidden rounded-lg"
+      className="relative w-full h-full min-h-[542px] overflow-hidden rounded-lg"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

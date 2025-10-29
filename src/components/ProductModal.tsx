@@ -52,7 +52,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      // document.body.style.overflow = 'hidden';
     }
 
     return () => {
@@ -100,7 +100,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
       className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] relative">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -111,19 +111,19 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
         </button>
 
         {/* Content */}
-        <div className="flex flex-col lg:flex-row h-full">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 p-4 h-full">
           {/* Left Side - Image Gallery */}
-          <div className="lg:w-1/2 p-5">
+          <div className="flex-1 lg:w-1/2">
             <div className="relative">
               {/* Main Image */}
-              <div className="relative overflow-hidden rounded-lg mb-4 h-80">
+              <div className="relative overflow-hidden rounded-lg h-100 lg:h-[28rem]">
                 <Image
                   src={images[currentImageIndex]}
                   alt={product.name}
                   fill
-                  className="object-cover cursor-zoom-in transition-transform duration-300 hover:scale-110"
+                  className="object-cover cursor-zoom-in transition-transform duration-300 hover:scale-[1.02]"
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.transform = 'scale(1.02)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'scale(1)';
@@ -138,7 +138,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
 
               {/* Thumbnail Gallery */}
               {images.length > 1 && (
-                <div className="flex space-x-2 overflow-x-auto">
+                <div className="flex space-x-2 overflow-x-auto mt-4">
                   {images.map((image, index) => (
                     <button
                       key={index}
@@ -164,7 +164,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
           </div>
 
           {/* Right Side - Product Details */}
-          <div className="lg:w-1/2 p-5 flex flex-col justify-between">
+          <div className="flex-1 lg:w-1/2 flex flex-col justify-between">
             <div>
               {/* Product Title */}
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -185,11 +185,11 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
               </div>
 
               {/* Short Description */}
-              {product.shortDescription && (
+              {/* {product.shortDescription && (
                 <p className="text-gray-700 mb-4">
                   {product.shortDescription}
                 </p>
-              )}
+              )} */}
 
               {/* Variations */}
               {product.variations && product.variations.length > 0 && (
@@ -237,15 +237,15 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              className="holographic-card w-full py-3 px-4 bg-[#030e55] text-white font-bebas uppercase text-lg font-bold border-none rounded-full cursor-pointer"
-            >
-              Add to Cart - Rs. {(finalPrice * quantity).toFixed(2)}
-            </button>
+              {/* Add to Cart Button */}
+              <button
+                onClick={handleAddToCart}
+                className="holographic-card w-full py-3 px-4 bg-[#030e55] text-white font-bebas uppercase text-lg font-bold border-none rounded-full cursor-pointer"
+              >
+                Add to Cart - Rs. {(finalPrice * quantity).toFixed(2)}
+              </button>
+            </div>
           </div>
         </div>
       </div>

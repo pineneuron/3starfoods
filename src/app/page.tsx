@@ -7,7 +7,8 @@ import FAQAccordion from '../components/FAQAccordion';
 import HomeProductTabs from '../components/HomeProductTabs';
 import CartSidebar from '../components/CartSidebar';
 import TodaysDeal from '../components/TodaysDeal';
-import CategoryGrid from '../components/CategoryGrid';
+import CategoryGridV1 from '../components/CategoryGridV1';
+// import CategoryGridV2 from '../components/CategoryGrid';
 import { CartProvider } from '../context/CartContext';
 import { Category } from '../components/ProductsCatalog';
 import { promises as fs } from 'fs';
@@ -33,16 +34,19 @@ export default async function Home() {
 
       <div className="tsf-banner relative py-20">
         <div className="container mx-auto px-10">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="tsf-slider col-span-2">
+          <div className="grid grid-cols-3 gap-4 items-stretch">
+            <div className="tsf-slider col-span-2 h-full">
               <HeroCarousel />
             </div>
-            <TodaysDeal />
+            <div className="h-full">
+              <TodaysDeal />
+            </div>
           </div>
         </div>
       </div>
 
-      <CategoryGrid />
+      <CategoryGridV1 />
+      {/* <CategoryGridV2 /> */}
 
       <HomeProductTabs
         bestsellerProducts={bestsellerProducts}

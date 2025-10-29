@@ -489,7 +489,7 @@ figure img,
   top: 80px;
   left: 0;
   width: 100%;
-  z-index: 999;
+  z-index: 49;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
@@ -819,10 +819,6 @@ body.sticky-header {
 
   .tsf-footer .ml-20 {
     margin-left: 0;
-  }
-
-  .tsf-our-product .tsf-product_heading .flex {
-    display: block;
   }
 
   .tsf-banner.py-20,
