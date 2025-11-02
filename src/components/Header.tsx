@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
-// import MaintenanceModal from './MaintenanceModal';
+import MaintenanceModal from './MaintenanceModal';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -137,7 +137,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 </div>
             </div>
         </div>
-      {/* <MaintenanceModal /> */}
+      <MaintenanceModal />
     </header>
   );
 }
