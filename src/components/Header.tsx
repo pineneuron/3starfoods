@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
-import MaintenanceModal from './MaintenanceModal';
+// import MaintenanceModal from './MaintenanceModal';
 import Image from 'next/image';
+import { useSession, signOut } from 'next-auth/react';
 
 interface HeaderProps {
   variant?: 'home' | 'inner';
@@ -13,7 +14,10 @@ interface HeaderProps {
 
 export default function Header({ variant = 'home' }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { items } = useCart();
+  const { status, data } = useSession();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   
   // Calculate total cart count
   const cartCount = items.reduce((total, item) => total + item.qty, 0);
@@ -38,7 +42,6 @@ export default function Header({ variant = 'home' }: HeaderProps) {
       const navIndicator = document.querySelector('.nav-indicator') as HTMLElement;
       if (navIndicator) {
         navIndicator.style.display = 'none';
-        // Force reflow to ensure the display change takes effect
         void navIndicator.offsetHeight;
         navIndicator.style.display = '';
       }
@@ -50,6 +53,21 @@ export default function Header({ variant = 'home' }: HeaderProps) {
   function openCart(e: React.MouseEvent) {
     e.preventDefault();
     window.dispatchEvent(new CustomEvent('tsf:cart-open'));
+  }
+
+  function handleUserClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (status !== 'authenticated') {
+      const cb = encodeURIComponent(pathname || '/');
+      router.push(`/auth/login?callbackUrl=${cb}`);
+      return;
+    }
+    setUserMenuOpen(v => !v);
+  }
+
+  function handleLogout() {
+    setUserMenuOpen(false);
+    signOut({ callbackUrl: '/' });
   }
 
   return (
@@ -96,10 +114,19 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                                 )}
                             </a>
                         </li>
-                        <li>
-                            <a href="#">
+                        <li className="relative">
+                            <a href="#" onClick={handleUserClick} className="relative">
                                 <Image src={isHome ? '/images/user.svg' : '/images/user-b.svg'} alt="user" width={24} height={24} className="pl-4" />
                             </a>
+                            {status === 'authenticated' && userMenuOpen && (
+                              <div className={`absolute right-0 mt-2 w-44 rounded-md shadow-lg ring-1 ring-black/5 z-50 ${isHome ? 'bg-white' : 'bg-white'}`}>
+                                <div className="py-2 text-sm">
+                                  <div className="px-4 py-2 text-gray-700">{data?.user?.email || 'Account'}</div>
+                                  <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
+                                  <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+                                </div>
+                              </div>
+                            )}
                         </li>
                         <li>
                             <a href="/api/todays-rate" target="_blank" className={`text-sm font-medium underline ${isHome ? 'text-white' : 'text-black'}`}>
@@ -110,7 +137,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 </div>
             </div>
         </div>
-      <MaintenanceModal />
+      {/* <MaintenanceModal /> */}
     </header>
   );
 }

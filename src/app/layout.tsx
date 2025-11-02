@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "../../public/design/src/input.css";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "3 Star Foods",
@@ -26,7 +27,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
       </head>
       <body suppressHydrationWarning>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <script src="/design/src/assets/js/jquery.js" defer></script>
         <script src="/design/src/assets/js/main.js" defer></script>
         {/* <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script> */}
