@@ -211,11 +211,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'Order was not saved' }, { status: 500 });
     }
 
-    // Email configuration
-    const smtpHost = process.env.SMTP_HOST || 'smtp.mailtrap.io';
-    const smtpPort = parseInt(process.env.SMTP_PORT || '2525');
-    const smtpUser = process.env.SMTP_USER || process.env.MAILTRAP_USER;
-    const smtpPass = process.env.SMTP_PASS || process.env.MAILTRAP_PASS;
+    // Email configuration (from .env.local)
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
     const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@3starfoods.com';
     const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods';
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@3starfoods.com';
@@ -224,7 +224,8 @@ export async function POST(request: NextRequest) {
     const transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
-      secure: false, // true for 465, false for other ports
+      secure: smtpPort === 465, // true for 465 (SSL), false for other ports
+      requireTLS: smtpPort === 587, // require TLS for port 587
       auth: {
         user: smtpUser,
         pass: smtpPass,

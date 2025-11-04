@@ -174,10 +174,12 @@ export const authOptions: NextAuthOptions = {
         if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
           // Dynamic import to avoid requiring types at build time
           const nodemailerModule = await import('nodemailer');
+          const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
           const transporter = nodemailerModule.default.createTransport({
             host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT || '2525'),
-            secure: false,
+            port: smtpPort,
+            secure: smtpPort === 465, // true for 465 (SSL), false for other ports
+            requireTLS: smtpPort === 587, // require TLS for port 587
             auth: {
               user: process.env.SMTP_USER,
               pass: process.env.SMTP_PASS,
@@ -217,9 +219,30 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user }) {
-      if (user && 'role' in user) {
+      // On first sign in (user object is available), fetch user role from database
+      if (user && user.email) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: user.email },
+            select: { role: true }
+          })
+          if (dbUser) {
+            token.role = dbUser.role
+          } else {
+            // New OAuth user - default to CUSTOMER role
+            token.role = 'CUSTOMER'
+          }
+        } catch (error) {
+          console.error('[AUTH] Error fetching user role:', error)
+          token.role = 'CUSTOMER' // Default fallback
+        }
+      }
+      
+      // If user already has role in token, keep it
+      if (user && 'role' in user && user.role) {
         token.role = user.role as string
       }
+      
       return token
     },
     async redirect({ url, baseUrl }) {
@@ -227,10 +250,6 @@ export const authOptions: NextAuthOptions = {
       if (url.startsWith('/admin')) {
         return url.startsWith(baseUrl) ? url : `${baseUrl}${url}`
       }
-      
-      // For OAuth providers, check if user is admin and redirect to /admin
-      // Note: This only works if token is available (which it might not be in redirect callback)
-      // For now, credentials login handles redirect client-side
       
       // Otherwise use default behavior
       if (url.startsWith(baseUrl)) return url
@@ -241,7 +260,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/login",
     error: "/auth/login",
-    newUser: "/profile",
+    newUser: "/account",
   },
   secret: process.env.NEXTAUTH_SECRET,
 }

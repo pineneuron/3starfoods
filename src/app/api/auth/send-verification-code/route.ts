@@ -126,10 +126,12 @@ export async function POST(req: Request) {
 
     // Send email using nodemailer if configured
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || '2525'),
-        secure: false,
+        port: smtpPort,
+        secure: smtpPort === 465, // true for 465 (SSL), false for other ports
+        requireTLS: smtpPort === 587, // require TLS for port 587
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,

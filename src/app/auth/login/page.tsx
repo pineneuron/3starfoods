@@ -108,10 +108,10 @@ function LoginForm() {
     }
   }
 
-  function loginWith(provider: string) {
-    // For OAuth providers, we'll handle redirect in middleware or callback
-    // For now, redirect to home - admin redirect will be handled after session is established
-    signIn(provider, { callbackUrl: params.get("callbackUrl") || "/" })
+  async function loginWith(provider: string) {
+    // For OAuth providers, redirect to home first, then check session and redirect admin users
+    const callbackUrl = params.get("callbackUrl") || "/"
+    signIn(provider, { callbackUrl })
   }
 
   return (
