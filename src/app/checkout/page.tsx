@@ -82,10 +82,11 @@ function CheckoutContent() {
   const hasItems = mounted && isHydrated ? items.length > 0 : (mounted ? true : false);
   const showEmptyCart = mounted && isHydrated && items.length === 0 && !submitSuccess;
   
-  const belowMinimum = total < MIN_ORDER_AMOUNT;
-  const deliveryFeeApplied = hasItems && belowMinimum ? DELIVERY_FEE : 0;
-  const grandTotal = total + deliveryFeeApplied;
-  const amountToReachMinimum = Math.max(0, MIN_ORDER_AMOUNT - total);
+  // Only calculate these after hydration to prevent hydration mismatch
+  const belowMinimum = mounted && isHydrated ? total < MIN_ORDER_AMOUNT : false;
+  const deliveryFeeApplied = (mounted && isHydrated && hasItems && belowMinimum) ? DELIVERY_FEE : 0;
+  const grandTotal = mounted && isHydrated ? total + deliveryFeeApplied : 0;
+  const amountToReachMinimum = mounted && isHydrated ? Math.max(0, MIN_ORDER_AMOUNT - total) : 0;
 
   useEffect(() => {
     setMounted(true);
@@ -990,7 +991,7 @@ function CheckoutContent() {
                 <h2 className="text-2xl font-bold tsf-font-sora mb-6">Order Summary</h2>
                 
                 <div className="space-y-4 mb-6">
-                  {items.map((item) => (
+                  {mounted && isHydrated && items.map((item) => (
                     <div key={`${item.id}-${item.variation || 'default'}`} className="flex gap-3 pb-4 border-b">
                       <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0">
                         <Image src={item.image} alt={item.name} width={80} height={80} className="object-cover" />
@@ -1004,9 +1005,12 @@ function CheckoutContent() {
                       </div>
                     </div>
                   ))}
+                  {!mounted || !isHydrated ? (
+                    <div className="text-center py-4 text-gray-500 text-sm">Loading items...</div>
+                  ) : null}
                 </div>
 
-                {belowMinimum && (
+                {mounted && isHydrated && belowMinimum && (
                   <div className="rounded-md bg-yellow-50 text-yellow-800 text-sm p-3 mb-4">
                     Add <span className="font-semibold">Rs. {amountToReachMinimum.toFixed(2)}</span> more to reach the minimum order amount (Rs. {MIN_ORDER_AMOUNT}). You can still checkout now; a delivery fee applies.
                   </div>
