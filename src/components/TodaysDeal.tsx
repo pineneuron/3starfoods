@@ -36,7 +36,6 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
     setIsModalOpen(true);
   };
 
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
@@ -44,7 +43,7 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
 
   return (
     <>
-      <div className="tsf-banner-list px-10 rounded-lg">
+      <div className="tsf-banner-list rounded-lg">
         <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
         <div className="tsf-banner-list-item tsf-box-shodow">
           {products.map((product, index) => {
@@ -75,15 +74,26 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
                     </a>
                   </div>
                   <div className="price text-md mt-2">
-                    RS {product.price.toFixed(2)} -{' '}
-                    <span className="pre-price text-gray-400">
-                      RS {discountedPrice.toFixed(2)} ({product.unit})
-                    </span>
-                    {hasDiscount && (
-                      <span className="tsf-discount tsf-bgred-color text-sm text-white font-normal rounded-sm p-1 ml-2">
-                        {product.discountPercent}%
+                    {hasDiscount ? (
+                      <>
+                        <span className="pre-price text-gray-400 line-through">
+                          RS {product.price.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="text-red-600 font-bold">
+                          RS {discountedPrice.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="tsf-discount tsf-bgred-color text-sm text-white font-normal rounded-sm p-1 ml-2">
+                          {product.discountPercent}%
+                        </span>
+                      </>
+                    ) : (
+                      <span>
+                        RS {product.price.toFixed(2)}
                       </span>
                     )}
+                    {' '}({product.unit})
                   </div>
                 </div>
               </div>
@@ -131,7 +141,7 @@ const TodaysDeal: React.FC = () => {
   // During SSR, render without cart functionality
   if (!isClient) {
     return (
-      <div className="tsf-banner-list px-10 rounded-lg">
+      <div className="tsf-banner-list rounded-lg">
         <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
         <div className="tsf-banner-list-item tsf-box-shodow">
           {dealProducts.map((product, index) => {
@@ -154,15 +164,26 @@ const TodaysDeal: React.FC = () => {
                     <span className="text-2xl font-bold capitalize">{product.name}</span>
                   </div>
                   <div className="price text-md mt-2">
-                    RS {product.price.toFixed(2)} -{' '}
-                    <span className="pre-price text-gray-400">
-                      RS {discountedPrice.toFixed(2)} ({product.unit})
-                    </span>
-                    {hasDiscount && (
-                      <span className="tsf-discount tsf-bgred-color text-sm text-white font-normal rounded-sm p-1 ml-2">
-                        {product.discountPercent}%
+                    {hasDiscount ? (
+                      <>
+                        <span className="pre-price text-gray-400 line-through">
+                          RS {product.price.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="text-red-600 font-bold">
+                          RS {discountedPrice.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="tsf-discount tsf-bgred-color text-sm text-white font-normal rounded-sm p-1 ml-2">
+                          {product.discountPercent}%
+                        </span>
+                      </>
+                    ) : (
+                      <span>
+                        RS {product.price.toFixed(2)}
                       </span>
                     )}
+                    {' '}({product.unit})
                   </div>
                 </div>
               </div>

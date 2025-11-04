@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -70,23 +71,23 @@ export default function Footer() {
           <div className="footer-left-social">
             <ul className="inline-flex items-center justify-between gap-6">
               <li>
-                <a className="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#">
-                  <i className="fa-brands fa-facebook-f text-black"></i>
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <Facebook className="text-black" size={28} />
                 </a>
               </li>
               <li>
-                <a className="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#">
-                  <i className="fa-brands fa-instagram"></i>
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <Instagram className="text-black" size={28} />
                 </a>
               </li>
               <li>
-                <a className="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#">
-                  <i className="fa-brands fa-twitter"></i>
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                  <Twitter className="text-black" size={28} />
                 </a>
               </li>
               <li>
-                <a className="bg-white py-5 px-6 inline-block w-16 h-16 rounded-full" href="#">
-                  <i className="fa-brands fa-linkedin"></i>
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                  <Linkedin className="text-black" size={28} />
                 </a>
               </li>
             </ul>

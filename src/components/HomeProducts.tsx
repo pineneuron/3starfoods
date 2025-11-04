@@ -47,47 +47,58 @@ function HomeProductsWithCart({ products }: HomeProductsProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
         {products.map((product) => {
           const hasDiscount = product.discountPercent > 0;
           const discountedPrice = hasDiscount
             ? Math.round(product.price * (1 - product.discountPercent / 100))
             : product.price;
-          
+
           return (
-            <div className="tsf-product_list" key={product.id}>
-              <figure className="tsf-box-shodow tsf-font-bebas">
+            <div className="tsf-product_list h-full" key={product.id}>
+              <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
                 <div className="tsf-wrapper">
                   <div className="tsf-product-img">
                     <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
-                      <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
+                      <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md cursor-pointer w-full h-auto" />
                     </a>
                   </div>
                 </div>
-                <figcaption className="p-5 text-center rounded-t-md">
+                <figcaption className="p-5 text-center rounded-t-md flex flex-col flex-grow">
                   <div className="tsf-product-name">
-                    <a 
-                      className="text-3xl capitalize cursor-pointer tsf-bg-red:hover" 
-                      href="#" 
+                    <a
+                      className="text-3xl capitalize cursor-pointer tsf-bg-red:hover"
+                      href="#"
                       onClick={(e) => { e.preventDefault(); handleProductClick(product); }}
                     >
                       {product.name}
                     </a>
                   </div>
                   <div className="price text-xl font-normal py-4">
-                    RS {product.price.toFixed(2)} -{' '}
-                    <span className="pre-price tsf-text-color tsf-font-bebas">
-                      RS {discountedPrice.toFixed(2)} ({product.unit})
-                    </span>
-                    {hasDiscount && (
-                      <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
-                        {product.discountPercent}%
+                    {hasDiscount ? (
+                      <>
+                        <span className="pre-price tsf-text-color tsf-font-bebas line-through">
+                          RS {product.price.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="text-red-600 font-bold">
+                          RS {discountedPrice.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                          {product.discountPercent}%
+                        </span>
+                      </>
+                    ) : (
+                      <span>
+                        RS {product.price.toFixed(2)}
                       </span>
                     )}
+                    {' '}({product.unit})
                   </div>
-                  <div className="tsf-add_cart mt-2">
-                    <button 
-                      className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer" 
+                  <div className="tsf-add_cart mt-auto pt-2">
+                    <button
+                      className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer"
                       onClick={() => handleProductClick(product)}
                     >
                       view details
@@ -99,7 +110,7 @@ function HomeProductsWithCart({ products }: HomeProductsProps) {
           );
         })}
       </div>
-      
+
       <ProductModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -112,7 +123,7 @@ function HomeProductsWithCart({ products }: HomeProductsProps) {
 // Main component that handles cart context safely
 export default function HomeProducts({ products, type }: HomeProductsProps) {
   const [isClient, setIsClient] = useState(false);
-  
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -120,37 +131,48 @@ export default function HomeProducts({ products, type }: HomeProductsProps) {
   // During SSR, render without cart functionality
   if (!isClient) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
         {products.map((product) => {
           const hasDiscount = product.discountPercent > 0;
           const discountedPrice = hasDiscount
             ? Math.round(product.price * (1 - product.discountPercent / 100))
             : product.price;
-          
+
           return (
-            <div className="tsf-product_list" key={product.id}>
-              <figure className="tsf-box-shodow tsf-font-bebas">
+            <div className="tsf-product_list h-full" key={product.id}>
+              <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
                 <div className="tsf-wrapper">
                   <div className="tsf-product-img">
-                    <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md" />
+                    <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md w-full h-auto" />
                   </div>
                 </div>
-                <figcaption className="p-5 text-center rounded-t-md">
+                <figcaption className="p-5 text-center rounded-t-md flex flex-col flex-grow">
                   <div className="tsf-product-name">
                     <span className="text-3xl capitalize">{product.name}</span>
                   </div>
                   <div className="price text-xl font-normal py-4">
-                    RS {product.price.toFixed(2)} -{' '}
-                    <span className="pre-price tsf-text-color tsf-font-bebas">
-                      RS {discountedPrice.toFixed(2)} ({product.unit})
-                    </span>
-                    {hasDiscount && (
-                      <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
-                        {product.discountPercent}%
+                    {hasDiscount ? (
+                      <>
+                        <span className="pre-price tsf-text-color tsf-font-bebas line-through">
+                          RS {product.price.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="text-red-600 font-bold">
+                          RS {discountedPrice.toFixed(2)}
+                        </span>
+                        {' '}
+                        <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                          {product.discountPercent}%
+                        </span>
+                      </>
+                    ) : (
+                      <span>
+                        RS {product.price.toFixed(2)}
                       </span>
                     )}
+                    {' '}({product.unit})
                   </div>
-                  <div className="tsf-add_cart mt-2">
+                  <div className="tsf-add_cart mt-auto pt-2">
                     <button className="tsf-button uppercase inline-block text-2xl cursor-pointer" disabled>
                       add to cart
                     </button>

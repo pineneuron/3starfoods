@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
-import MaintenanceModal from './MaintenanceModal';
+// import MaintenanceModal from './MaintenanceModal';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -16,11 +16,16 @@ export default function Header({ variant = 'home' }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { items } = useCart();
-  const { status, data } = useSession();
+  const { status } = useSession();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
-  // Calculate total cart count
-  const cartCount = items.reduce((total, item) => total + item.qty, 0);
+  // Calculate total cart count (only after mount to avoid hydration mismatch)
+  const cartCount = mounted ? items.reduce((total, item) => total + item.qty, 0) : 0;
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const isHome = variant === 'home';
   const headerClass = isHome 
@@ -121,7 +126,6 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                             {status === 'authenticated' && userMenuOpen && (
                               <div className={`absolute right-0 mt-2 w-44 rounded-md shadow-lg ring-1 ring-black/5 z-50 ${isHome ? 'bg-white' : 'bg-white'}`}>
                                 <div className="py-2 text-sm">
-                                  <div className="px-4 py-2 text-gray-700">{data?.user?.email || 'Account'}</div>
                                   <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
                                   <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
                                 </div>
@@ -129,7 +133,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                             )}
                         </li>
                         <li>
-                            <a href="/api/todays-rate" target="_blank" className={`text-sm font-medium underline ${isHome ? 'text-white' : 'text-black'}`}>
+                            <a href="/api/todays-rate" target="_blank" className={`text-normal font-medium underline ${isHome ? 'text-white' : 'text-black'}`}>
                                 Today&apos;s Rate
                             </a>
                         </li>
@@ -137,7 +141,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 </div>
             </div>
         </div>
-      <MaintenanceModal />
+      {/* <MaintenanceModal /> */}
     </header>
   );
 }

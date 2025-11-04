@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-  font-family: "Sora", sans-serif;
+  font-family: var(--font-sora), "Sora", sans-serif;
   font-size: 16px;
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Bebas Neue", sans-serif;
+  font-family: var(--font-bebas), "Bebas Neue", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -846,3 +846,27 @@ body.sticky-header {
 }
 
 @media screen and (max-width: 380px) {}
+
+/* Thin scrollbar utility for admin lists */
+.thin-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+}
+.thin-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Admin sidebar collapse */
+.admin-collapsed .admin-grid {
+  grid-template-columns: 64px 1fr !important;
+}
+.admin-collapsed .sidebar-label {
+  display: none !important;
+}

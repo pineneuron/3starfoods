@@ -80,6 +80,7 @@ model Category {
   imagePublicId String?  @map("image_public_id")
   sortOrder     Int      @default(0) @map("sort_order")
   isActive      Boolean  @default(true) @map("is_active")
+  parentId      String?  @map("parent_id")
   createdBy     String?  @map("created_by")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
@@ -87,7 +88,10 @@ model Category {
 
   // Relations
   products      Product[]
+  productLinks  ProductCategory[]
   createdByUser User?     @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+  parent        Category? @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Category[] @relation("CategoryToCategory")
 
   @@index([createdBy])
   @@map("categories")
@@ -101,6 +105,7 @@ model Product {
   description      String?
   shortDescription String?  @map("short_description")
   basePrice        Decimal  @map("base_price") @db.Decimal(10, 2)
+  salePrice        Decimal? @map("sale_price") @db.Decimal(10, 2)
   unit             String   @default("per kg")
   discountPercent  Int      @default(0) @map("discount_percent")
   imageUrl         String?  @map("image_url")
@@ -123,11 +128,23 @@ model Product {
   variations    ProductVariation[]
   orderItems    OrderItem[]
   inventory     ProductInventory?
+  categories    ProductCategory[]
   createdByUser User?              @relation(fields: [createdBy], references: [id], onDelete: SetNull)
 
   @@index([categoryId])
   @@index([createdBy])
   @@map("products")
+}
+
+model ProductCategory {
+  productId String @map("product_id")
+  categoryId String @map("category_id")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@map("product_categories")
 }
 
 model ProductImage {
@@ -244,11 +261,13 @@ model Order {
   customerName        String        @map("customer_name")
   customerEmail       String        @map("customer_email")
   customerPhone       String?       @map("customer_phone")
+  customerAlternativePhone String?  @map("customer_alternative_phone")
   customerCity        String?       @map("customer_city")
   customerAddress     String?       @map("customer_address")
   customerLandmark    String?       @map("customer_landmark")
   customerCoordinates Json?         @map("customer_coordinates")
   customerNotes       String?       @map("customer_notes")
+  paymentScreenshot   String?       @map("payment_screenshot")
   subtotal            Decimal       @db.Decimal(10, 2)
   deliveryFee         Decimal       @default(0) @map("delivery_fee") @db.Decimal(10, 2)
   discountAmount      Decimal       @default(0) @map("discount_amount") @db.Decimal(10, 2)

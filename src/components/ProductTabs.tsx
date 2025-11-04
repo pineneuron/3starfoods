@@ -76,7 +76,7 @@ const ProductTabs: React.FC = () => {
 
   return (
     <div className="tsf-product py-20" suppressHydrationWarning>
-      <div className="container mx-auto px-10">
+      <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
         <div className="tsf-product_heading py-10">
           <div className="flex justify-between items-center">
             <div className="mb-4">

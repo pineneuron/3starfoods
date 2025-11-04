@@ -40,6 +40,7 @@ export interface AppliedCoupon {
 interface CartContextValue {
   items: CartLineItem[];
   appliedCoupon: AppliedCoupon | null;
+  isHydrated: boolean;
   addItem: (product: CartProduct, qty?: number) => void;
   removeItem: (id: string, variation?: string) => void;
   increment: (id: string, variation?: string) => void;
@@ -54,30 +55,52 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartLineItem[]>([]);
-  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
-
-  // Load cart from localStorage on component mount
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('tsf-cart');
-      if (savedCart) {
-        const { items: savedItems, appliedCoupon: savedCoupon } = JSON.parse(savedCart);
-        setItems(savedItems || []);
-        setAppliedCoupon(savedCoupon || null);
-      }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
+// Helper function to load cart from localStorage (SSR-safe)
+function loadCartFromStorage(): { items: CartLineItem[]; appliedCoupon: AppliedCoupon | null } {
+  if (typeof window === 'undefined') {
+    return { items: [], appliedCoupon: null };
+  }
+  
+  try {
+    const savedCart = localStorage.getItem('tsf-cart');
+    if (savedCart) {
+      const parsed = JSON.parse(savedCart);
+      return {
+        items: parsed.items || [],
+        appliedCoupon: parsed.appliedCoupon || null
+      };
     }
+  } catch (error) {
+    console.error('Error loading cart from localStorage:', error);
+  }
+  
+  return { items: [], appliedCoupon: null };
+}
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  // Initialize state from localStorage synchronously (SSR-safe)
+  const initialState = loadCartFromStorage();
+  const [items, setItems] = useState<CartLineItem[]>(initialState.items);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(initialState.appliedCoupon);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Sync with localStorage on client mount (handles hydration and ensures latest data)
+  useEffect(() => {
+    const saved = loadCartFromStorage();
+    setItems(saved.items);
+    setAppliedCoupon(saved.appliedCoupon);
+    // Mark as hydrated so components know cart is ready
+    setIsHydrated(true);
   }, []);
 
   // Save cart to localStorage whenever items or appliedCoupon changes
   useEffect(() => {
-    try {
-      localStorage.setItem('tsf-cart', JSON.stringify({ items, appliedCoupon }));
-    } catch (error) {
-      console.error('Error saving cart to localStorage:', error);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('tsf-cart', JSON.stringify({ items, appliedCoupon }));
+      } catch (error) {
+        console.error('Error saving cart to localStorage:', error);
+      }
     }
   }, [items, appliedCoupon]);
 
@@ -130,59 +153,53 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   function clear() {
     setItems([]);
     setAppliedCoupon(null);
+    // Also clear from localStorage
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('tsf-cart');
+      } catch (error) {
+        console.error('Error clearing cart from localStorage:', error);
+      }
+    }
   }
 
   async function applyCoupon(code: string): Promise<{ success: boolean; message: string; coupon?: Coupon }> {
     try {
-      const response = await fetch('/data/coupon_codes.json');
-      const data = await response.json();
-      
-      const coupon = data.coupons.find((c: Coupon) => c.code.toUpperCase() === code.toUpperCase());
-      
-      if (!coupon) {
-        return { success: false, message: 'Invalid coupon code' };
-      }
-
-      if (!coupon.isActive) {
-        return { success: false, message: 'This coupon is not active' };
-      }
-
-      const now = new Date();
-      const startDate = new Date(coupon.startDate);
-      const endDate = new Date(coupon.endDate);
-
-      if (now < startDate) {
-        return { success: false, message: 'This coupon is not yet valid' };
-      }
-
-      if (now > endDate) {
-        return { success: false, message: 'This coupon has expired' };
-      }
-
-      if (coupon.usedCount >= coupon.usageLimit) {
-        return { success: false, message: 'This coupon has reached its usage limit' };
-      }
-
       const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
       
-      if (subtotal < coupon.minOrderAmount) {
-        return { 
-          success: false, 
-          message: `Minimum order amount of Rs. ${coupon.minOrderAmount} required for this coupon` 
-        };
+      const response = await fetch('/api/coupon/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, orderAmount: subtotal })
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        return { success: false, message: data.message };
       }
 
-      let discountAmount = 0;
-      if (coupon.type === 'percentage') {
-        discountAmount = (subtotal * coupon.value) / 100;
-        discountAmount = Math.min(discountAmount, coupon.maxDiscountAmount);
-      } else {
-        discountAmount = Math.min(coupon.value, coupon.maxDiscountAmount);
-      }
+      // Convert API response to match Coupon interface
+      const coupon: Coupon = {
+        id: data.coupon.id,
+        code: data.coupon.code,
+        name: data.coupon.name,
+        description: data.coupon.description || '',
+        type: data.coupon.type === 'PERCENTAGE' ? 'percentage' : 'flat',
+        value: data.coupon.value,
+        minOrderAmount: data.coupon.minOrderAmount,
+        maxDiscountAmount: data.coupon.maxDiscountAmount || 0,
+        startDate: data.coupon.startDate,
+        endDate: data.coupon.endDate,
+        isActive: data.coupon.isActive,
+        usageLimit: data.coupon.usageLimit || 0,
+        usedCount: data.coupon.usedCount
+      };
 
-      setAppliedCoupon({ coupon, discountAmount });
-      return { success: true, message: 'Coupon applied successfully!', coupon };
-    } catch {
+      setAppliedCoupon({ coupon, discountAmount: data.discountAmount });
+      return { success: true, message: data.message || 'Coupon applied successfully!', coupon };
+    } catch (error) {
+      console.error('Coupon validation error:', error);
       return { success: false, message: 'Error applying coupon. Please try again.' };
     }
   }
@@ -198,6 +215,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const value: CartContextValue = {
     items,
     appliedCoupon,
+    isHydrated,
     addItem,
     removeItem,
     increment,

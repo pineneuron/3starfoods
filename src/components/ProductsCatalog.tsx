@@ -101,23 +101,23 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
         const isActive = cat.id === activeCategoryId;
         return (
           <div key={cat.id} id={`styled-${cat.id}`} className={isActive ? 'block rounded-lg' : 'hidden rounded-lg'} role="tabpanel">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
               {cat.products.map((p) => {
                 const hasDiscount = p.discountPercent > 0;
                 const discountedPrice = hasDiscount
                   ? Math.round(p.price * (1 - p.discountPercent / 100))
                   : p.price;
                 return (
-                  <div className="tsf-product_list" key={p.id}>
-                    <figure className="tsf-box-shodow tsf-font-bebas">
+                  <div className="tsf-product_list h-full" key={p.id}>
+                    <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
                       <div className="tsf-wrapper">
                         <div className="tsf-product-img">
                           <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(p); }}>
-                            <Image src={p.image} alt={p.name} width={300} height={200} className="rounded-t-md cursor-pointer" />
+                            <Image src={p.image} alt={p.name} width={300} height={200} className="rounded-t-md cursor-pointer w-full h-auto" />
                           </a>
                         </div>
                       </div>
-                      <figcaption className="p-5 text-center rounded-t-md">
+                      <figcaption className="p-5 text-center rounded-t-md flex flex-col flex-grow">
                         <div className="tsf-product-name">
                           <a 
                             className="text-3xl capitalize cursor-pointer" 
@@ -128,17 +128,28 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                           </a>
                         </div>
                         <div className="price text-xl font-normal py-4">
-                          RS {p.price.toFixed(2)} -{' '}
-                          <span className="pre-price tsf-text-color tsf-font-bebas">
-                            RS {discountedPrice.toFixed(2)} ({p.unit})
-                          </span>
-                          {hasDiscount && (
-                            <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
-                              {p.discountPercent}%
+                          {hasDiscount ? (
+                            <>
+                              <span className="pre-price tsf-text-color tsf-font-bebas line-through">
+                                RS {p.price.toFixed(2)}
+                              </span>
+                              {' '}
+                              <span className="text-red-600 font-bold">
+                                RS {discountedPrice.toFixed(2)}
+                              </span>
+                              {' '}
+                              <span className="tsf-discount tsf-bgred-color text-md text-white font-normal rounded-sm p-1 ml-2">
+                                {p.discountPercent}%
+                              </span>
+                            </>
+                          ) : (
+                            <span>
+                              RS {p.price.toFixed(2)}
                             </span>
                           )}
+                          {' '}({p.unit})
                         </div>
-                        <div className="tsf-add_cart mt-2">
+                        <div className="tsf-add_cart mt-auto pt-2">
                           <a 
                             className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer" 
                             href="#" 

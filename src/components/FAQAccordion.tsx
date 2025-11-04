@@ -49,7 +49,7 @@ const FAQAccordion: React.FC = () => {
 
   return (
     <div className="tsf-faq relative py-20" suppressHydrationWarning>
-      <div className="container mx-auto px-10">
+      <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
         <div className="tsf-category_heading pb-10">
           <h2 className="tsf-dark-color text-4xl font-bold text-center tsf-font-sora capitalize">frequently asked questions.</h2>
         </div>

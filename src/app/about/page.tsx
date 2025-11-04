@@ -10,7 +10,7 @@ export default function AboutPage() {
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
-        <div className="container mx-auto">
+        <div className="w-full mx-auto 2xl:container">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora capitalize">about</h1>
           </div>
@@ -18,7 +18,7 @@ export default function AboutPage() {
       </div>
 
       <div className="tsf-about relative py-20">
-        <div className="container mx-auto">
+        <div className="w-full mx-auto 2xl:container">
           <div className="grid grid-cols-2 gap-10">
             <div className="tsf-about-img">
               <Image src="/images/bg-about.webp" className="rounded-md" alt="About" width={800} height={800} />
@@ -36,7 +36,7 @@ export default function AboutPage() {
       </div>
 
       <div className="tsf-about-video relative py-40 tsf-bg-secondary">
-        <div className="container mx-auto">
+        <div className="w-full mx-auto 2xl:container">
           <div className="grid grid-cols-3 gap-10">
             <div id="count" className="client text-center">
               <span className="count tsf-font-sora text-6xl font-bold text-white">100+</span>

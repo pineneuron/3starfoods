@@ -1,22 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// Expected envs:
-// MAILTRAP_TOKEN: Mailtrap API token
-// MAIL_FROM_EMAIL: From email, e.g. orders@yourdomain.test
-// MAIL_FROM_NAME: From name, e.g. 3 Star Foods
-// ADMIN_EMAIL: Admin recipient
-
-export async function GET() {
-  return NextResponse.json({ ok: true, message: 'Order endpoint ready. Send a POST request with order data.' });
-}
-
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
+  console.log('[ORDERS API] POST request received at:', new Date().toISOString());
   try {
-    const body = await req.json();
+    const body = await request.json();
+    console.log('[ORDERS API] Request body received');
+    
+    // Validate required fields
+    if (!body.customer || !body.items || !body.summary) {
+      return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
+    }
+    
     const {
       customer,
       items,
-      summary
+      summary,
+      paymentScreenshot
     } = body as {
       customer: {
         name: string;
@@ -30,7 +29,10 @@ export async function POST(req: Request) {
       };
       items: Array<{ id: string; name: string; qty: number; price: number; image?: string }>;
       summary: { subtotal: number; deliveryFee: number; total: number; belowMinimum: boolean };
+      paymentScreenshot?: string;
     };
+
+    console.log('[ORDERS API] Processing order for:', customer.email);
 
     const token = process.env.MAILTRAP_TOKEN;
     const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@example.com';
@@ -38,6 +40,7 @@ export async function POST(req: Request) {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
 
     if (!token) {
+      console.warn('[ORDERS API] Missing MAILTRAP_TOKEN');
       return NextResponse.json({ ok: false, error: 'Missing MAILTRAP_TOKEN' }, { status: 500 });
     }
 
@@ -85,6 +88,11 @@ export async function POST(req: Request) {
         <p style="margin-top:12px;"><strong>Subtotal:</strong> Rs. ${summary.subtotal.toFixed(2)}</p>
         ${summary.deliveryFee > 0 ? `<p><strong>Delivery Fee:</strong> Rs. ${summary.deliveryFee.toFixed(2)}</p>` : ''}
         <p><strong>Order Total:</strong> Rs. ${summary.total.toFixed(2)}</p>
+        ${paymentScreenshot ? `
+          <h3 style="margin:16px 0 8px;">Payment Screenshot</h3>
+          <p><a href="${paymentScreenshot}" target="_blank" style="color:#007bff;text-decoration:underline;">View payment screenshot</a></p>
+          <img src="${paymentScreenshot}" alt="Payment screenshot" style="max-width:400px;margin-top:8px;border:1px solid #ddd;border-radius:4px;" />
+        ` : ''}
       </div>
     `;
 
@@ -96,6 +104,7 @@ export async function POST(req: Request) {
       html
     };
 
+    console.log('[ORDERS API] Sending email to Mailtrap');
     const res = await fetch('https://sandbox.api.mailtrap.io/api/send', {
       method: 'POST',
       headers: {
@@ -107,12 +116,16 @@ export async function POST(req: Request) {
 
     if (!res.ok) {
       const errText = await res.text();
+      console.error('[ORDERS API] Mailtrap error:', errText);
       return NextResponse.json({ ok: false, error: errText }, { status: 500 });
     }
 
+    console.log('[ORDERS API] Email sent successfully');
     return NextResponse.json({ ok: true });
   } catch (e: unknown) {
+    console.error('[ORDERS API] Error:', e);
     const errorMessage = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ ok: false, error: errorMessage }, { status: 500 });
   }
 }
+

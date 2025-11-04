@@ -11,21 +11,35 @@ import CategoryGridV1 from '../components/CategoryGridV1';
 // import CategoryGridV2 from '../components/CategoryGrid';
 import { CartProvider } from '../context/CartContext';
 import { Category } from '../components/ProductsCatalog';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { ProductService } from '@/lib/services';
 import Image from 'next/image';
 
-async function getProductsData(): Promise<{ categories: Category[] }> {
-  const filePath = path.join(process.cwd(), 'public', 'data', 'products.json');
-  const file = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(file);
+function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof ProductService.getAllCategories>>): Category[] {
+  return dbCategories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    products: cat.products.map(p => ({
+      id: p.id,
+      name: p.name,
+      price: Number(p.basePrice),
+      unit: p.unit,
+      discountPercent: p.discountPercent,
+      image: p.imageUrl || '/images/placeholder.png',
+      images: p.images.length > 0 ? p.images.sort((a, b) => (a.isPrimary ? -1 : 0) - (b.isPrimary ? -1 : 0)).map(img => img.imageUrl) : undefined,
+      shortDescription: p.shortDescription || undefined,
+      variations: p.variations.length > 0 ? p.variations.map(v => ({ name: v.name, price: Number(v.price), discountPercent: v.discountPercent })) : undefined,
+      defaultVariation: p.variations.find(v => v.isDefault)?.name || undefined,
+      featured: p.isFeatured,
+      bestseller: p.isBestseller,
+    }))
+  }))
 }
 
 export default async function Home() {
-  const { categories } = await getProductsData();
+  const dbCategories = await ProductService.getAllCategories();
+  const categories = transformDbToCategory(dbCategories);
 
-  // Get all products and filter by featured/bestseller
-  const allProducts = categories.flatMap((cat: Category) => cat.products);
+  const allProducts = categories.flatMap(cat => cat.products);
   const featuredProducts = allProducts.filter(p => p.featured).slice(0, 8);
   const bestsellerProducts = allProducts.filter(p => p.bestseller).slice(0, 8);
   return (
@@ -33,12 +47,12 @@ export default async function Home() {
       <Header variant="home" />
 
       <div className="tsf-banner relative py-20">
-        <div className="container mx-auto px-10">
-          <div className="grid grid-cols-3 gap-4 items-stretch">
-            <div className="tsf-slider col-span-2 h-full">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
+          <div className="grid grid-cols-12 gap-10 items-stretch">
+            <div className="tsf-slider col-span-9 h-full">
               <HeroCarousel />
             </div>
-            <div className="h-full">
+            <div className="col-span-3 h-full">
               <TodaysDeal />
             </div>
           </div>
@@ -54,7 +68,7 @@ export default async function Home() {
       />
 
       <div className="tsf-frozen pb-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-category_heading">
             <h2 className="tsf-dark-color text-4xl font-bold pb-10">Frozen Items</h2>
           </div>
@@ -65,7 +79,7 @@ export default async function Home() {
       </div>
 
       <div className="tsf-how_order relative tsf-bg-secondary py-40">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-howorder_heading text-center">
             <h2 className="tsf-dark-color text-4xl font-bold uppercase text-white">how to order?</h2>
             <p className="text-xl mt-5 text-white">We&apos;ll show you stores and restaurants nearby you can order from.</p>
@@ -103,7 +117,7 @@ export default async function Home() {
       </div>
 
       <div className="tsf-quality py-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-howorder_heading text-left">
             <h2 className="tsf-dark-color text-4xl font-bold uppercase text-black">Quality & innovation</h2>
           </div>
@@ -163,7 +177,7 @@ export default async function Home() {
       </div>
 
       <div className="tsf-testimonial relative tsf-bg-blue py-40">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-howorder_heading text-left">
             <h2 className="text-white text-4xl font-bold uppercase">What our customer say</h2>
           </div>
@@ -195,7 +209,7 @@ export default async function Home() {
       </div>
 
       {/* <div className="tsf-motion py-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-howorder_heading text-left">
             <h2 className="tsf-dark-color text-4xl font-bold uppercase text-black">products in motion</h2>
           </div>

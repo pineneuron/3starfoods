@@ -69,7 +69,7 @@ const CategoryGrid: React.FC = () => {
     // SSR fallback - show loading state
     return (
       <div className="tsf-category relative tsf-bg-primary py-20 mt-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-category_heading">
             <h2 className="tsf-dark-color text-4xl font-bold z-10">explore by category</h2>
           </div>
@@ -90,7 +90,7 @@ const CategoryGrid: React.FC = () => {
 
   return (
     <div className="tsf-category relative tsf-bg-primary py-20 mt-20">
-      <div className="container mx-auto px-10">
+      <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
         <div className="tsf-category_heading">
           <h2 className="tsf-dark-color text-4xl font-bold z-10">Explore by Category</h2>
         </div>

@@ -1,0 +1,89 @@
+'use server'
+
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { prisma } from '@/lib/db'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+
+async function requireAdmin() {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user?.role !== 'ADMIN') {
+    redirect('/auth/login')
+  }
+  return session
+}
+
+export async function createCategory(formData: FormData) {
+  await requireAdmin()
+  const name = String(formData.get('name') || '').trim()
+  const rawSlug = String(formData.get('slug') || '').trim()
+  const sortOrder = Number(formData.get('sortOrder') || 0)
+  const parentId = String(formData.get('parentId') || '') || null
+  const imageUrl = String(formData.get('imageUrl') || '') || null
+  const imagePublicId = String(formData.get('imagePublicId') || '') || null
+  if (!name || !rawSlug) return
+  // ensure unique slug by suffixing -2, -3 ... if needed
+  const base = rawSlug
+  let slug = base
+  let n = 2
+  // loop until unique
+  while (await prisma.category.findUnique({ where: { slug } })) {
+    slug = `${base}-${n++}`
+  }
+  await prisma.category.create({ data: { name, slug, sortOrder, isActive: true, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined } })
+  revalidatePath('/admin/categories')
+}
+
+export async function updateCategory(formData: FormData) {
+  await requireAdmin()
+  const id = String(formData.get('id') || '')
+  const name = String(formData.get('name') || '').trim()
+  const rawSlug = String(formData.get('slug') || '').trim()
+  const sortOrder = Number(formData.get('sortOrder') || 0)
+  const parentId = String(formData.get('parentId') || '') || null
+  const imageUrl = String(formData.get('imageUrl') || '') || null
+  const imagePublicId = String(formData.get('imagePublicId') || '') || null
+  if (!id) return
+  // if slug collides with another record, suffix it
+  let slug = rawSlug
+  if (rawSlug) {
+    const existing = await prisma.category.findUnique({ where: { slug: rawSlug } })
+    if (existing && existing.id !== id) {
+      const base = rawSlug
+      let n = 2
+      slug = `${base}-${n++}`
+      while (await prisma.category.findUnique({ where: { slug } })) {
+        slug = `${base}-${n++}`
+      }
+    }
+  }
+  await prisma.category.update({ where: { id }, data: { name, slug, sortOrder, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined } })
+  revalidatePath('/admin/categories')
+}
+
+export async function toggleCategoryActive(formData: FormData) {
+  await requireAdmin()
+  const id = String(formData.get('id') || '')
+  const isActive = String(formData.get('isActive') || 'true') === 'true'
+  if (!id) return
+  await prisma.category.update({ where: { id }, data: { isActive } })
+  revalidatePath('/admin/categories')
+}
+
+export async function deleteCategory(formData: FormData) {
+  await requireAdmin()
+  const id = String(formData.get('id') || '')
+  if (!id) return
+  await prisma.category.delete({ where: { id } })
+  revalidatePath('/admin/categories')
+}
+
+export async function reorderCategories(formData: FormData) {
+  await requireAdmin()
+  const idsCsv = String(formData.get('ids') || '')
+  const ids = idsCsv.split(',').map(s => s.trim()).filter(Boolean)
+  // apply incremental sortOrder
+  await Promise.all(ids.map((id, idx) => prisma.category.update({ where: { id }, data: { sortOrder: idx } })))
+  revalidatePath('/admin/categories')
+}

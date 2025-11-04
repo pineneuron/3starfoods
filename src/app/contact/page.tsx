@@ -10,7 +10,7 @@ export default function ContactPage() {
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora">Contact Us</h1>
           </div>
@@ -18,7 +18,7 @@ export default function ContactPage() {
       </div>
 
       <div className="tsf-contact relative py-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="grid grid-cols-3">
             <div className="tsf-contact-detail rounded-tl-md rounded-bl-md tsf-bg-secondary p-10">
               <span className="uppercase text-white pb-5 inline-block">contact us</span>

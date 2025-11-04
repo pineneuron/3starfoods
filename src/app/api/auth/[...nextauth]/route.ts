@@ -38,22 +38,166 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } })
-        if (!user || !user.password) return null
-        const valid = await bcrypt.compare(credentials.password, user.password)
-        if (!valid) return null
-        return {
-          id: user.id,
-          email: user.email || undefined,
-          name: user.name || undefined,
-          role: user.role,
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.log('[AUTH] Missing credentials')
+            return null
+          }
+          
+          // Normalize email to lowercase for lookup
+          const email = credentials.email.toLowerCase().trim()
+          console.log('[AUTH] Attempting login for:', email)
+          
+          const user = await prisma.user.findUnique({ where: { email } })
+          if (!user) {
+            console.log('[AUTH] User not found:', email)
+            return null
+          }
+          
+          if (!user.password) {
+            console.log('[AUTH] User has no password set:', email)
+            return null
+          }
+          
+          const valid = await bcrypt.compare(credentials.password, user.password)
+          if (!valid) {
+            console.log('[AUTH] Invalid password for:', email)
+            return null
+          }
+          
+          console.log('[AUTH] Login successful for:', email, 'Role:', user.role)
+          return {
+            id: user.id,
+            email: user.email || undefined,
+            name: user.name || undefined,
+            role: user.role,
+          }
+        } catch (error) {
+          console.error('[AUTH] Authorize error:', error)
+          return null
         }
       },
     }),
     EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
+      async sendVerificationRequest({ identifier: email, url }) {
+        // Get base URL for logo
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        const logoUrl = `${baseUrl}/images/logo.png`;
+        const companyName = process.env.MAIL_FROM_NAME || '3 Star Foods';
+        const companyEmail = process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
+        const companyAddress = process.env.COMPANY_ADDRESS || '';
+        const companyPhone = process.env.COMPANY_PHONE || '';
+
+        // Generate email template with header and footer matching order emails
+        const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in to ${companyName}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+          
+          <!-- Header with Logo -->
+          <tr>
+            <td style="background-color:#ffffff;padding:30px 40px;text-align:center;border-bottom:3px solid #0073aa;">
+              <img src="${logoUrl}" alt="${companyName}" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding:40px;">
+              
+              <!-- Title -->
+              <h1 style="margin:0 0 10px;color:#2c3e50;font-size:24px;font-weight:600;line-height:1.3;">Sign in to ${companyName}</h1>
+              
+              <!-- Greeting -->
+              <p style="margin:0 0 20px;color:#555;font-size:15px;line-height:1.6;">
+                Click the button below to sign in to your account. This link will expire in 24 hours.
+              </p>
+
+              <!-- Sign In Button -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="${url}" style="display:inline-block;padding:14px 32px;background-color:#030e55;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;font-size:16px;text-align:center;">Sign in</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Alternative Link -->
+              <p style="margin:20px 0 0;color:#555;font-size:14px;line-height:1.6;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin:10px 0 30px;color:#0073aa;font-size:13px;word-break:break-all;line-height:1.6;">
+                <a href="${url}" style="color:#0073aa;text-decoration:underline;">${url}</a>
+              </p>
+
+              <!-- Security Notice -->
+              <p style="margin:30px 0 0;color:#999;font-size:12px;line-height:1.6;">
+                If you didn't request this sign-in link, you can safely ignore this email. No one can sign in to your account without access to this email.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#2c3e50;padding:30px 40px;text-align:center;">
+              <p style="margin:0 0 10px;color:#ffffff;font-size:14px;font-weight:600;">${companyName}</p>
+              ${companyAddress ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">${companyAddress}</p>` : ''}
+              ${companyPhone ? `<p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Phone: <a href="tel:${companyPhone}" style="color:#ffffff;text-decoration:none;">${companyPhone}</a></p>` : ''}
+              <p style="margin:0 0 5px;color:#b0b0b0;font-size:12px;">Email: <a href="mailto:${companyEmail}" style="color:#ffffff;text-decoration:none;">${companyEmail}</a></p>
+              <p style="margin:15px 0 0;color:#b0b0b0;font-size:11px;">© ${new Date().getFullYear()} ${companyName}. All rights reserved.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+        `;
+
+        const text = `Sign in to ${companyName}\n\nClick the link below to sign in to your account:\n${url}\n\nThis link will expire in 24 hours.\n\nIf you didn't request this sign-in link, you can safely ignore this email.`;
+
+        // Send email using nodemailer if configured, otherwise use NextAuth's default
+        if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+          // Dynamic import to avoid requiring types at build time
+          const nodemailerModule = await import('nodemailer');
+          const transporter = nodemailerModule.default.createTransport({
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT || '2525'),
+            secure: false,
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS,
+            },
+          });
+
+          await transporter.sendMail({
+            from: `"${companyName}" <${companyEmail}>`,
+            to: email,
+            subject: `Sign in to ${companyName}`,
+            text,
+            html,
+          });
+          return;
+        }
+
+        // Fallback: if SMTP is not configured, NextAuth will handle email sending
+        // This should not happen in production, but provides a fallback
+        throw new Error('Email configuration is missing. Please configure SMTP settings.');
+      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -77,6 +221,21 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role as string
       }
       return token
+    },
+    async redirect({ url, baseUrl }) {
+      // If redirecting to admin, allow it
+      if (url.startsWith('/admin')) {
+        return url.startsWith(baseUrl) ? url : `${baseUrl}${url}`
+      }
+      
+      // For OAuth providers, check if user is admin and redirect to /admin
+      // Note: This only works if token is available (which it might not be in redirect callback)
+      // For now, credentials login handles redirect client-side
+      
+      // Otherwise use default behavior
+      if (url.startsWith(baseUrl)) return url
+      if (url.startsWith('/')) return `${baseUrl}${url}`
+      return baseUrl
     },
   },
   pages: {

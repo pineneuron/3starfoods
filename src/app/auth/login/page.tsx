@@ -10,6 +10,8 @@ function LoginForm() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [magicLinkLoading, setMagicLinkLoading] = useState(false)
+  const [magicLinkSuccess, setMagicLinkSuccess] = useState(false)
   const router = useRouter()
   const params = useSearchParams()
 
@@ -51,9 +53,21 @@ function LoginForm() {
         }
       }
 
-      // Navigate to returned url or fallback
-      const url = typeof res === "object" && "url" in res ? (res as { url?: string }).url : undefined
-      router.push(url || "/")
+      // Check user role and redirect accordingly
+      // Wait a bit for session to be updated
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // Fetch session to get user role
+      const sessionRes = await fetch('/api/auth/session')
+      const session = await sessionRes.json()
+      
+      // Redirect based on role
+      let redirectUrl = params.get("callbackUrl") || "/"
+      if (session?.user?.role === 'ADMIN') {
+        redirectUrl = '/admin'
+      }
+      
+      router.push(redirectUrl)
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed"
       console.error("client signIn error:", errorMessage)
@@ -64,19 +78,39 @@ function LoginForm() {
 
   async function handleMagicLink(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
+    if (!email) {
+      setError("Please enter your email address")
+      return
+    }
+    setMagicLinkLoading(true)
     setError("")
-    const res = await signIn("email", {
-      redirect: false,
-      email,
-      callbackUrl: params.get("callbackUrl") || "/",
-    })
-    setLoading(false)
-    if (res?.error) return setError("Failed to send magic link")
-    setError("Check your email for a sign-in link.")
+    setMagicLinkSuccess(false)
+    
+    try {
+      const res = await signIn("email", {
+        redirect: false,
+        email,
+        callbackUrl: params.get("callbackUrl") || "/",
+      })
+      
+      if (res?.error) {
+        setError("Failed to send magic link. Please try again.")
+        setMagicLinkSuccess(false)
+      } else {
+        setMagicLinkSuccess(true)
+        setError("")
+      }
+    } catch {
+      setError("An error occurred. Please try again.")
+      setMagicLinkSuccess(false)
+    } finally {
+      setMagicLinkLoading(false)
+    }
   }
 
   function loginWith(provider: string) {
+    // For OAuth providers, we'll handle redirect in middleware or callback
+    // For now, redirect to home - admin redirect will be handled after session is established
     signIn(provider, { callbackUrl: params.get("callbackUrl") || "/" })
   }
 
@@ -135,8 +169,21 @@ function LoginForm() {
 
       <div className="flex justify-between items-center my-4">
         <span className="text-gray-500 text-sm">or</span>
-        <button className="text-[#030e55] text-sm underline cursor-pointer" onClick={handleMagicLink}>Sign in by Email (Magic Link)</button>
+        <button 
+          className="text-[#030e55] text-sm underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+          onClick={handleMagicLink}
+          disabled={magicLinkLoading || loading}
+        >
+          {magicLinkLoading ? 'Sending email...' : magicLinkSuccess ? 'Email sent! Check your inbox' : 'Sign in by Email (Magic Link)'}
+        </button>
       </div>
+      
+      {magicLinkSuccess && (
+        <div className="bg-green-50 text-green-700 rounded p-3 text-sm border border-green-200">
+          <p className="font-medium mb-1">✓ Email sent successfully!</p>
+          <p>Please check your email inbox and click the sign-in link we just sent to <strong>{email}</strong>. The link will expire in 24 hours.</p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-2 my-4">
         <button onClick={() => loginWith("google")}

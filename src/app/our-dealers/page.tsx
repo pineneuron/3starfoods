@@ -10,7 +10,7 @@ export default function OurDealersPage() {
       <Header variant="inner" />
 
       <div className="tsf-breadcrumb relative py-20">
-        <div className="container mx-auto">
+        <div className="w-full mx-auto 2xl:container">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora capitalize">our dealers</h1>
           </div>
@@ -18,7 +18,7 @@ export default function OurDealersPage() {
       </div>
 
       <div className="py-20">
-        <div className="container mx-auto px-10">
+        <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="text-center mb-12">
             <h2 className="tsf-dark-color text-4xl font-bold mb-4">Find Our Dealers Near You</h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
