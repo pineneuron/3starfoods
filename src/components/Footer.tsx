@@ -15,7 +15,7 @@ export default function Footer() {
               Our wide selection of delectable options ensures there&apos;s something for everyone. Join us in savoring the best flavors while contributing to a better food ecosystem.
             </p>
             <form action="" className="flex items-center mt-8 relative">
-              <input type="email" placeholder="Email" className="py-5 pl-8 pr-16 w-full rounded-full outline-none" />
+              <input type="email" placeholder="Email" className="bg-white py-5 pl-8 pr-16 w-full rounded-full outline-none" />
               <Image src="/design/src/assets/img/arrow-right.svg" alt="send" width={20} height={20} className="absolute right-6 z-10" />
             </form>
           </div>

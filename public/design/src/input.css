@@ -85,7 +85,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 header.home::before {
   content: '';
-  background: url(../src/assets/img/bg-covertop.png) no-repeat center;
+  background: url(../src/assets/img/bg-covertop.png) center;
   position: absolute;
   bottom: -20px;
   left: 0;
@@ -151,28 +151,28 @@ header.home::before {
 }
 .tsf-category::before {
     content: '';
-    background: url(../src/assets/img/bg-contenttop.svg) no-repeat center;
+    background: url(../src/assets/img/bg-contenttop.svg) center;
     position: absolute;
-    top: -85px;
+    top: -50px;
     left: 0;
     width: 100%;
-    height: 100px;
+    height: 55px;
     z-index: 1;
 }
 .tsf-category::after {
     content: '';
-    background: url(../src/assets/img/bg-contentbottom.svg) no-repeat center;
+    background: url(../src/assets/img/bg-contentbottom.svg) center;
     position: absolute;
-    bottom: -85px;
+    bottom: -50px;
     left: 0;
     width: 100%;
-    height: 100px;
+    height: 55px;
     z-index: 1;
 }
 .tsf-how_order::before,
 .tsf-about-video::before {
   content: '';
-  background: url(../src/assets/img/bg-covertop.png) no-repeat center;
+  background: url(../src/assets/img/bg-covertop.png) center;
   position: absolute;
   top: 0;
   left: 0;
@@ -184,7 +184,7 @@ header.home::before {
 .tsf-how_order::after,
 .tsf-about-video::after {
   content: '';
-  background: url(../src/assets/img/bg-covertop.png) no-repeat center;
+  background: url(../src/assets/img/bg-covertop.png) center;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -194,7 +194,7 @@ header.home::before {
 }
 .tsf-testimonial::before {
   content: '';
-  background: url(../src/assets/img/bg-covertop.png) no-repeat center;
+  background: url(../src/assets/img/bg-covertop.png) center;
   position: absolute;
   top: 0;
   left: 0;
@@ -205,7 +205,7 @@ header.home::before {
 }
 .tsf-testimonial::after {
   content: '';
-  background: url(../src/assets/img/bg-covertop.png) no-repeat center;
+  background: url(../src/assets/img/bg-covertop.png) center;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -215,7 +215,7 @@ header.home::before {
 }
 .tsf-footer::before {
     content: '';
-    background: url(../src/assets/img/bg-coverbottom.png) no-repeat center;
+    background: url(../src/assets/img/bg-coverbottom.png) center;
     position: absolute;
     top: 0;
     left: 0;
@@ -224,14 +224,14 @@ header.home::before {
     z-index: 1;
 }
 .tsf-breadcrumb {
-    background: url(../src/assets/img/bg-breadcrumb01.png) no-repeat center;
+    background: url(../src/assets/img/bg-breadcrumb01.png) center;
     background-size: cover;
     height: 500px;
     width: 100%;
 }
 .tsf-breadcrumb::before {
     content: '';
-    background: url(../src/assets/img/bg-coverbottom.png) no-repeat center;
+    background: url(../src/assets/img/bg-coverbottom.png) center;
     position: absolute;
     top: -25px;
     left: 0;
@@ -241,18 +241,18 @@ header.home::before {
 }
 .tsf-breadcrumb::after {
     content: '';
-    background: url(../src/assets/img/bg-coverbottom.png) no-repeat center;
+    background: url(../src/assets/img/bg-coverbottom.png) center;
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 50px;
+    height: 51px;
     rotate: 180deg;
     z-index: 1;
 }
 .tsf-contact::before {
     content: '';
-    background: url(../src/assets/img/bg-circle.svg) no-repeat center;
+    background: url(../src/assets/img/bg-circle.svg) center;
     position: absolute;
     top: 40px;
     left: 80%;
@@ -622,6 +622,10 @@ body.sticky-header {
 @media screen and (max-width: 1200px) {
   .nav-menu .nav-item .pr-14 {
     padding-right: calc(var(--spacing) * 6);
+  }
+  .tsf-banner .col-span-9,
+  .tsf-banner .col-span-3 {
+    grid-column: span 12 / span 9;
   }
 }
 
