@@ -536,9 +536,9 @@ figure img,
   top: 80px;
   left: 0;
   width: 100%;
+  height: calc(100vh - 80px);
   z-index: 49;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  pointer-events: none;
   transition: all 0.3s ease;
   opacity: 0;
   visibility: hidden;
@@ -549,6 +549,17 @@ figure img,
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+.tsf-sticky-tabmenu > div {
+  pointer-events: auto;
+}
+
+/* Hide sticky menu on mobile */
+@media screen and (max-width: 768px) {
+  .tsf-sticky-tabmenu {
+    display: none;
+  }
 }
 
 body.sticky-header {

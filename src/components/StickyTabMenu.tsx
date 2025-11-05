@@ -69,28 +69,61 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
   function handleClick(id: string) {
     const evt = new CustomEvent('tsf:set-category', { detail: id });
     window.dispatchEvent(evt);
+    
+    // Scroll to products section
+    const productSection = document.querySelector('.tsf-our-product') as HTMLElement | null;
+    const headerEl = document.querySelector('header') as HTMLElement | null;
+    const headerHeight = headerEl?.offsetHeight ?? 0;
+    
+    if (productSection) {
+      const rect = productSection.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const targetY = rect.top + scrollTop - headerHeight - 20; // 20px extra spacing
+      
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
+      });
+    }
   }
 
   return (
     <div className={`tsf-sticky-tabmenu${visible ? ' show' : ''}`} suppressHydrationWarning>
-      <div className="absolute top-50 left-0 z-10">
-        <ul className="-mb-px text-3xl font-medium text-center" role="tablist">
-          {categories.map((c) => (
-            <li key={c.id} className="me-2 pb-4" role="presentation">
-              <button
-                id={`${c.id}-sticky-tab`}
-                className={`inline-block p-4 cursor-pointer tsf-box-shodow rounded-r-md${activeId === c.id ? ' active' : ''}`}
-                type="button"
-                role="tab"
-                aria-controls={c.id}
-                aria-selected={activeId === c.id}
-                data-tabs-target={`#styled-${c.id}`}
-                onClick={() => handleClick(c.id)}
-              >
-                <Image src={c.icon} alt={`${c.id}-tab`} width={60} height={60} />
-              </button>
-            </li>
-          ))}
+      <div className="absolute top-1/2 left-4 -translate-y-1/2 z-10">
+        <ul className="flex flex-col gap-3" role="tablist">
+          {categories.map((c) => {
+            const isActive = activeId === c.id;
+            return (
+              <li key={c.id} role="presentation">
+                <button
+                  id={`${c.id}-sticky-tab`}
+                  className={`
+                    relative w-17 h-17 flex items-center justify-center
+                    cursor-pointer rounded-full transition-all duration-300
+                    ${isActive 
+                      ? 'bg-[#FF4900] shadow-lg shadow-[#FF4900]/40 scale-110' 
+                      : 'bg-white border-2 border-gray-300 hover:border-[#FF4900] hover:shadow-md hover:scale-105'
+                    }
+                    tsf-box-shodow
+                  `}
+                  type="button"
+                  role="tab"
+                  aria-controls={c.id}
+                  aria-selected={isActive}
+                  data-tabs-target={`#styled-${c.id}`}
+                  onClick={() => handleClick(c.id)}
+                >
+                  <Image 
+                    src={c.icon} 
+                    alt={`${c.id}-tab`} 
+                    width={40} 
+                    height={40}
+                    className={isActive ? 'brightness-0 invert' : ''}
+                  />
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

@@ -53,7 +53,7 @@ export default async function ProductsPage() {
       />
 
       <div className="tsf-our-product py-20">
-        <div className="container mx-auto">
+        <div className="container px-4 md:px-6 lg:px-7 mx-auto">
           <ProductsCatalog categories={categories} />
         </div>
       </div>

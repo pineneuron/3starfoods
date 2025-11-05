@@ -45,6 +45,25 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
       const custom = e as CustomEvent<string>;
       if (custom.detail) {
         setActiveCategoryId(custom.detail);
+        
+        // Scroll to products section if not already visible
+        const productHeading = document.querySelector('.tsf-product_heading') as HTMLElement | null;
+        const headerEl = document.querySelector('header') as HTMLElement | null;
+        const headerHeight = headerEl?.offsetHeight ?? 0;
+        
+        if (productHeading) {
+          const rect = productHeading.getBoundingClientRect();
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const targetY = rect.top + scrollTop - headerHeight - 20; // 20px extra spacing
+          
+          // Only scroll if the section is not already in view
+          if (rect.top < headerHeight + 50 || rect.top > window.innerHeight) {
+            window.scrollTo({
+              top: targetY,
+              behavior: 'smooth'
+            });
+          }
+        }
       }
     }
     window.addEventListener('tsf:set-category', onSetCategory as EventListener);
@@ -70,25 +89,51 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
 
   return (
     <div className="tsf-product_heading py-10" suppressHydrationWarning>
-      <div className="flex justify-between items-center">
-        <div className="mb-10">
-          <ul className="flex flex-wrap text-xl text-center" role="tablist">
-            {categories.map((cat, idx) => {
+      <div className="flex justify-center items-center mb-10">
+        <div className="w-full">
+          <ul className="flex flex-wrap justify-center gap-3 text-center" role="tablist">
+            {categories.map((cat) => {
               const isActive = cat.id === activeCategoryId;
-              const baseClasses = 'inline-block py-5 px-8 capitalize cursor-pointer tsf-font-sora';
-              const rounded = idx === 0 ? ' rounded-l-full' : idx === categories.length - 1 ? ' rounded-r-full' : '';
-              const activeClasses = isActive ? ' tsf-bg-red text-white' : '';
               return (
-                <li key={cat.id} className="me-2" role="presentation">
+                <li key={cat.id} role="presentation">
                   <button
-                    className={baseClasses + rounded + activeClasses}
+                    className={`
+                      relative inline-block px-8 py-3.5 capitalize cursor-pointer tsf-font-sora
+                      text-base font-semibold rounded-full min-w-[140px]
+                      transition-all duration-300 ease-in-out transform
+                      ${isActive 
+                        ? 'bg-[#FF4900] text-white shadow-lg shadow-[#FF4900]/40 scale-105' 
+                        : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#FF4900] hover:text-[#FF4900] hover:bg-gray-50 hover:shadow-md active:scale-95'
+                      }
+                    `}
                     type="button"
                     role="tab"
                     aria-selected={isActive}
                     data-tabs-target={`#styled-${cat.id}`}
-                    onClick={() => setActiveCategoryId(cat.id)}
+                    onClick={() => {
+                      setActiveCategoryId(cat.id);
+                      // Scroll to products section
+                      setTimeout(() => {
+                        const productHeading = document.querySelector('.tsf-product_heading') as HTMLElement | null;
+                        const headerEl = document.querySelector('header') as HTMLElement | null;
+                        const headerHeight = headerEl?.offsetHeight ?? 0;
+                        
+                        if (productHeading) {
+                          const rect = productHeading.getBoundingClientRect();
+                          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                          const targetY = rect.top + scrollTop - headerHeight - 20;
+                          
+                          if (rect.top < headerHeight + 50 || rect.top > window.innerHeight) {
+                            window.scrollTo({
+                              top: targetY,
+                              behavior: 'smooth'
+                            });
+                          }
+                        }
+                      }, 100);
+                    }}
                   >
-                    {cat.name}
+                    <span className="relative z-10 whitespace-nowrap">{cat.name}</span>
                   </button>
                 </li>
               );
