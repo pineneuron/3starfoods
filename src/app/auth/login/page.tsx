@@ -56,17 +56,17 @@ function LoginForm() {
       // Check user role and redirect accordingly
       // Wait a bit for session to be updated
       await new Promise(resolve => setTimeout(resolve, 100))
-      
+
       // Fetch session to get user role
       const sessionRes = await fetch('/api/auth/session')
       const session = await sessionRes.json()
-      
+
       // Redirect based on role
       let redirectUrl = params.get("callbackUrl") || "/"
       if (session?.user?.role === 'ADMIN') {
         redirectUrl = '/admin'
       }
-      
+
       router.push(redirectUrl)
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed"
@@ -85,14 +85,14 @@ function LoginForm() {
     setMagicLinkLoading(true)
     setError("")
     setMagicLinkSuccess(false)
-    
+
     try {
       const res = await signIn("email", {
         redirect: false,
         email,
         callbackUrl: params.get("callbackUrl") || "/",
       })
-      
+
       if (res?.error) {
         setError("Failed to send magic link. Please try again.")
         setMagicLinkSuccess(false)
@@ -164,20 +164,32 @@ function LoginForm() {
             Password
           </label>
         </div>
-        <button type="submit" disabled={loading} className="w-full py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors">Log in</button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          {loading && (
+            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          )}
+          {loading ? "Logging in..." : "Log in"}
+        </button>
       </form>
 
       <div className="flex justify-between items-center my-4">
         <span className="text-gray-500 text-sm">or</span>
-        <button 
-          className="text-[#030e55] text-sm underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
+        <button
+          className="text-[#030e55] text-sm underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleMagicLink}
           disabled={magicLinkLoading || loading}
         >
-          {magicLinkLoading ? 'Sending email...' : magicLinkSuccess ? 'Email sent! Check your inbox' : 'Sign in by Email (Magic Link)'}
+          {magicLinkLoading ? 'Sending magic link...' : magicLinkSuccess ? 'Email sent! Check your inbox' : 'Sign in by Email (Magic Link)'}
         </button>
       </div>
-      
+
       {magicLinkSuccess && (
         <div className="bg-green-50 text-green-700 rounded p-3 text-sm border border-green-200">
           <p className="font-medium mb-1">✓ Email sent successfully!</p>
