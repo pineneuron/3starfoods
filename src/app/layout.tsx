@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "../../public/design/src/input.css";
 import "leaflet/dist/leaflet.css";
 import Providers from "@/components/Providers";
 import { Sora, Bebas_Neue } from "next/font/google";
