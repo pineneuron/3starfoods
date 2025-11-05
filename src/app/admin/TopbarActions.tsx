@@ -3,6 +3,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Moon, Sun, User, LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { signOut } from 'next-auth/react'
 
 type Props = {
   name?: string | null
@@ -48,6 +49,11 @@ export function ThemeToggle() {
 
 export function AccountMenu({ name, email }: Props) {
   const initials = getInitials(name || undefined, email || undefined)
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/auth/login' })
+  }
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -67,7 +73,10 @@ export function AccountMenu({ name, email }: Props) {
             Profile
           </DropdownMenu.Item>
           <DropdownMenu.Separator className="my-1 h-px bg-[oklch(.922_0_0)]" />
-          <DropdownMenu.Item className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
+          <DropdownMenu.Item
+            className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100"
+            onClick={handleLogout}
+          >
             <LogOut className="h-4 w-4 text-gray-500 group-hover:text-gray-700" />
             Sign out
           </DropdownMenu.Item>
