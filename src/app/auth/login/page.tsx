@@ -164,6 +164,11 @@ function LoginForm() {
             Password
           </label>
         </div>
+        <div className="text-right">
+          <Link href="/auth/forgot-password" className="text-sm text-[#030e55] underline hover:text-[#020a3f]">
+            Forgot Password?
+          </Link>
+        </div>
         <button
           type="submit"
           disabled={loading}

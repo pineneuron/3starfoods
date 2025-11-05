@@ -22,7 +22,7 @@ export default function RegisterPage() {
     e.preventDefault()
     setError("")
     setSuccess("")
-    
+
     if (password !== confirmPassword) {
       setError("Passwords do not match")
       return
@@ -105,12 +105,12 @@ export default function RegisterPage() {
       await new Promise(resolve => setTimeout(resolve, 100))
       const sessionRes = await fetch('/api/auth/session')
       const session = await sessionRes.json()
-      
+
       let redirectUrl = "/"
       if (session?.user?.role === 'ADMIN') {
         redirectUrl = '/admin'
       }
-      
+
       router.push(redirectUrl)
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred"
@@ -129,11 +129,11 @@ export default function RegisterPage() {
       <h1 className="text-4xl font-bold mb-5 text-center">Register</h1>
       {error && <div className="bg-red-100 text-red-700 rounded p-2 mb-4 text-center">{error}</div>}
       {success && <div className="bg-green-100 text-green-700 rounded p-2 mb-4 text-center">{success}</div>}
-      
+
       {step === "form" ? (
         <form className="space-y-6" onSubmit={handleSendCode}>
           <div className="relative">
-            <input type="text" id="register-name" value={name} onChange={e => setName(e.target.value)} required 
+            <input type="text" id="register-name" value={name} onChange={e => setName(e.target.value)} required
               className="peer w-full border rounded-lg px-4 py-4 text-base focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all" placeholder="Name" />
             <label htmlFor="register-name" className="absolute left-4 bg-white px-1 font-medium pointer-events-none transition-all duration-200
               text-gray-400 text-base top-4
@@ -143,7 +143,7 @@ export default function RegisterPage() {
             >Name</label>
           </div>
           <div className="relative">
-            <input type="email" id="register-email" value={email} onChange={e => setEmail(e.target.value)} required 
+            <input type="email" id="register-email" value={email} onChange={e => setEmail(e.target.value)} required
               className="peer w-full border rounded-lg px-4 py-4 text-base focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all" placeholder="Email" />
             <label htmlFor="register-email" className="absolute left-4 bg-white px-1 font-medium pointer-events-none transition-all duration-200
               text-gray-400 text-base top-4
@@ -153,7 +153,7 @@ export default function RegisterPage() {
             >Email</label>
           </div>
           <div className="relative">
-            <input type="password" id="register-password" value={password} onChange={e => setPassword(e.target.value)} required 
+            <input type="password" id="register-password" value={password} onChange={e => setPassword(e.target.value)} required
               className="peer w-full border rounded-lg px-4 py-4 text-base focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all" placeholder="Password" />
             <label htmlFor="register-password" className="absolute left-4 bg-white px-1 font-medium pointer-events-none transition-all duration-200
               text-gray-400 text-base top-4
@@ -163,7 +163,7 @@ export default function RegisterPage() {
             >Password</label>
           </div>
           <div className="relative">
-            <input type="password" id="register-confirm" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required 
+            <input type="password" id="register-confirm" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required
               className="peer w-full border rounded-lg px-4 py-4 text-base focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all" placeholder="Confirm Password" />
             <label htmlFor="register-confirm" className="absolute left-4 bg-white px-1 font-medium pointer-events-none transition-all duration-200
               text-gray-400 text-base top-4
@@ -172,9 +172,9 @@ export default function RegisterPage() {
               peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-[#030e55] peer-not-placeholder-shown:top-1 peer-not-placeholder-shown:bg-white peer-not-placeholder-shown:px-1"
             >Confirm Password</label>
           </div>
-          <button 
-            type="submit" 
-            disabled={sendingCode} 
+          <button
+            type="submit"
+            disabled={sendingCode}
             className="w-full py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {sendingCode && (
@@ -195,15 +195,15 @@ export default function RegisterPage() {
             <p className="text-xs text-blue-600">Please check your email and enter the code below. The code will expire in 10 minutes.</p>
           </div>
           <div className="relative">
-            <input 
-              type="text" 
-              id="verification-code" 
-              value={verificationCode} 
-              onChange={e => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))} 
-              required 
+            <input
+              type="text"
+              id="verification-code"
+              value={verificationCode}
+              onChange={e => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              required
               maxLength={6}
-              className="peer w-full border rounded-lg px-4 py-4 text-base text-center text-2xl font-bold tracking-widest focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all" 
-              placeholder="000000" 
+              className="peer w-full border rounded-lg px-4 py-4 text-base text-center text-2xl font-bold tracking-widest focus:outline-none focus:border-[#030e55] border-gray-300 placeholder-transparent transition-all"
+              placeholder="000000"
             />
             <label htmlFor="verification-code" className="absolute left-4 bg-white px-1 font-medium pointer-events-none transition-all duration-200
               text-gray-400 text-base top-4
@@ -213,16 +213,16 @@ export default function RegisterPage() {
             >Verification Code</label>
           </div>
           <div className="flex gap-3">
-            <button 
-              type="button" 
-              onClick={() => { setStep("form"); setVerificationCode(""); setError(""); setSuccess(""); }} 
+            <button
+              type="button"
+              onClick={() => { setStep("form"); setVerificationCode(""); setError(""); setSuccess(""); }}
               className="flex-1 py-2 bg-gray-200 text-gray-700 rounded font-bold cursor-pointer transition-colors hover:bg-gray-300"
             >
               Change Email
             </button>
-            <button 
-              type="submit" 
-              disabled={loading || verificationCode.length !== 6} 
+            <button
+              type="submit"
+              disabled={loading || verificationCode.length !== 6}
               className="flex-1 py-2 bg-[#030e55] text-white rounded font-bold cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && (
