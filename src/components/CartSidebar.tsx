@@ -130,14 +130,14 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
       />
 
       <aside
-        className={`absolute right-0 top-0 h-full w-1/2 pb-10 flex flex-col justify-between bg-white tsf-box-shodow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`absolute right-0 top-0 h-full w-[420px] max-w-[90vw] flex flex-col justify-between bg-white tsf-box-shodow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-6 border-b">
           <h3 className="text-lg font-bold tsf-font-sora uppercase">Your Cart</h3>
           <button aria-label="Close" className="w-10 h-10 rounded-full tsf-bg-red text-white flex items-center justify-center" onClick={() => setOpen(false)}>×</button>
         </div>
 
-        <div className="h-[calc(100%-460px)] overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           {hasItems ? (
             items.map((it, idx) => (
               <div key={`${it.id}-${it.variation || 'default'}`} className={`flex items-start gap-4 p-6 ${idx !== 0 ? 'border-t' : ''}`}>
@@ -175,7 +175,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
         </div>
 
         {hasItems && (
-          <div className="border-t p-6 space-y-3">
+          <div className="sticky bottom-0 bg-white border-t p-6 space-y-3">
             {belowMinimum && (
               <div className="rounded-md bg-yellow-50 text-yellow-800 text-sm p-3">
                 Add <span className="font-semibold">Rs. {amountToReachMinimum.toFixed(2)}</span> more to reach the minimum order amount (Rs. {MIN_ORDER_AMOUNT}). You can still checkout now; a delivery fee applies.

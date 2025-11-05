@@ -6,6 +6,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CartSidebar from '@/components/CartSidebar';
 import Image from 'next/image';
 
 // Configurable order rules
@@ -1019,9 +1020,11 @@ function CheckoutContent() {
                 <div className="space-y-3 border-t pt-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">Rs. {subtotal.toFixed(2)}</span>
+                    <span className="font-medium">
+                      {mounted && isHydrated ? `Rs. ${subtotal.toFixed(2)}` : 'Rs. 0.00'}
+                    </span>
                   </div>
-                  {discountAmount > 0 && (
+                  {mounted && isHydrated && discountAmount > 0 && (
                     <div className="flex items-center justify-between text-sm text-green-600">
                       <span>Discount ({appliedCoupon?.coupon.code})</span>
                       <span className="font-medium">-Rs. {discountAmount.toFixed(2)}</span>
@@ -1035,7 +1038,9 @@ function CheckoutContent() {
                   )}
                   <div className="flex items-center justify-between text-lg border-t pt-3">
                     <span className="text-gray-800 font-semibold">Total</span>
-                    <span className="font-bold">Rs. {grandTotal.toFixed(2)}</span>
+                    <span className="font-bold">
+                      {mounted && isHydrated ? `Rs. ${grandTotal.toFixed(2)}` : 'Rs. 0.00'}
+                    </span>
                   </div>
                 </div>
 
@@ -1060,6 +1065,7 @@ function CheckoutContent() {
       </div>
 
       <Footer />
+      <CartSidebar />
     </>
   );
 }
