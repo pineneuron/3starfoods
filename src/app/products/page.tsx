@@ -45,10 +45,10 @@ export default async function ProductsPage() {
       <StickyTabMenu
         categories={[
           { id: 'chicken', icon: '/images/product-tab01.svg' },
-          { id: 'fish', icon: '/images/product-tab02.svg' },
+          { id: 'mutton', icon: '/images/product-tab05.svg' },
           { id: 'pork', icon: '/images/product-tab03.svg' },
-          { id: 'mutton', icon: '/images/product-tab04.svg' },
-          { id: 'buff', icon: '/images/product-tab05.svg' }
+          { id: 'fish', icon: '/images/product-tab04.svg' },
+          { id: 'buff', icon: '/images/product-tab06.svg' }
         ]}
       />
 
