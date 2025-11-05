@@ -111,87 +111,74 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
   );
 }
 
+function TodaysDealSkeleton() {
+  return (
+    <div className="tsf-banner-list rounded-lg">
+      <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
+      <div className="tsf-banner-list-item tsf-box-shodow">
+        {[1, 2, 3].map((index) => (
+          <div 
+            key={index}
+            className={`flex justify-start items-center p-5 ${index !== 3 ? 'border-b border-gray-200' : ''}`}
+          >
+            {/* Image skeleton */}
+            <div className="tsf-product-img">
+              <div className="w-[120px] h-[120px] bg-gray-200 rounded-md animate-pulse" />
+            </div>
+            {/* Content skeleton */}
+            <div className="pl-6 flex-1">
+              {/* Product name skeleton */}
+              <div className="mb-2">
+                <div className="h-7 bg-gray-200 rounded animate-pulse w-3/4" />
+              </div>
+              {/* Price skeleton */}
+              <div className="mt-2">
+                <div className="h-5 bg-gray-200 rounded animate-pulse w-2/3" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const TodaysDeal: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [dealProducts, setDealProducts] = useState<DealProduct[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsClient(true);
     
-    // Load today's deal products from the JSON file
     const loadDealProducts = async () => {
-      const response = await fetch('/data/products.json');
-      const data = await response.json();
-      
-      // Get bestseller products for today's deals (only with real images)
-      const allProducts = data.categories.flatMap((cat: { products: DealProduct[] }) => cat.products);
-      const bestsellerProducts = allProducts
-        .filter((product: DealProduct) => 
-          product.bestseller === true && 
-          product.image !== '/images/placeholder.png'
-        )
-        .slice(0, 3); // Take top 3 bestsellers with real images
-      
-      setDealProducts(bestsellerProducts);
+      try {
+        setLoading(true);
+        const response = await fetch('/api/todays-deals');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch today\'s deals');
+        }
+        
+        const data = await response.json();
+        setDealProducts(data);
+      } catch (error) {
+        console.error('Error loading deal products:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadDealProducts();
   }, []);
 
-  // During SSR, render without cart functionality
-  if (!isClient) {
-    return (
-      <div className="tsf-banner-list rounded-lg">
-        <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
-        <div className="tsf-banner-list-item tsf-box-shodow">
-          {dealProducts.map((product, index) => {
-            const hasDiscount = product.discountPercent > 0;
-            const discountedPrice = hasDiscount
-              ? Math.round(product.price * (1 - product.discountPercent / 100))
-              : product.price;
-            const isLast = index === dealProducts.length - 1;
+  if (loading || !isClient) {
+    return <TodaysDealSkeleton />;
+  }
 
-            return (
-              <div 
-                key={product.id}
-                className={`flex justify-start items-center tsf-font-bebas p-5 ${!isLast ? 'border-b border-gray-200' : ''}`}
-              >
-                <div className="tsf-product-img">
-                  <Image src={product.image} alt={product.name} width={120} height={120} className="rounded-md" />
-                </div>
-                <div className="pl-6 flex-1">
-                  <div className="tsf-product-name">
-                    <span className="text-2xl font-bold capitalize">{product.name}</span>
-                  </div>
-                  <div className="price text-md mt-2">
-                    {hasDiscount ? (
-                      <>
-                        <span className="pre-price text-gray-400 line-through">
-                          RS {product.price.toFixed(2)}
-                        </span>
-                        {' '}
-                        <span className="text-red-600 font-bold">
-                          RS {discountedPrice.toFixed(2)}
-                        </span>
-                        {' '}
-                        <span className="tsf-discount tsf-bgred-color text-sm text-white font-normal rounded-sm p-1 ml-2">
-                          {product.discountPercent}%
-                        </span>
-                      </>
-                    ) : (
-                      <span>
-                        RS {product.price.toFixed(2)}
-                      </span>
-                    )}
-                    {' '}({product.unit})
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
+  // If no products found, show empty state or skeleton
+  if (dealProducts.length === 0) {
+    return <TodaysDealSkeleton />;
   }
 
   // After client-side hydration, render with cart functionality
