@@ -119,9 +119,9 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                       </div>
                       <figcaption className="p-5 text-center rounded-t-md flex flex-col flex-grow">
                         <div className="tsf-product-name">
-                          <a 
-                            className="text-3xl capitalize cursor-pointer" 
-                            href="#" 
+                          <a
+                            className="text-3xl capitalize cursor-pointer"
+                            href="#"
                             onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
                           >
                             {p.name}
@@ -150,9 +150,9 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                           {' '}({p.unit})
                         </div>
                         <div className="tsf-add_cart mt-auto pt-2">
-                          <a 
-                            className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer" 
-                            href="#" 
+                          <a
+                            className="tsf-button holographic-card uppercase inline-block text-2xl cursor-pointer"
+                            href="#"
                             onClick={(e) => { e.preventDefault(); handleProductClick(p); }}
                           >
                             view details
@@ -167,7 +167,7 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
           </div>
         );
       })}
-      
+
       <ProductModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

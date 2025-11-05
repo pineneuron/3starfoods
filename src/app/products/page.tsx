@@ -37,7 +37,7 @@ export default async function ProductsPage() {
       <div className="tsf-breadcrumb relative py-20">
         <div className="w-full mx-auto container">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora capitalize">our products</h1>
+            <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora capitalize">Our Products</h1>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default async function ProductsPage() {
       />
 
       <div className="tsf-our-product py-20">
-        <div className="w-full mx-auto 2xl:container">
+        <div className="container mx-auto">
           <ProductsCatalog categories={categories} />
         </div>
       </div>
