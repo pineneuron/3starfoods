@@ -7,9 +7,11 @@ function transformDbToFrozenProducts(dbCategories: Awaited<ReturnType<typeof Pro
   const allProducts: FrozenProduct[] = [];
   
   dbCategories
-    .filter(cat => frozenSlugs.includes(cat.slug))
+    .filter(cat => cat.isActive && frozenSlugs.includes(cat.slug))
     .forEach(cat => {
-      cat.products.forEach(p => {
+      cat.products
+        .filter(p => p.isActive)
+        .forEach(p => {
         allProducts.push({
           id: p.id,
           name: p.name,
@@ -29,7 +31,7 @@ function transformDbToFrozenProducts(dbCategories: Awaited<ReturnType<typeof Pro
           featured: p.isFeatured,
           bestseller: p.isBestseller,
         });
-      });
+        });
     });
   
   // Take first 8 items from combined frozen items

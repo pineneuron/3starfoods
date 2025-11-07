@@ -37,7 +37,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           <SidebarNav />
 
           <div className="mt-auto p-3 border-t border-t-[oklch(.922_0_0)]">
-            <Link href="/admin" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100">
+            <Link href="/admin/settings?tab=profile" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100">
               <div className="h-9 w-9 rounded-full bg-[#7c6cff] text-white flex items-center justify-center text-[12px] font-semibold">
                 {session?.user?.name?.charAt(0)?.toUpperCase() ?? 'A'}
               </div>

@@ -17,17 +17,17 @@ const CategoryGrid: React.FC = () => {
     setIsClient(true);
     
     const loadCategories = async () => {
-      const response = await fetch('/data/products.json');
-      const data = await response.json();
-      
-      // Transform categories to include product count
-      const categoriesWithCount = data.categories.map((cat: { id: string; name: string; products: unknown[] }) => ({
-        id: cat.id,
-        name: cat.name,
-        productCount: cat.products.length
-      }));
-      
-      setCategories(categoriesWithCount);
+      try {
+        const response = await fetch('/api/categories/summary', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Failed to load categories');
+        }
+        const data: Category[] = await response.json();
+        setCategories(data.filter(category => category.productCount > 0));
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        setCategories([]);
+      }
     };
 
     loadCategories();

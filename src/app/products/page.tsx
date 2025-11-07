@@ -7,24 +7,29 @@ import { CartProvider } from '../../context/CartContext';
 import { ProductService } from '@/lib/services';
 
 function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof ProductService.getAllCategories>>): Category[] {
-  return dbCategories.map(cat => ({
-    id: cat.id,
-    name: cat.name,
-    products: cat.products.map(p => ({
-      id: p.id,
-      name: p.name,
-      price: Number(p.basePrice),
-      unit: p.unit,
-      discountPercent: p.discountPercent,
-      image: p.imageUrl || '/images/placeholder.png',
-      images: p.images.length > 0 ? p.images.sort((a, b) => (a.isPrimary ? -1 : 0) - (b.isPrimary ? -1 : 0)).map(img => img.imageUrl) : undefined,
-      shortDescription: p.shortDescription || undefined,
-      variations: p.variations.length > 0 ? p.variations.map(v => ({ name: v.name, price: Number(v.price), discountPercent: v.discountPercent })) : undefined,
-      defaultVariation: p.variations.find(v => v.isDefault)?.name || undefined,
-      featured: p.isFeatured,
-      bestseller: p.isBestseller,
+  return dbCategories
+    .filter(cat => cat.isActive)
+    .map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      products: cat.products
+        .filter(p => p.isActive)
+        .map(p => ({
+          id: p.id,
+          name: p.name,
+          price: Number(p.basePrice),
+          unit: p.unit,
+          discountPercent: p.discountPercent,
+          image: p.imageUrl || '/images/placeholder.png',
+          images: p.images.length > 0 ? p.images.sort((a, b) => (a.isPrimary ? -1 : 0) - (b.isPrimary ? -1 : 0)).map(img => img.imageUrl) : undefined,
+          shortDescription: p.shortDescription || undefined,
+          variations: p.variations.length > 0 ? p.variations.map(v => ({ name: v.name, price: Number(v.price), discountPercent: v.discountPercent })) : undefined,
+          defaultVariation: p.variations.find(v => v.isDefault)?.name || undefined,
+          featured: p.isFeatured,
+          bestseller: p.isBestseller,
+        }))
     }))
-  }))
+    .filter(cat => cat.products.length > 0)
 }
 
 export default async function ProductsPage() {

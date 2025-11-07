@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Ticket, Settings, ChevronDown, Dot, Users } from 'lucide-react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, ChevronDown, Users, Bell, Wrench, Mail, PlusCircle, List } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
 export default function SidebarNav() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
 
@@ -38,6 +39,8 @@ export default function SidebarNav() {
   const isCategoriesActive = pathname?.startsWith('/admin/categories')
   const isProductsActive = pathname?.startsWith('/admin/products')
   const isUsersActive = pathname?.startsWith('/admin/users')
+  const isSettingsActive = pathname?.startsWith('/admin/settings')
+  const currentSettingsTab = searchParams.get('tab')
   
   const getHash = () => {
     if (!mounted || typeof window === 'undefined') return ''
@@ -81,7 +84,7 @@ export default function SidebarNav() {
               pathname === '/admin/categories' && getHash() === '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <PlusCircle className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
@@ -92,7 +95,7 @@ export default function SidebarNav() {
               pathname === '/admin/categories' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <List className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">All Categories</span>
           </Link>
         </Collapsible.Content>
@@ -121,7 +124,7 @@ export default function SidebarNav() {
               pathname === '/admin/products' && getHash() === '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <PlusCircle className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
@@ -132,7 +135,7 @@ export default function SidebarNav() {
               pathname === '/admin/products' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <List className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">All Products</span>
           </Link>
         </Collapsible.Content>
@@ -161,7 +164,7 @@ export default function SidebarNav() {
               pathname === '/admin/users' && getHash() === '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <PlusCircle className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
@@ -172,7 +175,7 @@ export default function SidebarNav() {
               pathname === '/admin/users' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
-            <Dot className="h-4 w-4 text-gray-400" />
+            <List className="h-4 w-4 text-gray-400" />
             <span className="sidebar-label">All Users</span>
           </Link>
         </Collapsible.Content>
@@ -190,29 +193,66 @@ export default function SidebarNav() {
         <span className="sidebar-label">Orders</span>
       </Link>
       
-      <Link 
-        href="/admin/coupons"
-        prefetch={false}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
-          pathname === '/admin/coupons' && "bg-gray-100 text-gray-900"
-        )}
-      >
-        <Ticket className="h-4 w-4" />
-        <span className="sidebar-label">Coupons</span>
-      </Link>
-      
-      <Link 
-        href="/admin/settings"
-        prefetch={false}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
-          pathname === '/admin/settings' && "bg-gray-100 text-gray-900"
-        )}
-      >
-        <Settings className="h-4 w-4" />
-        <span className="sidebar-label">Settings</span>
-      </Link>
+      <Collapsible.Root open={openDropdown === 'settings'} onOpenChange={(open) => handleDropdownToggle(open ? 'settings' : '')}>
+        <Collapsible.Trigger 
+          className={cn(
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            isSettingsActive && "bg-gray-100 text-gray-900"
+          )}
+        > 
+          <span className="inline-flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            <span className="sidebar-label">Settings</span>
+          </span>
+          <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'settings' && "rotate-180")} />
+        </Collapsible.Trigger>
+        <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
+          <Link 
+            href="/admin/settings"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/settings' && (!currentSettingsTab || currentSettingsTab === 'profile') && "bg-gray-100"
+            )}
+          >
+            <Wrench className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">Profile</span>
+          </Link>
+          <Link 
+            href="/admin/settings?tab=general"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/settings' && currentSettingsTab === 'general' && "bg-gray-100"
+            )}
+          >
+            <Settings className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">General</span>
+          </Link>
+          <Link 
+            href="/admin/settings?tab=notifications"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/settings' && currentSettingsTab === 'notifications' && "bg-gray-100"
+            )}
+          >
+            <Bell className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">Notifications</span>
+          </Link>
+          <Link 
+            href="/admin/settings?tab=smtp"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/settings' && currentSettingsTab === 'smtp' && "bg-gray-100"
+            )}
+          >
+            <Mail className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">SMTP</span>
+          </Link>
+        </Collapsible.Content>
+      </Collapsible.Root>
     </nav>
   )
 }

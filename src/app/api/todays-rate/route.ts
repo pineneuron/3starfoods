@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { jsPDF } from 'jspdf';
+import { ProductService } from '@/lib/services';
 import fs from 'fs';
 import path from 'path';
 
 export async function GET() {
     try {
-        // Read products data from JSON file
-        const productsPath = path.join(process.cwd(), 'public', 'data', 'products.json');
-        const productsData = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        const categories = await ProductService.getAllCategories();
 
         // Create new PDF document
         const doc = new jsPDF();
@@ -58,7 +57,7 @@ export async function GET() {
         let serialNumber = 1;
 
         // Process each category
-        productsData.categories.forEach((category: { id: string; name: string; products: { id: string; name: string; price: number; unit: string; discountPercent: number }[] }, categoryIndex: number) => {
+        categories.forEach((category, categoryIndex) => {
             if (categoryIndex > 0) {
                 yPosition += 15;
             }
@@ -105,7 +104,7 @@ export async function GET() {
             yPosition += 15;
 
             // Add products for this category
-            category.products.forEach((product: { id: string; name: string; price: number; unit: string; discountPercent: number }) => {
+            category.products.forEach((product) => {
                 if (yPosition > 260) {
                     doc.addPage();
                     yPosition = 30;
@@ -146,9 +145,9 @@ export async function GET() {
                 doc.text(product.name, 40, yPosition + 2);
 
                 doc.setFont('helvetica', 'normal');
-                doc.text('Fresh', 120, yPosition + 2);
+                doc.text(product.unit || 'N/A', 120, yPosition + 2);
                 doc.text('', 150, yPosition + 2);
-                doc.text(product.price.toString(), 175, yPosition + 2);
+                doc.text(Number(product.basePrice).toFixed(2), 175, yPosition + 2);
 
                 yPosition += 12;
                 serialNumber++;

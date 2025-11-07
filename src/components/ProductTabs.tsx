@@ -25,15 +25,10 @@ export interface ProductItem {
   bestseller?: boolean;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  products: ProductItem[];
-}
-
 const ProductTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState('bestseller');
-  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [bestsellers, setBestsellers] = useState<ProductItem[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<ProductItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,24 +40,27 @@ const ProductTabs: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/data/products.json');
-        const data = await response.json();
-        const allProducts = data.categories.flatMap((cat: Category) => cat.products);
-        setProducts(allProducts);
+        const response = await fetch('/api/products/highlights', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Failed to load highlighted products');
+        }
+        const data: { bestsellers: ProductItem[]; featured: ProductItem[] } = await response.json();
+        setBestsellers(data.bestsellers);
+        setFeaturedProducts(data.featured);
       } catch (error) {
         console.error('Error fetching products:', error);
         // Fallback to static data if fetch fails
-        setProducts([]);
+        setBestsellers([]);
+        setFeaturedProducts([]);
       }
     };
 
     fetchProducts();
   }, []);
 
-  const bestsellerProducts = products.filter(p => p.bestseller).slice(0, 8);
-  const featuredProducts = products.filter(p => p.featured).slice(0, 8);
-
-  const currentProducts = activeTab === 'bestseller' ? bestsellerProducts : featuredProducts;
+  const currentProducts = activeTab === 'bestseller'
+    ? bestsellers.slice(0, 8)
+    : featuredProducts.slice(0, 8);
 
   const handleProductClick = (product: ProductItem) => {
     setSelectedProduct(product);
