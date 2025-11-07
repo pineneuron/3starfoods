@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       const paymentMethod = cashOnDelivery ? 'Cash on Delivery' : (paymentScreenshot ? 'Prepaid' : 'Prepaid');
 
       // Generate order number
-      const orderNumber = `TSF-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      const orderNumber = `TSF-${Date.now().toString().slice(-6)}`;
 
       // Map items to database format
       // Convert product slugs/IDs to actual database IDs

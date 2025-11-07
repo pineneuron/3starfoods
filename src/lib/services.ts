@@ -297,8 +297,7 @@ export class OrderService {
 
   private static generateOrderNumber(): string {
     const timestamp = Date.now().toString()
-    const random = Math.random().toString(36).substring(2, 8).toUpperCase()
-    return `TSF-${timestamp.slice(-6)}-${random}`
+    return `TSF-${timestamp.slice(-6)}`
   }
 }
 
