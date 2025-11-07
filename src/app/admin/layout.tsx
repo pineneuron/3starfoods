@@ -10,6 +10,7 @@ import Breadcrumb from './Breadcrumb'
 import { ThemeToggle, AccountMenu } from './TopbarActions'
 import SidebarToggle from './SidebarToggle'
 import SidebarNav from './SidebarNav'
+import NavigationLoading from './NavigationLoading'
 
 const fontSans = Geist({ subsets: ['latin'], variable: '--font-sans' })
 const fontMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' })
@@ -25,6 +26,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   return (
     <div className={`min-h-screen bg-gray-50 ${fontSans.variable} ${fontMono.variable} font-sans font-normal`}>
+      <NavigationLoading />
       <div className="grid grid-cols-[240px_1fr] min-h-screen admin-grid">
         <aside className="sticky top-0 h-screen bg-[oklch(.985 0 0)] border-r border-gray-200 flex flex-col">
           <Link href="/admin" className="h-14 flex items-center px-4">

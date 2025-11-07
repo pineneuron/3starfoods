@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Ticket, Settings, FileText, ChevronDown, Dot, Users } from 'lucide-react'
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Ticket, Settings, ChevronDown, Dot, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
@@ -48,7 +48,7 @@ export default function SidebarNav() {
     <nav className="p-2 pt-0 space-y-0.5">
       <div className="px-3 py-2 text-xs font-medium text-gray-500 sidebar-label">Overview</div>
       <Link 
-        href="/admin" 
+        href="/admin"
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin' && "bg-gray-100 text-gray-900"
@@ -73,7 +73,8 @@ export default function SidebarNav() {
         </Collapsible.Trigger>
         <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
           <Link 
-            href="/admin/categories#add" 
+            href="/admin/categories#add"
+            prefetch={false}
             scroll={false} 
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
@@ -84,7 +85,8 @@ export default function SidebarNav() {
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
-            href="/admin/categories" 
+            href="/admin/categories"
+            prefetch={false}
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
               pathname === '/admin/categories' && getHash() !== '#add' && "bg-gray-100"
@@ -111,7 +113,8 @@ export default function SidebarNav() {
         </Collapsible.Trigger>
         <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
           <Link 
-            href="/admin/products#add" 
+            href="/admin/products#add"
+            prefetch={false}
             scroll={false} 
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
@@ -122,7 +125,8 @@ export default function SidebarNav() {
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
-            href="/admin/products" 
+            href="/admin/products"
+            prefetch={false}
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
               pathname === '/admin/products' && getHash() !== '#add' && "bg-gray-100"
@@ -149,7 +153,8 @@ export default function SidebarNav() {
         </Collapsible.Trigger>
         <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
           <Link 
-            href="/admin/users#add" 
+            href="/admin/users#add"
+            prefetch={false}
             scroll={false} 
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
@@ -160,7 +165,8 @@ export default function SidebarNav() {
             <span className="sidebar-label">Add New</span>
           </Link>
           <Link 
-            href="/admin/users" 
+            href="/admin/users"
+            prefetch={false}
             className={cn(
               "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
               pathname === '/admin/users' && getHash() !== '#add' && "bg-gray-100"
@@ -173,7 +179,8 @@ export default function SidebarNav() {
       </Collapsible.Root>
       
       <Link 
-        href="/admin/orders" 
+        href="/admin/orders"
+        prefetch={false}
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/orders' && "bg-gray-100 text-gray-900"
@@ -184,7 +191,8 @@ export default function SidebarNav() {
       </Link>
       
       <Link 
-        href="/admin/coupons" 
+        href="/admin/coupons"
+        prefetch={false}
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/coupons' && "bg-gray-100 text-gray-900"
@@ -195,7 +203,8 @@ export default function SidebarNav() {
       </Link>
       
       <Link 
-        href="/admin/settings" 
+        href="/admin/settings"
+        prefetch={false}
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/settings' && "bg-gray-100 text-gray-900"
