@@ -1,14 +1,7 @@
-import { Suspense } from 'react'
 import { prisma } from '@/lib/db'
 import DashboardClient from './DashboardClient'
-import DashboardLoading from './DashboardLoading'
 
 export const dynamic = 'force-dynamic'
-
-async function DashboardData() {
-  const data = await getDashboardStats()
-  return <DashboardClient {...data} />
-}
 
 async function getDashboardStats() {
   try {
@@ -278,10 +271,7 @@ async function getDashboardStats() {
   }
 }
 
-export default function AdminHomePage() {
-  return (
-    <Suspense fallback={<DashboardLoading />}>
-      <DashboardData />
-    </Suspense>
-  )
+export default async function AdminHomePage() {
+  const data = await getDashboardStats()
+  return <DashboardClient {...data} />
 }

@@ -360,6 +360,7 @@ export default function DashboardClient({ stats, charts }: DashboardClientProps)
           </BarChart>
         </ResponsiveContainer>
       </div>
+
     </div>
   )
 }

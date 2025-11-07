@@ -27,10 +27,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     <div className={`min-h-screen bg-gray-50 ${fontSans.variable} ${fontMono.variable} font-sans font-normal`}>
       <div className="grid grid-cols-[240px_1fr] min-h-screen admin-grid">
         <aside className="sticky top-0 h-screen bg-[oklch(.985 0 0)] border-r border-gray-200 flex flex-col">
-          <div className="h-14 flex items-center px-4">
+          <Link href="/admin" className="h-14 flex items-center px-4">
             <LayoutDashboard className="h-5 w-5 text-[#030e55] mr-2" />
             <span className="text-[15px] font-extrabold tracking-tight text-[#030e55] sidebar-label">3 Star Foods</span>
-          </div>
+          </Link>
           <nav className="p-2 pt-0 space-y-0.5">
             <div className="px-3 py-2 text-xs font-medium text-gray-500 sidebar-label">Overview</div>
             <Link href="/admin" className={cn("flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors")}>
