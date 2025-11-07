@@ -1,87 +1,122 @@
 import { prisma } from '@/lib/db'
-import DashboardClient from './DashboardClient'
+import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-async function getDashboardStats() {
+export async function GET() {
   try {
     const now = new Date()
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const todayEnd = new Date(todayStart)
     todayEnd.setDate(todayEnd.getDate() + 1)
-
+    
     const yesterdayStart = new Date(todayStart)
     yesterdayStart.setDate(yesterdayStart.getDate() - 1)
-
+    
     const last7DaysStart = new Date(todayStart)
     last7DaysStart.setDate(last7DaysStart.getDate() - 7)
-
+    
     const last30DaysStart = new Date(todayStart)
     last30DaysStart.setDate(last30DaysStart.getDate() - 30)
 
     // Today's stats
-    const [ordersToday, revenueToday, ordersYesterday, revenueYesterday] = await Promise.all([
-      prisma.order.count({
-        where: {
-          createdAt: { gte: todayStart, lt: todayEnd },
+    const ordersToday = await prisma.order.count({
+      where: {
+        createdAt: {
+          gte: todayStart,
+          lt: todayEnd,
         },
-      }),
-      prisma.order.aggregate({
-        where: {
-          createdAt: { gte: todayStart, lt: todayEnd },
-          paymentStatus: 'PAID',
+      },
+    })
+
+    const revenueToday = await prisma.order.aggregate({
+      where: {
+        createdAt: {
+          gte: todayStart,
+          lt: todayEnd,
         },
-        _sum: { totalAmount: true },
-      }),
-      prisma.order.count({
-        where: {
-          createdAt: { gte: yesterdayStart, lt: todayStart },
+        paymentStatus: 'PAID',
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    })
+
+    // Yesterday's stats for comparison
+    const ordersYesterday = await prisma.order.count({
+      where: {
+        createdAt: {
+          gte: yesterdayStart,
+          lt: todayStart,
         },
-      }),
-      prisma.order.aggregate({
-        where: {
-          createdAt: { gte: yesterdayStart, lt: todayStart },
-          paymentStatus: 'PAID',
+      },
+    })
+
+    const revenueYesterday = await prisma.order.aggregate({
+      where: {
+        createdAt: {
+          gte: yesterdayStart,
+          lt: todayStart,
         },
-        _sum: { totalAmount: true },
-      }),
-    ])
+        paymentStatus: 'PAID',
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    })
 
     // Calculate percentage changes
-    const ordersChange = ordersYesterday > 0
+    const ordersChange = ordersYesterday > 0 
       ? ((ordersToday - ordersYesterday) / ordersYesterday * 100).toFixed(1)
       : ordersToday > 0 ? '100' : '0'
-
+    
     const revenueChange = revenueYesterday._sum.totalAmount && Number(revenueYesterday._sum.totalAmount) > 0
       ? ((Number(revenueToday._sum.totalAmount || 0) - Number(revenueYesterday._sum.totalAmount)) / Number(revenueYesterday._sum.totalAmount) * 100).toFixed(1)
       : Number(revenueToday._sum.totalAmount || 0) > 0 ? '100' : '0'
 
-    // Other stats
-    const [totalProducts, totalCustomers, pendingOrders, lowStockInventory] = await Promise.all([
-      prisma.product.count({
-        where: { isActive: true, deletedAt: null },
-      }),
-      prisma.customer.count({
-        where: { isActive: true },
-      }),
-      prisma.order.count({
-        where: {
-          status: { in: ['PENDING', 'CONFIRMED', 'PROCESSING'] },
-        },
-      }),
-      prisma.productInventory.findMany({
-        where: { isTracked: true },
-        select: { quantity: true, minQuantity: true },
-      }),
-    ])
+    // Total products
+    const totalProducts = await prisma.product.count({
+      where: {
+        isActive: true,
+        deletedAt: null,
+      },
+    })
 
-    const lowStockItems = lowStockInventory.filter(
-      inv => inv.quantity <= inv.minQuantity
-    ).length
+    // Total customers
+    const totalCustomers = await prisma.customer.count({
+      where: {
+        isActive: true,
+      },
+    })
 
+    // Average Order Value (Today)
     const avgOrderValue = ordersToday > 0
       ? Number(revenueToday._sum.totalAmount || 0) / ordersToday
       : 0
+
+    // Pending orders
+    const pendingOrders = await prisma.order.count({
+      where: {
+        status: {
+          in: ['PENDING', 'CONFIRMED', 'PROCESSING'],
+        },
+      },
+    })
+
+    // Low stock items
+    const lowStockInventory = await prisma.productInventory.findMany({
+      where: {
+        isTracked: true,
+      },
+      select: {
+        quantity: true,
+        minQuantity: true,
+      },
+    })
+    
+    const lowStockItems = lowStockInventory.filter(
+      inv => inv.quantity <= inv.minQuantity
+    ).length
 
     // Revenue trend (last 7 days)
     const revenueTrend = []
@@ -93,10 +128,15 @@ async function getDashboardStats() {
 
       const revenue = await prisma.order.aggregate({
         where: {
-          createdAt: { gte: date, lt: nextDate },
+          createdAt: {
+            gte: date,
+            lt: nextDate,
+          },
           paymentStatus: 'PAID',
         },
-        _sum: { totalAmount: true },
+        _sum: {
+          totalAmount: true,
+        },
       })
 
       revenueTrend.push({
@@ -114,7 +154,12 @@ async function getDashboardStats() {
       nextDate.setDate(nextDate.getDate() + 1)
 
       const count = await prisma.order.count({
-        where: { createdAt: { gte: date, lt: nextDate } },
+        where: {
+          createdAt: {
+            gte: date,
+            lt: nextDate,
+          },
+        },
       })
 
       orderTrend.push({
@@ -126,7 +171,9 @@ async function getDashboardStats() {
     // Order status distribution
     const orderStatusCounts = await prisma.order.groupBy({
       by: ['status'],
-      _count: { id: true },
+      _count: {
+        id: true,
+      },
     })
 
     const orderStatusDistribution = orderStatusCounts.map(item => ({
@@ -137,7 +184,9 @@ async function getDashboardStats() {
     // Payment status distribution
     const paymentStatusCounts = await prisma.order.groupBy({
       by: ['paymentStatus'],
-      _count: { id: true },
+      _count: {
+        id: true,
+      },
     })
 
     const paymentStatusDistribution = paymentStatusCounts.map(item => ({
@@ -150,12 +199,21 @@ async function getDashboardStats() {
       by: ['productId', 'productName'],
       where: {
         order: {
-          createdAt: { gte: last30DaysStart },
+          createdAt: {
+            gte: last30DaysStart,
+          },
           paymentStatus: 'PAID',
         },
       },
-      _sum: { quantity: true, totalPrice: true },
-      orderBy: { _sum: { quantity: 'desc' } },
+      _sum: {
+        quantity: true,
+        totalPrice: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: 'desc',
+        },
+      },
       take: 10,
     })
 
@@ -163,12 +221,18 @@ async function getDashboardStats() {
     const categorySales = await prisma.orderItem.findMany({
       where: {
         order: {
-          createdAt: { gte: last30DaysStart },
+          createdAt: {
+            gte: last30DaysStart,
+          },
           paymentStatus: 'PAID',
         },
       },
       include: {
-        product: { include: { category: true } },
+        product: {
+          include: {
+            category: true,
+          },
+        },
       },
     })
 
@@ -184,6 +248,22 @@ async function getDashboardStats() {
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 10)
 
+    // Recent orders
+    const recentOrders = await prisma.order.findMany({
+      take: 10,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      select: {
+        id: true,
+        orderNumber: true,
+        customerName: true,
+        totalAmount: true,
+        status: true,
+        paymentStatus: true,
+        createdAt: true,
+      },
+    })
 
     // New customers trend (last 7 days)
     const newCustomersTrend = []
@@ -194,7 +274,12 @@ async function getDashboardStats() {
       nextDate.setDate(nextDate.getDate() + 1)
 
       const count = await prisma.customer.count({
-        where: { createdAt: { gte: date, lt: nextDate } },
+        where: {
+          createdAt: {
+            gte: date,
+            lt: nextDate,
+          },
+        },
       })
 
       newCustomersTrend.push({
@@ -206,21 +291,35 @@ async function getDashboardStats() {
     // Total revenue (last 30 days)
     const totalRevenue30Days = await prisma.order.aggregate({
       where: {
-        createdAt: { gte: last30DaysStart },
+        createdAt: {
+          gte: last30DaysStart,
+        },
         paymentStatus: 'PAID',
       },
-      _sum: { totalAmount: true },
+      _sum: {
+        totalAmount: true,
+      },
     })
 
     // Total orders (last 30 days)
     const totalOrders30Days = await prisma.order.count({
-      where: { createdAt: { gte: last30DaysStart } },
+      where: {
+        createdAt: {
+          gte: last30DaysStart,
+        },
+      },
     })
 
-    return {
+    return NextResponse.json({
       stats: {
-        ordersToday: { value: ordersToday, change: ordersChange },
-        revenueToday: { value: Number(revenueToday._sum.totalAmount || 0), change: revenueChange },
+        ordersToday: {
+          value: ordersToday,
+          change: ordersChange,
+        },
+        revenueToday: {
+          value: Number(revenueToday._sum.totalAmount || 0),
+          change: revenueChange,
+        },
         totalProducts,
         totalCustomers,
         avgOrderValue,
@@ -242,37 +341,22 @@ async function getDashboardStats() {
         salesByCategory,
         newCustomersTrend,
       },
-    }
+      recentOrders: recentOrders.map(order => ({
+        id: order.id,
+        orderNumber: order.orderNumber,
+        customerName: order.customerName,
+        totalAmount: Number(order.totalAmount),
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        createdAt: order.createdAt.toISOString(),
+      })),
+    })
   } catch (error) {
-    console.error('Error fetching dashboard stats:', error)
-    // Return empty/default data on error
-    return {
-      stats: {
-        ordersToday: { value: 0, change: '0' },
-        revenueToday: { value: 0, change: '0' },
-        totalProducts: 0,
-        totalCustomers: 0,
-        avgOrderValue: 0,
-        pendingOrders: 0,
-        lowStockItems: 0,
-        totalRevenue30Days: 0,
-        totalOrders30Days: 0,
-      },
-      charts: {
-        revenueTrend: [],
-        orderTrend: [],
-        orderStatusDistribution: [],
-        paymentStatusDistribution: [],
-        topProducts: [],
-        salesByCategory: [],
-        newCustomersTrend: [],
-      },
-    }
+    console.error('Dashboard stats error:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch dashboard stats' },
+      { status: 500 }
+    )
   }
 }
 
-export default async function AdminHomePage() {
-  const data = await getDashboardStats()
-
-  return <DashboardClient {...data} />
-}
