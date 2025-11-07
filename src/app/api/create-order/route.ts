@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { prisma } from '@/lib/db';
 import { OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
+import { getNotificationSettings } from '@/lib/settings';
 
 export async function POST(request: NextRequest) {
   try {
@@ -218,7 +219,10 @@ export async function POST(request: NextRequest) {
     const smtpPass = process.env.SMTP_PASS;
     const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@3starfoods.com';
     const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods';
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@3starfoods.com';
+    const notificationSettings = await getNotificationSettings();
+    const adminEmails = notificationSettings.orderEmails.length
+      ? notificationSettings.orderEmails
+      : [process.env.ADMIN_EMAIL || 'admin@3starfoods.com'];
 
     // Create nodemailer transporter
     const transporter = nodemailer.createTransport({
@@ -472,7 +476,7 @@ export async function POST(request: NextRequest) {
     try {
       await transporter.sendMail({
         from: `"${fromName}" <${fromEmail}>`,
-        to: adminEmail,
+        to: adminEmails,
         subject: `New Order #${savedOrder.orderNumber} - ${customer.name}`,
         text: textContent,
         html: adminHtml

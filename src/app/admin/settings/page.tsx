@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Wrench, Settings, Bell, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getGeneralSettings, updateGeneralSettings, updateProfile, updatePassword } from './actions'
+import { getGeneralSettings, getNotificationSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile } from './actions'
 
 type SettingsCategory = 'profile' | 'general' | 'notifications'
 
@@ -651,9 +651,177 @@ function GeneralSection() {
 }
 
 function NotificationsSection() {
+  const [orderEmailsInput, setOrderEmailsInput] = useState('')
+  const [contactEmailsInput, setContactEmailsInput] = useState('')
+
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const [notificationError, setNotificationError] = useState('')
+  const [notificationSuccess, setNotificationSuccess] = useState('')
+  const [orderEmailError, setOrderEmailError] = useState('')
+  const [contactEmailError, setContactEmailError] = useState('')
+
+  useEffect(() => {
+    let ignore = false
+
+    const loadNotificationSettings = async () => {
+      setLoading(true)
+      const result = await getNotificationSettings()
+      if (ignore) return
+
+      if (result.ok && result.data) {
+        setOrderEmailsInput(result.data.orderEmails.join('\n'))
+        setContactEmailsInput(result.data.contactEmails.join('\n'))
+        setNotificationError('')
+      } else {
+        setNotificationError(result.error || 'Failed to load notification settings')
+      }
+      setLoading(false)
+    }
+
+    void loadNotificationSettings()
+    return () => {
+      ignore = true
+    }
+  }, [])
+
+  const parseEmails = (value: string) =>
+    value
+      .split(/[\n,]+/)
+      .map(email => email.trim())
+      .filter(Boolean)
+
+  const handleNotificationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setNotificationError('')
+    setNotificationSuccess('')
+    setOrderEmailError('')
+    setContactEmailError('')
+
+    const orderEmails = parseEmails(orderEmailsInput)
+    const contactEmails = parseEmails(contactEmailsInput)
+
+    if (!orderEmails.length) {
+      setOrderEmailError('Please provide at least one email address for order notifications')
+      setSaving(false)
+      return
+    }
+
+    if (!contactEmails.length) {
+      setContactEmailError('Please provide at least one email address for contact form submissions')
+      setSaving(false)
+      return
+    }
+
+    const result = await updateNotificationSettings({
+      orderEmails,
+      contactEmails
+    })
+
+    if (result.ok) {
+      setNotificationSuccess('Notification preferences saved successfully')
+      setOrderEmailsInput(orderEmails.join('\n'))
+      setContactEmailsInput(contactEmails.join('\n'))
+    } else {
+      setNotificationError(result.error || 'Failed to update notification settings')
+    }
+
+    setSaving(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-8 w-full lg:max-w-[75%]">
+        <div>
+          <div className="h-5 w-36 rounded bg-gray-200 animate-pulse" />
+          <div className="mt-2 h-4 w-64 rounded bg-gray-200 animate-pulse" />
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <div className="h-4 w-40 rounded bg-gray-200 animate-pulse" />
+            <div className="mt-2 h-24 w-full rounded bg-gray-200 animate-pulse" />
+            <div className="mt-2 h-3 w-2/3 rounded bg-gray-200 animate-pulse" />
+          </div>
+
+          <div>
+            <div className="h-4 w-44 rounded bg-gray-200 animate-pulse" />
+            <div className="mt-2 h-24 w-full rounded bg-gray-200 animate-pulse" />
+            <div className="mt-2 h-3 w-3/4 rounded bg-gray-200 animate-pulse" />
+          </div>
+        </div>
+
+        <div className="h-10 w-36 rounded bg-gray-200 animate-pulse" />
+      </div>
+    )
+  }
+
   return (
-    <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 p-8 text-sm text-gray-600">
-      Notification settings coming soon...
-    </div>
+    <form onSubmit={handleNotificationSubmit} className="space-y-6 w-full lg:max-w-[75%]">
+      {notificationSuccess && (
+        <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-600">
+          {notificationSuccess}
+        </div>
+      )}
+      {notificationError && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+          {notificationError}
+        </div>
+      )}
+
+      <div>
+        <label htmlFor="orderNotificationEmails" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          Order Notification Emails
+        </label>
+        <textarea
+          id="orderNotificationEmails"
+          name="orderNotificationEmails"
+          value={orderEmailsInput}
+          onChange={(e) => setOrderEmailsInput(e.target.value)}
+          className="w-full min-h-[120px] resize-y px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="admin@3starfoods.com"
+        />
+        {orderEmailError ? (
+          <p className="mt-1.5 text-xs text-red-600">{orderEmailError}</p>
+        ) : (
+          <p className="mt-1.5 text-xs text-gray-500">
+            Separate multiple email addresses with commas or new lines. All listed recipients will receive new order alerts.
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="contactNotificationEmails" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          Contact Form Emails
+        </label>
+        <textarea
+          id="contactNotificationEmails"
+          name="contactNotificationEmails"
+          value={contactEmailsInput}
+          onChange={(e) => setContactEmailsInput(e.target.value)}
+          className="w-full min-h-[120px] resize-y px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="info@3starfoods.com"
+        />
+        {contactEmailError ? (
+          <p className="mt-1.5 text-xs text-red-600">{contactEmailError}</p>
+        ) : (
+          <p className="mt-1.5 text-xs text-gray-500">
+            Messages submitted through the website contact form will be sent to these addresses.
+          </p>
+        )}
+      </div>
+
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={saving}
+          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? 'Saving...' : 'Save Notification Settings'}
+        </button>
+      </div>
+    </form>
   )
 }

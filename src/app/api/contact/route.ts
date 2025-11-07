@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { getNotificationSettings } from '@/lib/settings'
 
 export const runtime = 'nodejs'
 
@@ -91,7 +92,10 @@ export async function POST(request: NextRequest) {
         const smtpPass = process.env.SMTP_PASS
         const fromEmail = process.env.MAIL_FROM_EMAIL || 'noreply@3starfoods.com'
         const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods'
-        const adminEmail = process.env.ADMIN_EMAIL || 'admin@3starfoods.com'
+        const notificationSettings = await getNotificationSettings()
+        const contactRecipients = notificationSettings.contactEmails.length
+            ? notificationSettings.contactEmails
+            : [process.env.ADMIN_EMAIL || 'admin@3starfoods.com']
 
         // Check if SMTP is configured
         if (!smtpHost || !smtpUser || !smtpPass) {
@@ -222,7 +226,7 @@ export async function POST(request: NextRequest) {
         // Send email to admin
         await transporter.sendMail({
             from: `"${companyName}" <${fromEmail}>`,
-            to: adminEmail,
+            to: contactRecipients,
             replyTo: sanitizedEmail,
             subject: `Contact Form: ${sanitizedSubject}`,
             text,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getNotificationSettings } from '@/lib/settings';
 
 export async function POST(request: NextRequest) {
   console.log('[ORDERS CREATE API] POST request received at:', new Date().toISOString());
@@ -37,7 +38,11 @@ export async function POST(request: NextRequest) {
     const token = process.env.MAILTRAP_TOKEN;
     const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@example.com';
     const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods';
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+
+    const notificationSettings = await getNotificationSettings();
+    const adminRecipients = notificationSettings.orderEmails.length
+      ? notificationSettings.orderEmails
+      : [process.env.ADMIN_EMAIL || 'admin@example.com'];
 
     if (!token) {
       console.warn('[ORDERS CREATE API] Missing MAILTRAP_TOKEN');
@@ -45,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const to = [
-      { email: adminEmail, name: 'Admin' },
+      ...adminRecipients.map(email => ({ email, name: 'Admin' })),
       { email: customer.email, name: customer.name }
     ];
 

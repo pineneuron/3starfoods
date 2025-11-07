@@ -7,7 +7,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { ValidationUtils } from '@/lib/utils'
 import bcrypt from 'bcryptjs'
-import { getGeneralSettings as fetchGeneralSettings } from '@/lib/settings'
+import { getGeneralSettings as fetchGeneralSettings, getNotificationSettings as fetchNotificationSettings, notificationSettingUtils } from '@/lib/settings'
 
 async function requireAuth() {
   const session = await getServerSession(authOptions)
@@ -32,6 +32,11 @@ type GeneralSettingsPayload = {
   siteTitle: string
   tagline?: string | null
   adminEmail: string
+}
+
+type NotificationSettingsPayload = {
+  orderEmails: string[]
+  contactEmails: string[]
 }
 
 export async function updateProfile({ name, imageUrl }: ProfilePayload) {
@@ -137,6 +142,20 @@ export async function getGeneralSettings() {
   }
 }
 
+export async function getNotificationSettings() {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+
+  const settings = await fetchNotificationSettings()
+
+  return {
+    ok: true,
+    data: settings
+  }
+}
+
 export async function updateGeneralSettings({ siteTitle, tagline, adminEmail }: GeneralSettingsPayload) {
   const session = await requireAuth()
   if (session.user?.role !== 'ADMIN') {
@@ -181,5 +200,72 @@ export async function updateGeneralSettings({ siteTitle, tagline, adminEmail }: 
   } catch (error) {
     console.error('Error updating general settings:', error)
     return { ok: false, error: 'Failed to update general settings' }
+  }
+}
+
+export async function updateNotificationSettings(payload: NotificationSettingsPayload) {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+
+  const orderEmails = Array.from(new Set(payload.orderEmails.map(email => email.trim()))).filter(Boolean)
+  const contactEmails = Array.from(new Set(payload.contactEmails.map(email => email.trim()))).filter(Boolean)
+
+  if (!orderEmails.length) {
+    return { ok: false, error: 'At least one order notification email is required' }
+  }
+
+  if (!orderEmails.every(ValidationUtils.isValidEmail)) {
+    return { ok: false, error: 'One or more order notification emails are invalid' }
+  }
+
+  if (!contactEmails.length) {
+    return { ok: false, error: 'At least one contact form email is required' }
+  }
+
+  if (!contactEmails.every(ValidationUtils.isValidEmail)) {
+    return { ok: false, error: 'One or more contact form emails are invalid' }
+  }
+
+  try {
+    await prisma.$transaction([
+      prisma.systemSetting.upsert({
+        where: { key: notificationSettingUtils.keys.orderEmails },
+        update: {
+          value: notificationSettingUtils.serializeEmailList(orderEmails),
+          type: 'string',
+          category: 'notifications'
+        },
+        create: {
+          key: notificationSettingUtils.keys.orderEmails,
+          value: notificationSettingUtils.serializeEmailList(orderEmails),
+          type: 'string',
+          category: 'notifications'
+        }
+      }),
+      prisma.systemSetting.upsert({
+        where: { key: notificationSettingUtils.keys.contactEmails },
+        update: {
+          value: notificationSettingUtils.serializeEmailList(contactEmails),
+          type: 'string',
+          category: 'notifications'
+        },
+        create: {
+          key: notificationSettingUtils.keys.contactEmails,
+          value: notificationSettingUtils.serializeEmailList(contactEmails),
+          type: 'string',
+          category: 'notifications'
+        }
+      })
+    ])
+
+    revalidatePath('/admin/settings')
+    revalidateTag('notification-settings')
+
+    return { ok: true }
+  } catch (error) {
+    console.error('Error updating notification settings:', error)
+    return { ok: false, error: 'Failed to update notification settings' }
   }
 }
