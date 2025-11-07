@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 // import MaintenanceModal from './MaintenanceModal';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
+import { useGeneralSettings } from '@/context/GeneralSettingsContext';
 
 interface HeaderProps {
   variant?: 'home' | 'inner';
@@ -19,6 +20,11 @@ export default function Header({ variant = 'home' }: HeaderProps) {
   const { data: session, status } = useSession();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const generalSettings = useGeneralSettings();
+
+  const { siteTitle } = generalSettings;
+  const logoSrc = '/images/logo.svg';
+  const logoAlt = siteTitle ? `${siteTitle} logo` : '3 Star Foods logo';
 
   const isAdmin = session?.user?.role === 'ADMIN';
 
@@ -106,7 +112,7 @@ export default function Header({ variant = 'home' }: HeaderProps) {
           </div>
           <div className="logo-wrap flex justify-center items-center flex-1">
             <Link href="/" className="tsf-logo">
-              <Image src="/images/logo.svg" alt="logo" width={120} height={40} />
+              <Image src={logoSrc} alt={logoAlt} width={120} height={40} className="h-12 w-auto" priority={variant === 'home'} />
             </Link>
           </div>
           <div className="flex-1 cart-icon">

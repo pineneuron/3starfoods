@@ -50,7 +50,7 @@ export default function SidebarNav() {
       <Link 
         href="/admin"
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin' && "bg-gray-100 text-gray-900"
         )}
       >
@@ -61,7 +61,7 @@ export default function SidebarNav() {
       <Collapsible.Root open={openDropdown === 'categories'} onOpenChange={(open) => handleDropdownToggle(open ? 'categories' : '')}>
         <Collapsible.Trigger 
           className={cn(
-            "w-full flex items-center justify-between px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
             isCategoriesActive && "bg-gray-100 text-gray-900"
           )}
         > 
@@ -77,7 +77,7 @@ export default function SidebarNav() {
             prefetch={false}
             scroll={false} 
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/categories' && getHash() === '#add' && "bg-gray-100"
             )}
           >
@@ -88,7 +88,7 @@ export default function SidebarNav() {
             href="/admin/categories"
             prefetch={false}
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/categories' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
@@ -101,7 +101,7 @@ export default function SidebarNav() {
       <Collapsible.Root open={openDropdown === 'products'} onOpenChange={(open) => handleDropdownToggle(open ? 'products' : '')}>
         <Collapsible.Trigger 
           className={cn(
-            "w-full flex items-center justify-between px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
             isProductsActive && "bg-gray-100 text-gray-900"
           )}
         > 
@@ -117,7 +117,7 @@ export default function SidebarNav() {
             prefetch={false}
             scroll={false} 
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/products' && getHash() === '#add' && "bg-gray-100"
             )}
           >
@@ -128,7 +128,7 @@ export default function SidebarNav() {
             href="/admin/products"
             prefetch={false}
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/products' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
@@ -141,7 +141,7 @@ export default function SidebarNav() {
       <Collapsible.Root open={openDropdown === 'users'} onOpenChange={(open) => handleDropdownToggle(open ? 'users' : '')}>
         <Collapsible.Trigger 
           className={cn(
-            "w-full flex items-center justify-between px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
             isUsersActive && "bg-gray-100 text-gray-900"
           )}
         > 
@@ -157,7 +157,7 @@ export default function SidebarNav() {
             prefetch={false}
             scroll={false} 
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/users' && getHash() === '#add' && "bg-gray-100"
             )}
           >
@@ -168,7 +168,7 @@ export default function SidebarNav() {
             href="/admin/users"
             prefetch={false}
             className={cn(
-              "flex items-center gap-2 px-2 py-1 rounded-md text-[13px] text-gray-700 hover:bg-gray-100",
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
               pathname === '/admin/users' && getHash() !== '#add' && "bg-gray-100"
             )}
           >
@@ -182,7 +182,7 @@ export default function SidebarNav() {
         href="/admin/orders"
         prefetch={false}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/orders' && "bg-gray-100 text-gray-900"
         )}
       > 
@@ -194,7 +194,7 @@ export default function SidebarNav() {
         href="/admin/coupons"
         prefetch={false}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/coupons' && "bg-gray-100 text-gray-900"
         )}
       >
@@ -206,7 +206,7 @@ export default function SidebarNav() {
         href="/admin/settings"
         prefetch={false}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-[13px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
           pathname === '/admin/settings' && "bg-gray-100 text-gray-900"
         )}
       >

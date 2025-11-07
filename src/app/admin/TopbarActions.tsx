@@ -4,6 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Moon, Sun, User, LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 
 type Props = {
   name?: string | null
@@ -68,9 +69,14 @@ export function AccountMenu({ name, email }: Props) {
             <div className="text-[12px] text-gray-500">{email || 'user@example.com'}</div>
           </div>
           <DropdownMenu.Separator className="my-1 h-px bg-[oklch(.922_0_0)]" />
-          <DropdownMenu.Item className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
-            <User className="h-4 w-4 text-gray-500 group-hover:text-gray-700" />
-            Profile
+          <DropdownMenu.Item asChild>
+            <Link
+              href="/admin/settings?tab=profile"
+              className="group flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-[13px] text-gray-700 outline-none hover:bg-gray-100"
+            >
+              <User className="h-4 w-4 text-gray-500 group-hover:text-gray-700" />
+              Settings
+            </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Separator className="my-1 h-px bg-[oklch(.922_0_0)]" />
           <DropdownMenu.Item

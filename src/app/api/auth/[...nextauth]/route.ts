@@ -215,10 +215,25 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.userId = token.sub
         session.user.role = token.role as string | undefined
+        if (token.name) {
+          session.user.name = token.name
+        }
+        if (token.picture) {
+          session.user.image = token.picture
+        }
       }
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update' && session?.user) {
+        if (session.user.name) {
+          token.name = session.user.name
+        }
+        if (session.user.image) {
+          token.picture = session.user.image
+        }
+      }
+
       // On first sign in (user object is available), fetch user role from database
       if (user && user.email) {
         try {
@@ -241,6 +256,14 @@ export const authOptions: NextAuthOptions = {
       // If user already has role in token, keep it
       if (user && 'role' in user && user.role) {
         token.role = user.role as string
+      }
+
+      if (user?.name) {
+        token.name = user.name
+      }
+
+      if (user && 'image' in user && typeof user.image === 'string' && user.image) {
+        token.picture = user.image
       }
       
       return token

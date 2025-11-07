@@ -2,11 +2,22 @@
 
 import { SessionProvider } from "next-auth/react";
 import { CartProvider } from "@/context/CartContext";
+import { GeneralSettingsProvider } from "@/context/GeneralSettingsContext";
+import type { GeneralSettings } from "@/lib/settings";
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+type ProvidersProps = {
+  children: React.ReactNode;
+  generalSettings: GeneralSettings;
+};
+
+export default function Providers({ children, generalSettings }: ProvidersProps) {
   return (
     <SessionProvider>
-      <CartProvider>{children}</CartProvider>
+      <CartProvider>
+        <GeneralSettingsProvider value={generalSettings}>
+          {children}
+        </GeneralSettingsProvider>
+      </CartProvider>
     </SessionProvider>
   );
 }
