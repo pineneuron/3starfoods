@@ -253,7 +253,15 @@ export class MigrationService {
       { key: 'contact_email', value: 'info@3starfoods.com', type: 'string', category: 'contact' },
       { key: 'contact_phone', value: '+977-1-2345678', type: 'string', category: 'contact' },
       { key: 'business_hours', value: '9:00 AM - 7:00 PM', type: 'string', category: 'contact' },
-      { key: 'delivery_areas', value: 'Kathmandu, Lalitpur, Bhaktapur', type: 'string', category: 'delivery' }
+      { key: 'delivery_areas', value: 'Kathmandu, Lalitpur, Bhaktapur', type: 'string', category: 'delivery' },
+      { key: 'notifications_order_emails', value: 'admin@3starfoods.com', type: 'string', category: 'notifications' },
+      { key: 'notifications_contact_emails', value: 'info@3starfoods.com', type: 'string', category: 'notifications' },
+      { key: 'smtp_host', value: '', type: 'string', category: 'smtp' },
+      { key: 'smtp_port', value: '587', type: 'number', category: 'smtp' },
+      { key: 'smtp_user', value: '', type: 'string', category: 'smtp' },
+      { key: 'smtp_pass', value: '', type: 'string', category: 'smtp' },
+      { key: 'smtp_from_email', value: 'noreply@3starfoods.com', type: 'string', category: 'smtp' },
+      { key: 'smtp_from_name', value: '3 Star Foods', type: 'string', category: 'smtp' }
     ]
 
     for (const setting of defaultSettings) {

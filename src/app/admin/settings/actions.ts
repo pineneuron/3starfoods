@@ -7,7 +7,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { ValidationUtils } from '@/lib/utils'
 import bcrypt from 'bcryptjs'
-import { getGeneralSettings as fetchGeneralSettings, getNotificationSettings as fetchNotificationSettings, notificationSettingUtils } from '@/lib/settings'
+import { getGeneralSettings as fetchGeneralSettings, getNotificationSettings as fetchNotificationSettings, getSmtpSettings as fetchSmtpSettings, notificationSettingUtils, smtpSettingUtils } from '@/lib/settings'
 
 async function requireAuth() {
   const session = await getServerSession(authOptions)
@@ -37,6 +37,15 @@ type GeneralSettingsPayload = {
 type NotificationSettingsPayload = {
   orderEmails: string[]
   contactEmails: string[]
+}
+
+type SmtpSettingsPayload = {
+  host: string
+  port: number
+  user: string
+  password?: string | null
+  fromEmail: string
+  fromName: string
 }
 
 export async function updateProfile({ name, imageUrl }: ProfilePayload) {
@@ -156,6 +165,27 @@ export async function getNotificationSettings() {
   }
 }
 
+export async function getSmtpSettings() {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+
+  const settings = await fetchSmtpSettings()
+
+  return {
+    ok: true,
+    data: {
+      host: settings.host,
+      port: settings.port,
+      user: settings.user,
+      fromEmail: settings.fromEmail,
+      fromName: settings.fromName,
+      hasPassword: Boolean(settings.password)
+    }
+  }
+}
+
 export async function updateGeneralSettings({ siteTitle, tagline, adminEmail }: GeneralSettingsPayload) {
   const session = await requireAuth()
   if (session.user?.role !== 'ADMIN') {
@@ -267,5 +297,92 @@ export async function updateNotificationSettings(payload: NotificationSettingsPa
   } catch (error) {
     console.error('Error updating notification settings:', error)
     return { ok: false, error: 'Failed to update notification settings' }
+  }
+}
+
+export async function updateSmtpSettings({ host, port, user, password, fromEmail, fromName }: SmtpSettingsPayload) {
+  const session = await requireAuth()
+  if (session.user?.role !== 'ADMIN') {
+    return { ok: false, error: 'Unauthorized' }
+  }
+
+  const trimmedHost = host.trim()
+  const trimmedUser = user.trim()
+  const trimmedFromEmail = fromEmail.trim()
+  const trimmedFromName = fromName.trim()
+  const portNumber = Number(port)
+  const newPassword = password?.trim() ?? ''
+  const shouldUpdatePassword = newPassword.length > 0
+
+  if (!trimmedHost) {
+    return { ok: false, error: 'SMTP host is required' }
+  }
+
+  if (!Number.isInteger(portNumber) || portNumber <= 0) {
+    return { ok: false, error: 'SMTP port must be a positive whole number' }
+  }
+
+  if (!trimmedUser) {
+    return { ok: false, error: 'SMTP username is required' }
+  }
+
+  if (!ValidationUtils.isValidEmail(trimmedFromEmail)) {
+    return { ok: false, error: 'Please provide a valid from email address' }
+  }
+
+  const currentSettings = await fetchSmtpSettings()
+
+  if (!shouldUpdatePassword && !currentSettings.password) {
+    return { ok: false, error: 'SMTP password is required' }
+  }
+
+  try {
+    const operations = [
+      prisma.systemSetting.upsert({
+        where: { key: smtpSettingUtils.keys.host },
+        update: { value: trimmedHost, type: 'string', category: 'smtp' },
+        create: { key: smtpSettingUtils.keys.host, value: trimmedHost, type: 'string', category: 'smtp' }
+      }),
+      prisma.systemSetting.upsert({
+        where: { key: smtpSettingUtils.keys.port },
+        update: { value: String(portNumber), type: 'number', category: 'smtp' },
+        create: { key: smtpSettingUtils.keys.port, value: String(portNumber), type: 'number', category: 'smtp' }
+      }),
+      prisma.systemSetting.upsert({
+        where: { key: smtpSettingUtils.keys.user },
+        update: { value: trimmedUser, type: 'string', category: 'smtp' },
+        create: { key: smtpSettingUtils.keys.user, value: trimmedUser, type: 'string', category: 'smtp' }
+      }),
+      prisma.systemSetting.upsert({
+        where: { key: smtpSettingUtils.keys.fromEmail },
+        update: { value: trimmedFromEmail, type: 'string', category: 'smtp' },
+        create: { key: smtpSettingUtils.keys.fromEmail, value: trimmedFromEmail, type: 'string', category: 'smtp' }
+      }),
+      prisma.systemSetting.upsert({
+        where: { key: smtpSettingUtils.keys.fromName },
+        update: { value: trimmedFromName, type: 'string', category: 'smtp' },
+        create: { key: smtpSettingUtils.keys.fromName, value: trimmedFromName, type: 'string', category: 'smtp' }
+      })
+    ]
+
+    if (shouldUpdatePassword) {
+      operations.push(
+        prisma.systemSetting.upsert({
+          where: { key: smtpSettingUtils.keys.password },
+          update: { value: newPassword, type: 'string', category: 'smtp' },
+          create: { key: smtpSettingUtils.keys.password, value: newPassword, type: 'string', category: 'smtp' }
+        })
+      )
+    }
+
+    await prisma.$transaction(operations)
+
+    revalidatePath('/admin/settings')
+    revalidateTag('smtp-settings')
+
+    return { ok: true }
+  } catch (error) {
+    console.error('Error updating SMTP settings:', error)
+    return { ok: false, error: 'Failed to update SMTP settings' }
   }
 }

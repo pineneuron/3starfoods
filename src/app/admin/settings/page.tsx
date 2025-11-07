@@ -4,16 +4,17 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Wrench, Settings, Bell, Upload, X } from 'lucide-react'
+import { Wrench, Settings, Bell, Mail, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getGeneralSettings, getNotificationSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile } from './actions'
+import { getGeneralSettings, getNotificationSettings, getSmtpSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile, updateSmtpSettings } from './actions'
 
-type SettingsCategory = 'profile' | 'general' | 'notifications'
+type SettingsCategory = 'profile' | 'general' | 'notifications' | 'smtp'
 
 const settingsCategories = [
   { id: 'profile' as SettingsCategory, label: 'Profile', icon: Wrench },
   { id: 'general' as SettingsCategory, label: 'General', icon: Settings },
   { id: 'notifications' as SettingsCategory, label: 'Notifications', icon: Bell },
+  { id: 'smtp' as SettingsCategory, label: 'SMTP', icon: Mail },
 ]
 
 export default function SettingsPage() {
@@ -103,6 +104,7 @@ export default function SettingsPage() {
             {activeCategory === 'profile' && <ProfileSection />}
             {activeCategory === 'general' && <GeneralSection />}
             {activeCategory === 'notifications' && <NotificationsSection />}
+            {activeCategory === 'smtp' && <SmtpSection />}
           </div>
         </div>
       </div>
@@ -820,6 +822,298 @@ function NotificationsSection() {
           className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save Notification Settings'}
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function SmtpSection() {
+  const [host, setHost] = useState('')
+  const [port, setPort] = useState('587')
+  const [user, setUser] = useState('')
+  const [password, setPassword] = useState('')
+  const [fromEmail, setFromEmail] = useState('')
+  const [fromName, setFromName] = useState('')
+  const [hasPassword, setHasPassword] = useState(false)
+
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const [smtpError, setSmtpError] = useState('')
+  const [smtpSuccess, setSmtpSuccess] = useState('')
+
+  const [hostError, setHostError] = useState('')
+  const [portError, setPortError] = useState('')
+  const [userError, setUserError] = useState('')
+  const [fromEmailError, setFromEmailError] = useState('')
+  const [passwordHint, setPasswordHint] = useState('Enter the SMTP password')
+
+  useEffect(() => {
+    let ignore = false
+
+    const loadSmtpSettings = async () => {
+      setLoading(true)
+      const result = await getSmtpSettings()
+      if (ignore) return
+
+      if (result.ok && result.data) {
+        setHost(result.data.host ?? '')
+        setPort(String(result.data.port ?? ''))
+        setUser(result.data.user ?? '')
+        setFromEmail(result.data.fromEmail ?? '')
+        setFromName(result.data.fromName ?? '')
+        setHasPassword(Boolean(result.data.hasPassword))
+        setPasswordHint(result.data.hasPassword ? 'Leave blank to keep current password' : 'Enter the SMTP password')
+        setSmtpError('')
+      } else {
+        setSmtpError(result.error || 'Failed to load SMTP settings')
+      }
+      setLoading(false)
+    }
+
+    void loadSmtpSettings()
+    return () => {
+      ignore = true
+    }
+  }, [])
+
+  const handleSmtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setSmtpError('')
+    setSmtpSuccess('')
+    setHostError('')
+    setPortError('')
+    setUserError('')
+    setFromEmailError('')
+
+    const trimmedHost = host.trim()
+    const trimmedUser = user.trim()
+    const trimmedFromEmail = fromEmail.trim()
+    const trimmedFromName = fromName.trim()
+    const trimmedPassword = password.trim()
+    const parsedPort = Number(port)
+
+    let hasValidationError = false
+
+    if (!trimmedHost) {
+      setHostError('SMTP host is required')
+      hasValidationError = true
+    }
+
+    if (!Number.isInteger(parsedPort) || parsedPort <= 0) {
+      setPortError('Enter a valid port number')
+      hasValidationError = true
+    }
+
+    if (!trimmedUser) {
+      setUserError('SMTP username is required')
+      hasValidationError = true
+    }
+
+    if (!trimmedFromEmail || !/^\S+@\S+\.\S+$/.test(trimmedFromEmail)) {
+      setFromEmailError('Enter a valid sender email address')
+      hasValidationError = true
+    }
+
+    if (hasValidationError) {
+      setSaving(false)
+      return
+    }
+
+    const result = await updateSmtpSettings({
+      host: trimmedHost,
+      port: parsedPort,
+      user: trimmedUser,
+      password: trimmedPassword ? trimmedPassword : undefined,
+      fromEmail: trimmedFromEmail,
+      fromName: trimmedFromName
+    })
+
+    if (result.ok) {
+      setSmtpSuccess('SMTP settings saved successfully')
+      const passwordNowConfigured = Boolean(trimmedPassword) || hasPassword
+      setHasPassword(passwordNowConfigured)
+      setPassword('')
+      setPasswordHint(passwordNowConfigured ? 'Leave blank to keep current password' : 'Enter the SMTP password')
+    } else {
+      setSmtpError(result.error || 'Failed to update SMTP settings')
+    }
+
+    setSaving(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-8 w-full lg:max-w-[75%]">
+        <div>
+          <div className="h-5 w-28 rounded bg-gray-200 animate-pulse" />
+          <div className="mt-2 h-4 w-60 rounded bg-gray-200 animate-pulse" />
+        </div>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="h-4 w-32 rounded bg-gray-200 animate-pulse" />
+            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-24 rounded bg-gray-200 animate-pulse" />
+            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-28 rounded bg-gray-200 animate-pulse" />
+            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-40 rounded bg-gray-200 animate-pulse" />
+            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-36 rounded bg-gray-200 animate-pulse" />
+            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
+          </div>
+        </div>
+
+        <div className="h-10 w-36 rounded bg-gray-200 animate-pulse" />
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSmtpSubmit} className="space-y-6 w-full lg:max-w-[75%]">
+      {smtpSuccess && (
+        <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-600">
+          {smtpSuccess}
+        </div>
+      )}
+      {smtpError && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+          {smtpError}
+        </div>
+      )}
+
+      <div>
+        <label htmlFor="smtpHost" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          SMTP Host
+        </label>
+        <input
+          id="smtpHost"
+          name="smtpHost"
+          type="text"
+          value={host}
+          onChange={(e) => setHost(e.target.value)}
+          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="smtp.mailprovider.com"
+        />
+        {hostError ? (
+          <p className="mt-1.5 text-xs text-red-600">{hostError}</p>
+        ) : (
+          <p className="mt-1.5 text-xs text-gray-500">Hostname or IP address of your SMTP server.</p>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="smtpPort" className="block text-sm font-semibold text-gray-900 mb-1.5">
+            Port
+          </label>
+          <input
+            id="smtpPort"
+            name="smtpPort"
+            type="number"
+            value={port}
+            onChange={(e) => setPort(e.target.value)}
+            className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="587"
+          />
+          {portError ? (
+            <p className="mt-1.5 text-xs text-red-600">{portError}</p>
+          ) : (
+            <p className="mt-1.5 text-xs text-gray-500">Typically 587 (TLS) or 465 (SSL).</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="smtpUser" className="block text-sm font-semibold text-gray-900 mb-1.5">
+            Username
+          </label>
+          <input
+            id="smtpUser"
+            name="smtpUser"
+            type="text"
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+            className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="noreply@3starfoods.com"
+          />
+          {userError ? (
+            <p className="mt-1.5 text-xs text-red-600">{userError}</p>
+          ) : (
+            <p className="mt-1.5 text-xs text-gray-500">SMTP account username or email address.</p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="smtpPassword" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          Password
+        </label>
+        <input
+          id="smtpPassword"
+          name="smtpPassword"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder={hasPassword ? '••••••••' : 'SMTP password'}
+        />
+        <p className="mt-1.5 text-xs text-gray-500">{passwordHint}</p>
+      </div>
+
+      <div>
+        <label htmlFor="smtpFromEmail" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          From Email Address
+        </label>
+        <input
+          id="smtpFromEmail"
+          name="smtpFromEmail"
+          type="email"
+          value={fromEmail}
+          onChange={(e) => setFromEmail(e.target.value)}
+          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="noreply@3starfoods.com"
+        />
+        {fromEmailError ? (
+          <p className="mt-1.5 text-xs text-red-600">{fromEmailError}</p>
+        ) : (
+          <p className="mt-1.5 text-xs text-gray-500">Sender address shown in outgoing emails.</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="smtpFromName" className="block text-sm font-semibold text-gray-900 mb-1.5">
+          From Name
+        </label>
+        <input
+          id="smtpFromName"
+          name="smtpFromName"
+          type="text"
+          value={fromName}
+          onChange={(e) => setFromName(e.target.value)}
+          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="3 Star Foods"
+        />
+        <p className="mt-1.5 text-xs text-gray-500">Display name used for outgoing emails.</p>
+      </div>
+
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={saving}
+          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? 'Saving...' : 'Save SMTP Settings'}
         </button>
       </div>
     </form>

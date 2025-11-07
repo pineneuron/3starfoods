@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import nodemailer from "nodemailer"
+import { getSmtpSettings } from "@/lib/settings"
 
 export const runtime = 'nodejs'
 
@@ -124,17 +125,17 @@ export async function POST(req: Request) {
 
     const text = `Verify Your Email - ${companyName}\n\nYour verification code is: ${code}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this verification code, you can safely ignore this email.`;
 
-    // Send email using nodemailer if configured
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
+    const smtpSettings = await getSmtpSettings()
+
+    if (smtpSettings.host && smtpSettings.user && smtpSettings.password) {
       const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: smtpPort,
-        secure: smtpPort === 465, // true for 465 (SSL), false for other ports
-        requireTLS: smtpPort === 587, // require TLS for port 587
+        host: smtpSettings.host,
+        port: smtpSettings.port,
+        secure: smtpSettings.port === 465,
+        requireTLS: smtpSettings.port === 587,
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: smtpSettings.user,
+          pass: smtpSettings.password,
         },
       });
 
@@ -157,4 +158,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to send verification code", detail: errorMessage }, { status: 500 })
   }
 }
-

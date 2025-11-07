@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { prisma } from '@/lib/db';
 import { OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
-import { getNotificationSettings } from '@/lib/settings';
+import { getNotificationSettings, getSmtpSettings } from '@/lib/settings';
 
 export async function POST(request: NextRequest) {
   try {
@@ -213,26 +213,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Email configuration (from .env.local)
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@3starfoods.com';
-    const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods';
+    const smtpSettings = await getSmtpSettings();
+    const fromEmail = smtpSettings.fromEmail || 'orders@3starfoods.com';
+    const fromName = smtpSettings.fromName || '3 Star Foods';
     const notificationSettings = await getNotificationSettings();
     const adminEmails = notificationSettings.orderEmails.length
       ? notificationSettings.orderEmails
       : [process.env.ADMIN_EMAIL || 'admin@3starfoods.com'];
 
+    if (!smtpSettings.host || !smtpSettings.user || !smtpSettings.password) {
+      console.warn('[ORDER EMAIL] SMTP settings incomplete. Skipping email dispatch.');
+      return NextResponse.json({ ok: true });
+    }
+
     // Create nodemailer transporter
     const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpPort === 465, // true for 465 (SSL), false for other ports
-      requireTLS: smtpPort === 587, // require TLS for port 587
+      host: smtpSettings.host,
+      port: smtpSettings.port,
+      secure: smtpSettings.port === 465, // true for 465 (SSL), false for other ports
+      requireTLS: smtpSettings.port === 587, // require TLS for port 587
       auth: {
-        user: smtpUser,
-        pass: smtpPass,
+        user: smtpSettings.user,
+        pass: smtpSettings.password,
       },
     });
 

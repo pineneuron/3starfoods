@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import nodemailer from "nodemailer"
 import crypto from "crypto"
+import { getSmtpSettings } from "@/lib/settings"
 
 export const runtime = 'nodejs'
 
@@ -144,17 +145,17 @@ export async function POST(req: Request) {
 
     const text = `Reset Your Password - ${companyName}\n\nWe received a request to reset your password. Click the link below to create a new password:\n\n${resetUrl}\n\nThis link will expire in 1 hour. If you didn't request a password reset, please ignore this email.`
 
-    // Send email using nodemailer if configured
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587
+    const smtpSettings = await getSmtpSettings()
+
+    if (smtpSettings.host && smtpSettings.user && smtpSettings.password) {
       const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        requireTLS: smtpPort === 587,
+        host: smtpSettings.host,
+        port: smtpSettings.port,
+        secure: smtpSettings.port === 465,
+        requireTLS: smtpSettings.port === 587,
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: smtpSettings.user,
+          pass: smtpSettings.password,
         },
       })
 

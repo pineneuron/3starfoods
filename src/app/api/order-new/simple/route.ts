@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getNotificationSettings } from '@/lib/settings';
+import { getNotificationSettings, getSmtpSettings } from '@/lib/settings';
 
 export async function POST(request: NextRequest) {
   console.log('[ORDERS API] POST request received at:', new Date().toISOString());
@@ -36,8 +36,9 @@ export async function POST(request: NextRequest) {
     console.log('[ORDERS API] Processing order for:', customer.email);
 
     const token = process.env.MAILTRAP_TOKEN;
-    const fromEmail = process.env.MAIL_FROM_EMAIL || 'orders@example.com';
-    const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods';
+    const smtpSettings = await getSmtpSettings();
+    const fromEmail = smtpSettings.fromEmail || 'orders@example.com';
+    const fromName = smtpSettings.fromName || '3 Star Foods';
 
     const notificationSettings = await getNotificationSettings();
     const adminRecipients = notificationSettings.orderEmails.length

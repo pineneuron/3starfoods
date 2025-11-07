@@ -7,6 +7,7 @@ import FacebookProvider from "next-auth/providers/facebook"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/db"
 import type { NextAuthOptions, DefaultSession } from "next-auth"
+import { getSmtpSettings } from "@/lib/settings"
 
 declare module "next-auth" {
   interface Session {
@@ -85,8 +86,9 @@ export const authOptions: NextAuthOptions = {
         // Get base URL for logo
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
         const logoUrl = `${baseUrl}/images/logo.png`;
-        const companyName = process.env.MAIL_FROM_NAME || '3 Star Foods';
-        const companyEmail = process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
+        const smtpSettings = await getSmtpSettings();
+        const companyName = smtpSettings.fromName || process.env.MAIL_FROM_NAME || '3 Star Foods';
+        const companyEmail = smtpSettings.fromEmail || process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
         const companyAddress = process.env.COMPANY_ADDRESS || '';
         const companyPhone = process.env.COMPANY_PHONE || '';
 
@@ -171,18 +173,17 @@ export const authOptions: NextAuthOptions = {
         const text = `Sign in to ${companyName}\n\nClick the link below to sign in to your account:\n${url}\n\nThis link will expire in 24 hours.\n\nIf you didn't request this sign-in link, you can safely ignore this email.`;
 
         // Send email using nodemailer if configured, otherwise use NextAuth's default
-        if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        if (smtpSettings.host && smtpSettings.user && smtpSettings.password) {
           // Dynamic import to avoid requiring types at build time
           const nodemailerModule = await import('nodemailer');
-          const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
           const transporter = nodemailerModule.default.createTransport({
-            host: process.env.SMTP_HOST,
-            port: smtpPort,
-            secure: smtpPort === 465, // true for 465 (SSL), false for other ports
-            requireTLS: smtpPort === 587, // require TLS for port 587
+            host: smtpSettings.host,
+            port: smtpSettings.port,
+            secure: smtpSettings.port === 465, // true for 465 (SSL), false for other ports
+            requireTLS: smtpSettings.port === 587, // require TLS for port 587
             auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASS,
+              user: smtpSettings.user,
+              pass: smtpSettings.password,
             },
           });
 

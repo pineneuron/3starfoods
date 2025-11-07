@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
-import { getNotificationSettings } from '@/lib/settings'
+import { getNotificationSettings, getSmtpSettings } from '@/lib/settings'
 
 export const runtime = 'nodejs'
 
@@ -86,35 +86,34 @@ export async function POST(request: NextRequest) {
         const sanitizedMessage = message.trim()
 
         // Email configuration
-        const smtpHost = process.env.SMTP_HOST
-        const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587
-        const smtpUser = process.env.SMTP_USER
-        const smtpPass = process.env.SMTP_PASS
-        const fromEmail = process.env.MAIL_FROM_EMAIL || 'noreply@3starfoods.com'
-        const fromName = process.env.MAIL_FROM_NAME || '3 Star Foods'
+        const smtpSettings = await getSmtpSettings()
+        const fromEmail = smtpSettings.fromEmail || 'noreply@3starfoods.com'
+        const fromName = smtpSettings.fromName || '3 Star Foods'
         const notificationSettings = await getNotificationSettings()
         const contactRecipients = notificationSettings.contactEmails.length
             ? notificationSettings.contactEmails
             : [process.env.ADMIN_EMAIL || 'admin@3starfoods.com']
 
-        // Check if SMTP is configured
-        if (!smtpHost || !smtpUser || !smtpPass) {
-            console.error('[CONTACT] SMTP not configured')
+        if (!smtpSettings.host || !smtpSettings.user || !smtpSettings.password) {
+            console.warn('[CONTACT] SMTP settings incomplete. Unable to send email.');
             return NextResponse.json(
                 { error: 'Email service not configured. Please contact support directly.' },
                 { status: 500 }
             )
         }
 
+        // Check if SMTP is configured
+        const smtpPort = smtpSettings.port
+
         // Create nodemailer transporter
         const transporter = nodemailer.createTransport({
-            host: smtpHost,
+            host: smtpSettings.host,
             port: smtpPort,
             secure: smtpPort === 465,
             requireTLS: smtpPort === 587,
             auth: {
-                user: smtpUser,
-                pass: smtpPass,
+                user: smtpSettings.user,
+                pass: smtpSettings.password,
             },
         })
 

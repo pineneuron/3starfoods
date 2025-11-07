@@ -13,6 +13,15 @@ export type NotificationSettings = {
   contactEmails: string[]
 }
 
+export type SmtpSettings = {
+  host: string
+  port: number
+  user: string
+  password: string
+  fromEmail: string
+  fromName: string
+}
+
 const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
   siteTitle: '3 Star Foods',
   tagline: 'Three Star Foods website',
@@ -25,6 +34,15 @@ const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
   contactEmails: [process.env.CONTACT_FORM_EMAIL || process.env.ADMIN_EMAIL || 'info@3starfoods.com']
 }
 
+const DEFAULT_SMTP_SETTINGS: SmtpSettings = {
+  host: process.env.SMTP_HOST || '',
+  port: process.env.SMTP_PORT ? Number.parseInt(process.env.SMTP_PORT, 10) || 587 : 587,
+  user: process.env.SMTP_USER || '',
+  password: process.env.SMTP_PASS || '',
+  fromEmail: process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com',
+  fromName: process.env.MAIL_FROM_NAME || '3 Star Foods'
+}
+
 const GENERAL_SETTING_KEYS = {
   siteTitle: 'site_name',
   tagline: 'site_description',
@@ -34,6 +52,15 @@ const GENERAL_SETTING_KEYS = {
 const NOTIFICATION_SETTING_KEYS = {
   orderEmails: 'notifications_order_emails',
   contactEmails: 'notifications_contact_emails'
+} as const
+
+const SMTP_SETTING_KEYS = {
+  host: 'smtp_host',
+  port: 'smtp_port',
+  user: 'smtp_user',
+  password: 'smtp_pass',
+  fromEmail: 'smtp_from_email',
+  fromName: 'smtp_from_name'
 } as const
 
 function parseEmailList(value?: string | null) {
@@ -121,4 +148,47 @@ export const notificationSettingUtils = {
   serializeEmailList,
   parseEmailList,
   keys: NOTIFICATION_SETTING_KEYS
+}
+
+async function querySmtpSettings(): Promise<SmtpSettings> {
+  const settings = await prisma.systemSetting.findMany({
+    where: {
+      key: {
+        in: Object.values(SMTP_SETTING_KEYS)
+      }
+    }
+  })
+
+  if (!settings.length) {
+    return DEFAULT_SMTP_SETTINGS
+  }
+
+  const map = settings.reduce<Record<string, string>>((acc, setting) => {
+    if (setting.value !== null && setting.value !== undefined) {
+      acc[setting.key] = setting.value
+    }
+    return acc
+  }, {})
+
+  const parsedPort = map[SMTP_SETTING_KEYS.port]
+    ? Number.parseInt(map[SMTP_SETTING_KEYS.port], 10)
+    : undefined
+
+  return {
+    host: map[SMTP_SETTING_KEYS.host] ?? DEFAULT_SMTP_SETTINGS.host,
+    port: parsedPort && !Number.isNaN(parsedPort) ? parsedPort : DEFAULT_SMTP_SETTINGS.port,
+    user: map[SMTP_SETTING_KEYS.user] ?? DEFAULT_SMTP_SETTINGS.user,
+    password: map[SMTP_SETTING_KEYS.password] ?? DEFAULT_SMTP_SETTINGS.password,
+    fromEmail: map[SMTP_SETTING_KEYS.fromEmail] ?? DEFAULT_SMTP_SETTINGS.fromEmail,
+    fromName: map[SMTP_SETTING_KEYS.fromName] ?? DEFAULT_SMTP_SETTINGS.fromName
+  }
+}
+
+export const getSmtpSettings = unstable_cache(querySmtpSettings, ['smtp-settings'], {
+  revalidate: false,
+  tags: ['smtp-settings']
+})
+
+export const smtpSettingUtils = {
+  keys: SMTP_SETTING_KEYS
 }
