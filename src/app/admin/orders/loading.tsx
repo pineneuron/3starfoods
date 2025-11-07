@@ -40,7 +40,7 @@ export default function OrdersLoading() {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
               <tr key={i} className="border-b border-gray-200">
                 <td className="px-3 py-3">
                   <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>

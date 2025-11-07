@@ -238,7 +238,7 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
                       <form action={actions.toggleProductActive}>
                         <input type="hidden" name="id" value={p.id} />
                         <input type="hidden" name="isActive" value={(!p.isActive).toString()} />
-                        <button type="submit" className={`px-2.5 h-8 rounded-md text-[12px] font-semibold ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>
+                        <button type="submit" className={`px-2.5 h-7 rounded-md text-[12px] font-semibold ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>
                           {p.isActive ? 'Active' : 'Inactive'}
                         </button>
                       </form>

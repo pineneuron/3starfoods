@@ -78,4 +78,3 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
     <OrdersClient q={q} orders={uiOrders} />
   )
 }
-

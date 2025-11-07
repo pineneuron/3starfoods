@@ -74,7 +74,7 @@ export default function SidebarNav() {
           </span>
           <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'categories' && "rotate-180")} />
         </Collapsible.Trigger>
-        <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
           <Link 
             href="/admin/categories#add"
             prefetch={false}
@@ -114,7 +114,7 @@ export default function SidebarNav() {
           </span>
           <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'products' && "rotate-180")} />
         </Collapsible.Trigger>
-        <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
           <Link 
             href="/admin/products#add"
             prefetch={false}
@@ -154,7 +154,7 @@ export default function SidebarNav() {
           </span>
           <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'users' && "rotate-180")} />
         </Collapsible.Trigger>
-        <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
           <Link 
             href="/admin/users#add"
             prefetch={false}
@@ -206,7 +206,7 @@ export default function SidebarNav() {
           </span>
           <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'settings' && "rotate-180")} />
         </Collapsible.Trigger>
-        <Collapsible.Content className="pl-8 pr-2 py-1 space-y-1">
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
           <Link 
             href="/admin/settings"
             prefetch={false}

@@ -133,7 +133,7 @@ export default function CategoriesClient({ q, categories, parents, actions }: Pr
                   <form action={actions.toggleCategoryActive}>
                     <input type="hidden" name="id" value={c.id} />
                     <input type="hidden" name="isActive" value={(!c.isActive).toString()} />
-                    <button type="submit" className={`px-2.5 h-8 rounded-md text-[12px] font-semibold ${c.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>
+                    <button type="submit" className={`px-2.5 h-7 rounded-md text-[12px] font-semibold ${c.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'}`}>
                       {c.isActive ? 'Active' : 'Inactive'}
                     </button>
                   </form>

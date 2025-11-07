@@ -197,12 +197,12 @@ export default function OrdersClient({ q, orders }: Props) {
                 </td>
                 <td className="px-3 py-3 text-[13px] font-semibold">Rs. {order.totalAmount.toFixed(2)}</td>
                 <td className="px-3 py-3">
-                  <span className={`px-2.5 h-8 inline-flex items-center rounded-md text-[12px] font-semibold ${getStatusColor(order.status)}`}>
+                  <span className={`px-2.5 h-6 inline-flex items-center rounded-md text-[11px] font-semibold ${getStatusColor(order.status)}`}>
                     {order.status}
                   </span>
                 </td>
                 <td className="px-3 py-3">
-                  <span className={`px-2.5 h-8 inline-flex items-center rounded-md text-[12px] font-semibold ${getPaymentStatusColor(order.paymentStatus)}`}>
+                  <span className={`px-2.5 h-6 inline-flex items-center rounded-md text-[11px] font-semibold ${getPaymentStatusColor(order.paymentStatus)}`}>
                     {order.paymentStatus}
                   </span>
                 </td>
