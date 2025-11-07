@@ -56,7 +56,6 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-
 export default function DashboardClient({ stats, charts }: DashboardClientProps) {
   const isPositiveChange = (change: string) => parseFloat(change) >= 0
 
