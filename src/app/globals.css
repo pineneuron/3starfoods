@@ -427,10 +427,10 @@ header.home::before {
 }
 
 .tsf-category-item img {
-  height: 230px;
+  height: 220px;
   width: 220px;
   object-fit: none;
-  padding: 50px;
+  padding: 5px;
 }
 
 .tsf-category figure,

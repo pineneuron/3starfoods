@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Linkedin, Youtube } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -35,18 +35,18 @@ export default function Footer() {
                 <h3 className="text-xl font-bold text-white tsf-font-sora uppercase">Product Categories</h3>
                 <div className="grid grid-cols-2 gap-10">
                   <ul className="mt-10">
-                    <li className="pb-5 text-white capitalize"><a href="#">ham & cutlet</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">frozen momo</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">salami</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">sausage</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">mutton items</a></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">ham & cutlet</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">frozen momo</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">salami</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">sausage</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">mutton items</Link></li>
                   </ul>
                   <ul className="mt-10">
-                    <li className="pb-5 text-white capitalize"><a href="#">burger patty</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">chicken items</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">buff items</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">pork items</a></li>
-                    <li className="pb-5 text-white capitalize"><a href="#">ready to eat</a></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">burger patty</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">chicken items</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">buff items</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">pork items</Link></li>
+                    <li className="pb-5 text-white capitalize"><Link href="/products">ready to eat</Link></li>
                   </ul>
                 </div>
               </div>
@@ -71,31 +71,26 @@ export default function Footer() {
           <div className="footer-left-social">
             <ul className="inline-flex items-center justify-between gap-6">
               <li>
-                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://www.facebook.com/3starfoodspvtltd" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                   <Facebook className="text-black" size={28} />
                 </a>
               </li>
               <li>
-                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://www.instagram.com/3starfoods/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                   <Instagram className="text-black" size={28} />
                 </a>
               </li>
               <li>
-                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                  <Twitter className="text-black" size={28} />
-                </a>
-              </li>
-              <li>
-                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                  <Linkedin className="text-black" size={28} />
+                <a className="bg-white py-5 px-6 inline-flex items-center justify-center w-16 h-16 rounded-full hover:bg-gray-100 transition-colors" href="https://www.youtube.com/@threestar6309" target="_blank" rel="noopener noreferrer" aria-label="Youtube">
+                  <Youtube className="text-black" size={28} />
                 </a>
               </li>
             </ul>
           </div>
           <div className="footer-right-certificate">
             <div className="flex items-space-between gap-10">
-              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={90} height={90} />
-              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={90} height={90} />
+              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={120} height={120} />
+              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={120} height={120} />
             </div>
           </div>
         </div>
@@ -103,19 +98,19 @@ export default function Footer() {
           <div className="flex items-center justify-between">
             <div className="tsf-copyright">
               <p className="text-white">
-                © 2025 Three Star Foods Private Limited.
+                © 2023 Three Star Foods Private Limited.
               </p>
             </div>
             <div className="tsf-payment">
               <div className="flex items-center gap-10">
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/esewa.svg" alt="esewa" width={60} height={40} />
+                  <Image src="/design/src/assets/img/esewa.svg" alt="esewa" width={80} height={60} />
                 </div>
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/khalti.svg" alt="khalti" width={60} height={40} />
+                  <Image src="/design/src/assets/img/khalti.svg" alt="khalti" width={80} height={60} />
                 </div>
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/visacard.svg" alt="visacard" width={60} height={40} />
+                  <Image src="/design/src/assets/img/visacard.svg" alt="visacard" width={80} height={60} />
                 </div>
               </div>
             </div>

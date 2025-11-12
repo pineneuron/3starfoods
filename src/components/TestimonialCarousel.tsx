@@ -37,17 +37,14 @@ const TestimonialCarousel: React.FC = () => {
                   <Image src="/images/h-star.svg" alt="quote" width={16} height={16} className="tsf-star-icon" />
                 </div>
               </div>
-              <p className="text-xl text-black mt-6 flex-1">Best meat products. On good price. The
-                variety of fresh meat products that they have is just so good. Best for
-                wholesale as well as retail.I get my supplies here every-time.</p>
+              <p className="text-xl text-black mt-6 flex-1">5 star for butchery and 2 star for restaurant. This is one of the best and most hygienic meat shops in Kathmandu—I haven’t come across anything better. The variety of fresh and frozen meat products is impressive. They’ve also introduced a deli counter that serves a range of cooked chicken and mutton dishes, perfect for when you’re not in the mood to cook.</p>
               <div className="flex items-center gap-2">
                 <div className="mt-5">
                   <Image src="/images/user01.svg" alt="user01"
                     width={40} height={40} className="rounded-full" />
                 </div>
                 <div>
-                  <h3 className="text-md font-bold text-black tsf-font-sora mt-6">Aakash
-                    SKYmiester</h3>
+                  <h3 className="text-md font-bold text-black tsf-font-sora mt-6">Deepak Pokhrel</h3>
                 </div>
               </div>
               <div className="tsf-testimonialitem-imgquote absolute bottom-5 right-10">

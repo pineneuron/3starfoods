@@ -310,7 +310,11 @@ export class MigrationService {
       const categories = [
         { id: 'chicken', name: 'Chicken Items', slug: 'chicken-items' },
         { id: 'fish', name: 'Fish Items', slug: 'fish-items' },
-        { id: 'mutton', name: 'Mutton Items', slug: 'mutton-items' }
+        { id: 'mutton', name: 'Mutton Items', slug: 'mutton-items' },
+        { id: 'buff', name: 'Buff Items', slug: 'buff-items' },
+        { id: 'pork', name: 'Pork Items', slug: 'pork-items' },
+        { id: 'veg', name: 'Veg Items', slug: 'veg-items' },
+        { id: 'frozen', name: 'Frozen Items', slug: 'frozen-items' }
       ]
 
       for (const category of categories) {

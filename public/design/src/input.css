@@ -80,6 +80,9 @@ h1,h2,h3,h4,h5,h6 {
 .tsf-bg-gray-light {
     background-color: #F5F5F5;
 }
+.tsf-bg-lightgreen {
+  background: #e6eded;
+}
 .tsf-box-shodow {
     box-shadow: 0 5px 16px rgba(0, 0, 0, .1);
 }
@@ -371,8 +374,6 @@ header.home::before {
   height: 220px;
   object-fit: none;
   padding: 5px;
-  background: #fff;
-  border-radius: 100%;
 }
 .tsf-category figure,
 .tsf-motion figure { 

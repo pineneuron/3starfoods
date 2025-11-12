@@ -251,15 +251,29 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-// counter
+
+// counter (supports values like "100+" by preserving suffix)
+document.addEventListener('DOMContentLoaded', function () {
   $('.count').each(function () {
-    $(this).prop('Counter',0).animate({
-        Counter: $(this).text()
-    }, {
-        duration: 6000,
+    const $el = $(this);
+    const original = ($el.text() || '').trim();
+    // Extract numeric part and suffix (e.g., "100+" => 100 and "+")
+    const match = original.match(/^(\d+(?:\.\d+)?)(.*)$/);
+    const target = match ? parseFloat(match[1]) : parseFloat(original.replace(/[^\d.]/g, '')) || 0;
+    const suffix = match ? match[2] : original.replace(/[0-9.\s]/g, '');
+
+    $el.prop('Counter', 0).animate(
+      { Counter: target },
+      {
+        duration: 2000,
         easing: 'swing',
         step: function (now) {
-            $(this).text(Math.ceil(now));
-        }
-    });
-    });
+          $el.text(Math.ceil(now) + suffix);
+        },
+        complete: function () {
+          $el.text(Math.ceil(target) + suffix);
+        },
+      }
+    );
+  });
+});
