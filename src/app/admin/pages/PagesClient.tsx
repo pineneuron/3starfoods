@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import * as Toast from '@radix-ui/react-toast'
@@ -56,6 +56,38 @@ export default function PagesClient({ q, pages, actions }: Props) {
   }, [pages, sortByUpdated])
 
   const templateLabel = (templateKey: string) => PAGE_TEMPLATES[templateKey]?.label ?? templateKey
+
+  // Open add modal on #add, and intercept in-page clicks to avoid scroll
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const openIfAdd = () => {
+      if (window.location.hash === '#add') {
+        setEditingPage(null)
+        setShowCreate(true)
+        history.replaceState(null, '', window.location.pathname)
+      }
+    }
+    openIfAdd()
+    window.addEventListener('hashchange', openIfAdd)
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      const link = target?.closest('a[href]') as HTMLAnchorElement | null
+      if (!link) return
+      try {
+        const url = new URL(link.href, window.location.href)
+        if (url.hash === '#add' && url.pathname === window.location.pathname) {
+          e.preventDefault()
+          setEditingPage(null)
+          setShowCreate(true)
+        }
+      } catch {}
+    }
+    document.addEventListener('click', onClick, true)
+    return () => {
+      window.removeEventListener('hashchange', openIfAdd)
+      document.removeEventListener('click', onClick, true)
+    }
+  }, [])
 
   const handleStatusChange = async (page: PageRecord, targetStatus: 'DRAFT' | 'PUBLISHED') => {
     const fd = new FormData()

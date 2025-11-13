@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import HeroCarousel from '../components/HeroCarousel'
-import FrozenItemsCarousel from '../components/FrozenItemsCarousel'
+// import FrozenItemsCarousel from '../components/FrozenItemsCarousel'
 import TestimonialCarousel from '../components/TestimonialCarousel'
 import FAQAccordion from '../components/FAQAccordion'
 import HomeProductTabs from '../components/HomeProductTabs'
@@ -477,7 +477,7 @@ export default async function Home() {
 
       <HomeProductTabs bestsellerProducts={bestsellerProducts} featuredProducts={featuredProducts} />
 
-      <div className="tsf-frozen pb-20">
+      {/* <div className="tsf-frozen pb-20">
         <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-category_heading">
             <h2 className="tsf-dark-color text-4xl font-bold pb-10">Frozen Items</h2>
@@ -486,7 +486,7 @@ export default async function Home() {
             <FrozenItemsCarousel />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="tsf-how_order relative tsf-bg-secondary py-40">
         <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">

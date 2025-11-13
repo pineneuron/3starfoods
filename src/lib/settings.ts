@@ -78,30 +78,37 @@ function serializeEmailList(emails: string[]) {
 }
 
 async function queryGeneralSettings(): Promise<GeneralSettings> {
-  const settings = await prisma.systemSetting.findMany({
-    where: {
-      key: {
-        in: Object.values(GENERAL_SETTING_KEYS)
+  try {
+    const settings = await prisma.systemSetting.findMany({
+      where: {
+        key: {
+          in: Object.values(GENERAL_SETTING_KEYS)
+        }
       }
-    }
-  })
+    })
 
-  if (!settings.length) {
+    if (!settings.length) {
+      return DEFAULT_GENERAL_SETTINGS
+    }
+
+    const map = settings.reduce<Record<string, string>>((acc, setting) => {
+      if (setting.value) {
+        acc[setting.key] = setting.value
+      }
+      return acc
+    }, {})
+
+    return {
+      siteTitle: map[GENERAL_SETTING_KEYS.siteTitle] ?? DEFAULT_GENERAL_SETTINGS.siteTitle,
+      tagline: map[GENERAL_SETTING_KEYS.tagline] ?? DEFAULT_GENERAL_SETTINGS.tagline,
+      siteIcon: DEFAULT_GENERAL_SETTINGS.siteIcon,
+      adminEmail: map[GENERAL_SETTING_KEYS.adminEmail] ?? DEFAULT_GENERAL_SETTINGS.adminEmail
+    }
+  } catch (error) {
+    // During build time, database might not be available
+    // Return defaults to allow build to complete
+    console.warn('[Settings] Database not available, using defaults:', error instanceof Error ? error.message : 'Unknown error')
     return DEFAULT_GENERAL_SETTINGS
-  }
-
-  const map = settings.reduce<Record<string, string>>((acc, setting) => {
-    if (setting.value) {
-      acc[setting.key] = setting.value
-    }
-    return acc
-  }, {})
-
-  return {
-    siteTitle: map[GENERAL_SETTING_KEYS.siteTitle] ?? DEFAULT_GENERAL_SETTINGS.siteTitle,
-    tagline: map[GENERAL_SETTING_KEYS.tagline] ?? DEFAULT_GENERAL_SETTINGS.tagline,
-    siteIcon: DEFAULT_GENERAL_SETTINGS.siteIcon,
-    adminEmail: map[GENERAL_SETTING_KEYS.adminEmail] ?? DEFAULT_GENERAL_SETTINGS.adminEmail
   }
 }
 
@@ -111,31 +118,37 @@ export const getGeneralSettings = unstable_cache(queryGeneralSettings, ['general
 })
 
 async function queryNotificationSettings(): Promise<NotificationSettings> {
-  const settings = await prisma.systemSetting.findMany({
-    where: {
-      key: {
-        in: Object.values(NOTIFICATION_SETTING_KEYS)
+  try {
+    const settings = await prisma.systemSetting.findMany({
+      where: {
+        key: {
+          in: Object.values(NOTIFICATION_SETTING_KEYS)
+        }
       }
-    }
-  })
+    })
 
-  if (!settings.length) {
+    if (!settings.length) {
+      return DEFAULT_NOTIFICATION_SETTINGS
+    }
+
+    const map = settings.reduce<Record<string, string>>((acc, setting) => {
+      if (setting.value) {
+        acc[setting.key] = setting.value
+      }
+      return acc
+    }, {})
+
+    const orderEmails = parseEmailList(map[NOTIFICATION_SETTING_KEYS.orderEmails])
+    const contactEmails = parseEmailList(map[NOTIFICATION_SETTING_KEYS.contactEmails])
+
+    return {
+      orderEmails: orderEmails.length ? orderEmails : DEFAULT_NOTIFICATION_SETTINGS.orderEmails,
+      contactEmails: contactEmails.length ? contactEmails : DEFAULT_NOTIFICATION_SETTINGS.contactEmails
+    }
+  } catch (error) {
+    // During build time, database might not be available
+    console.warn('[Settings] Database not available, using defaults:', error instanceof Error ? error.message : 'Unknown error')
     return DEFAULT_NOTIFICATION_SETTINGS
-  }
-
-  const map = settings.reduce<Record<string, string>>((acc, setting) => {
-    if (setting.value) {
-      acc[setting.key] = setting.value
-    }
-    return acc
-  }, {})
-
-  const orderEmails = parseEmailList(map[NOTIFICATION_SETTING_KEYS.orderEmails])
-  const contactEmails = parseEmailList(map[NOTIFICATION_SETTING_KEYS.contactEmails])
-
-  return {
-    orderEmails: orderEmails.length ? orderEmails : DEFAULT_NOTIFICATION_SETTINGS.orderEmails,
-    contactEmails: contactEmails.length ? contactEmails : DEFAULT_NOTIFICATION_SETTINGS.contactEmails
   }
 }
 
@@ -151,36 +164,42 @@ export const notificationSettingUtils = {
 }
 
 async function querySmtpSettings(): Promise<SmtpSettings> {
-  const settings = await prisma.systemSetting.findMany({
-    where: {
-      key: {
-        in: Object.values(SMTP_SETTING_KEYS)
+  try {
+    const settings = await prisma.systemSetting.findMany({
+      where: {
+        key: {
+          in: Object.values(SMTP_SETTING_KEYS)
+        }
       }
-    }
-  })
+    })
 
-  if (!settings.length) {
+    if (!settings.length) {
+      return DEFAULT_SMTP_SETTINGS
+    }
+
+    const map = settings.reduce<Record<string, string>>((acc, setting) => {
+      if (setting.value !== null && setting.value !== undefined) {
+        acc[setting.key] = setting.value
+      }
+      return acc
+    }, {})
+
+    const parsedPort = map[SMTP_SETTING_KEYS.port]
+      ? Number.parseInt(map[SMTP_SETTING_KEYS.port], 10)
+      : undefined
+
+    return {
+      host: map[SMTP_SETTING_KEYS.host] ?? DEFAULT_SMTP_SETTINGS.host,
+      port: parsedPort && !Number.isNaN(parsedPort) ? parsedPort : DEFAULT_SMTP_SETTINGS.port,
+      user: map[SMTP_SETTING_KEYS.user] ?? DEFAULT_SMTP_SETTINGS.user,
+      password: map[SMTP_SETTING_KEYS.password] ?? DEFAULT_SMTP_SETTINGS.password,
+      fromEmail: map[SMTP_SETTING_KEYS.fromEmail] ?? DEFAULT_SMTP_SETTINGS.fromEmail,
+      fromName: map[SMTP_SETTING_KEYS.fromName] ?? DEFAULT_SMTP_SETTINGS.fromName
+    }
+  } catch (error) {
+    // During build time, database might not be available
+    console.warn('[Settings] Database not available, using defaults:', error instanceof Error ? error.message : 'Unknown error')
     return DEFAULT_SMTP_SETTINGS
-  }
-
-  const map = settings.reduce<Record<string, string>>((acc, setting) => {
-    if (setting.value !== null && setting.value !== undefined) {
-      acc[setting.key] = setting.value
-    }
-    return acc
-  }, {})
-
-  const parsedPort = map[SMTP_SETTING_KEYS.port]
-    ? Number.parseInt(map[SMTP_SETTING_KEYS.port], 10)
-    : undefined
-
-  return {
-    host: map[SMTP_SETTING_KEYS.host] ?? DEFAULT_SMTP_SETTINGS.host,
-    port: parsedPort && !Number.isNaN(parsedPort) ? parsedPort : DEFAULT_SMTP_SETTINGS.port,
-    user: map[SMTP_SETTING_KEYS.user] ?? DEFAULT_SMTP_SETTINGS.user,
-    password: map[SMTP_SETTING_KEYS.password] ?? DEFAULT_SMTP_SETTINGS.password,
-    fromEmail: map[SMTP_SETTING_KEYS.fromEmail] ?? DEFAULT_SMTP_SETTINGS.fromEmail,
-    fromName: map[SMTP_SETTING_KEYS.fromName] ?? DEFAULT_SMTP_SETTINGS.fromName
   }
 }
 

@@ -5,6 +5,8 @@ import Providers from "@/components/Providers";
 import { Sora, Bebas_Neue } from "next/font/google";
 import { getGeneralSettings } from "@/lib/settings";
 
+export const dynamic = 'force-dynamic';
+
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap" });
 const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas", display: "swap" });
 

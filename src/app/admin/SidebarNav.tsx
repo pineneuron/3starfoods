@@ -20,8 +20,12 @@ export default function SidebarNav() {
       setOpenDropdown('categories')
     } else if (pathname?.startsWith('/admin/products')) {
       setOpenDropdown('products')
+    } else if (pathname?.startsWith('/admin/pages')) {
+      setOpenDropdown('pages')
     } else if (pathname?.startsWith('/admin/users')) {
       setOpenDropdown('users')
+    } else if (pathname?.startsWith('/admin/settings')) {
+      setOpenDropdown('settings')
     }
   }, [pathname])
 
@@ -142,17 +146,45 @@ export default function SidebarNav() {
         </Collapsible.Content>
       </Collapsible.Root>
       
-      <Link 
-        href="/admin/pages"
-        prefetch={false}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
-          isPagesActive && "bg-gray-100 text-gray-900"
-        )}
-      > 
-        <FileText className="h-4 w-4" />
-        <span className="sidebar-label">Pages</span>
-      </Link>
+      <Collapsible.Root open={openDropdown === 'pages'} onOpenChange={(open) => handleDropdownToggle(open ? 'pages' : '')}>
+        <Collapsible.Trigger 
+          className={cn(
+            "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+            isPagesActive && "bg-gray-100 text-gray-900"
+          )}
+        > 
+          <span className="inline-flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="sidebar-label">Pages</span>
+          </span>
+          <ChevronDown className={cn("h-4 w-4 text-gray-500 transition-transform", openDropdown === 'pages' && "rotate-180")} />
+        </Collapsible.Trigger>
+        <Collapsible.Content className="pl-6 pr-2 py-1 space-y-1">
+          <Link 
+            href="/admin/pages#add"
+            prefetch={false}
+            scroll={false} 
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/pages' && getHash() === '#add' && "bg-gray-100"
+            )}
+          >
+            <PlusCircle className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">Add New</span>
+          </Link>
+          <Link 
+            href="/admin/pages"
+            prefetch={false}
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100",
+              pathname === '/admin/pages' && getHash() !== '#add' && "bg-gray-100"
+            )}
+          >
+            <List className="h-4 w-4 text-gray-400" />
+            <span className="sidebar-label">All Pages</span>
+          </Link>
+        </Collapsible.Content>
+      </Collapsible.Root>
       
       <Collapsible.Root open={openDropdown === 'users'} onOpenChange={(open) => handleDropdownToggle(open ? 'users' : '')}>
         <Collapsible.Trigger 
