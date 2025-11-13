@@ -4,11 +4,10 @@ import ProductsCatalog, { Category } from '../../components/ProductsCatalog';
 import StickyTabMenu from '../../components/StickyTabMenu';
 import CartSidebar from '../../components/CartSidebar';
 import { CartProvider } from '../../context/CartContext';
-import { ProductService } from '@/lib/services';
+import { prisma } from '@/lib/db';
 
-function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof ProductService.getAllCategories>>): Category[] {
+function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof getTopLevelCategories>>): Category[] {
   return dbCategories
-    .filter(cat => cat.isActive)
     .map(cat => ({
       id: cat.id,
       name: cat.name,
@@ -32,8 +31,31 @@ function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof ProductSe
     .filter(cat => cat.products.length > 0)
 }
 
+async function getTopLevelCategories() {
+  // Fetch categories without parent, active, and not soft-deleted, ordered by sortOrder
+  return prisma.category.findMany({
+    where: {
+      parentId: null,
+      deletedAt: null,
+      isActive: true,
+    },
+    include: {
+      products: {
+        include: {
+          images: true,
+          variations: true,
+          inventory: true
+        },
+        where: { isActive: true },
+        orderBy: { sortOrder: 'asc' }
+      }
+    },
+    orderBy: { sortOrder: 'asc' }
+  });
+}
+
 export default async function ProductsPage() {
-  const dbCategories = await ProductService.getAllCategories();
+  const dbCategories = await getTopLevelCategories();
   const categories = transformDbToCategory(dbCategories);
   return (
     <CartProvider>

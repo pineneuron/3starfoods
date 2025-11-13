@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, ChevronDown, Users, Bell, Wrench, Mail, PlusCircle, List } from 'lucide-react'
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, ChevronDown, Users, Bell, Wrench, Mail, PlusCircle, List, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
@@ -38,6 +38,7 @@ export default function SidebarNav() {
 
   const isCategoriesActive = pathname?.startsWith('/admin/categories')
   const isProductsActive = pathname?.startsWith('/admin/products')
+  const isPagesActive = pathname?.startsWith('/admin/pages')
   const isUsersActive = pathname?.startsWith('/admin/users')
   const isSettingsActive = pathname?.startsWith('/admin/settings')
   const currentSettingsTab = searchParams.get('tab')
@@ -140,6 +141,18 @@ export default function SidebarNav() {
           </Link>
         </Collapsible.Content>
       </Collapsible.Root>
+      
+      <Link 
+        href="/admin/pages"
+        prefetch={false}
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors",
+          isPagesActive && "bg-gray-100 text-gray-900"
+        )}
+      > 
+        <FileText className="h-4 w-4" />
+        <span className="sidebar-label">Pages</span>
+      </Link>
       
       <Collapsible.Root open={openDropdown === 'users'} onOpenChange={(open) => handleDropdownToggle(open ? 'users' : '')}>
         <Collapsible.Trigger 

@@ -45,7 +45,7 @@ function TodaysDealWithCart({ products }: { products: DealProduct[] }) {
     <>
       <div className="tsf-banner-list rounded-lg">
         <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
-        <div className="tsf-banner-list-item tsf-box-shodow">
+        <div className="tsf-banner-list-item tsf-box-shadow">
           {products.map((product, index) => {
             const hasDiscount = product.discountPercent > 0;
             const discountedPrice = hasDiscount
@@ -115,7 +115,7 @@ function TodaysDealSkeleton() {
   return (
     <div className="tsf-banner-list rounded-lg">
       <h2 className="tsf-dark-color text-4xl font-bold pb-5">Today&apos;s Deal</h2>
-      <div className="tsf-banner-list-item tsf-box-shodow">
+      <div className="tsf-banner-list-item tsf-box-shadow">
         {[1, 2, 3].map((index) => (
           <div 
             key={index}

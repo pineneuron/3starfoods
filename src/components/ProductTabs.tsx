@@ -113,7 +113,7 @@ const ProductTabs: React.FC = () => {
                   
                   return (
                     <div key={product.id} className="tsf-product_list">
-                      <figure className="tsf-box-shodow tsf-font-bebas">
+                      <figure className="tsf-box-shadow tsf-font-bebas">
                         <div className="tsf-wrapper">
                           <div className="tsf-product-img">
                             <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>

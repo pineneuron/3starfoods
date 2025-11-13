@@ -104,7 +104,7 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
                       ? 'bg-[#FF4900] shadow-lg shadow-[#FF4900]/40 scale-110' 
                       : 'bg-white border-2 border-gray-300 hover:border-[#FF4900] hover:shadow-md hover:scale-105'
                     }
-                    tsf-box-shodow
+                    tsf-box-shadow
                   `}
                   type="button"
                   role="tab"

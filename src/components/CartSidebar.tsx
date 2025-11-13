@@ -130,7 +130,7 @@ export default function CartSidebar({ initialOpen = false }: CartSidebarProps) {
       />
 
       <aside
-        className={`absolute right-0 top-0 h-full w-[420px] max-w-[90vw] flex flex-col justify-between bg-white tsf-box-shodow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`absolute right-0 top-0 h-full w-[420px] max-w-[90vw] flex flex-col justify-between bg-white tsf-box-shadow transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-6 border-b">
           <h3 className="text-lg font-bold tsf-font-sora uppercase">Your Cart</h3>

@@ -24,7 +24,7 @@ const MotionCarousel: React.FC = () => {
   return (
     <Carousel options={options}>
       <div className="item">
-        <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
+        <figure className="tsf-box-shadow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
             <Image src="/images/motion01.svg" alt="motion01" width={320} height={320} />
           </div>
@@ -36,7 +36,7 @@ const MotionCarousel: React.FC = () => {
         </figure>
       </div>
       <div className="item">
-        <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
+        <figure className="tsf-box-shadow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
             <Image src="/images/motion02.svg" alt="motion02" width={320} height={320} />
           </div>
@@ -48,7 +48,7 @@ const MotionCarousel: React.FC = () => {
         </figure>
       </div>
       <div className="item">
-        <figure className="tsf-box-shodow tsf-font-bebas rounded-md">
+        <figure className="tsf-box-shadow tsf-font-bebas rounded-md">
           <div className="tsf-motionitem-img">
             <Image src="/images/motion03.svg" alt="motion03" width={320} height={320} />
           </div>

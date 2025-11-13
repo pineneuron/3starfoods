@@ -13,6 +13,7 @@
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:migrate:deploy": "dotenv -e .env.local -- prisma migrate deploy",
     "db:seed": "tsx src/lib/scripts/seed.ts",
+    "db:seed:dealers": "tsx src/lib/scripts/seed-dealers.ts",
     "db:migrate:json": "tsx src/lib/scripts/migrate-json.ts",
     "db:reset": "tsx src/lib/scripts/reset.ts",
     "db:studio": "dotenv -e .env.local -- prisma studio",
@@ -78,6 +79,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.21",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.3",
     "@types/react": "^19",

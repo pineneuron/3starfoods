@@ -72,7 +72,7 @@ export default function FrozenItemsCarouselClient({ products }: FrozenItemsCarou
           return (
             <div className="item h-full mb-6" key={product.id}>
               <div className="tsf-product_list h-full">
-                <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
+                <figure className="tsf-box-shadow tsf-font-bebas h-full flex flex-col">
                   <div className="tsf-wrapper">
                     <div className="tsf-product-img">
                       <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ProductModal from './ProductModal';
 import Image from 'next/image';
 
@@ -39,6 +39,7 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
   const [activeCategoryId, setActiveCategoryId] = useState<string>(categories[0]?.id ?? '');
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onSetCategory(e: Event) {
@@ -87,9 +88,55 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
     setSelectedProduct(null);
   }
 
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategoryId(categoryId);
+    // Scroll to products section
+    setTimeout(() => {
+      // Get dropdown height on mobile (if visible)
+      const dropdownHeight = dropdownRef.current && window.innerWidth < 768 ? dropdownRef.current.offsetHeight : 0;
+      
+      // Find the products grid container (first visible category content)
+      const productsGrid = document.querySelector('.tsf-product_heading .grid') as HTMLElement | null;
+      
+      if (productsGrid) {
+        const rect = productsGrid.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const targetY = rect.top + scrollTop - dropdownHeight - 20;
+        
+        window.scrollTo({
+          top: targetY,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
   return (
-    <div className="tsf-product_heading py-10" suppressHydrationWarning>
-      <div className="flex justify-center items-center mb-10">
+    <div className="tsf-product_heading" suppressHydrationWarning>
+      {/* Mobile Dropdown - Sticky */}
+      <div ref={dropdownRef} className="sticky top-0 z-40 bg-white shadow-md md:hidden mb-6 -mx-4 px-4 py-3">
+        <div className="relative">
+          <select
+            value={activeCategoryId}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            className="w-full border-2 border-gray-300 rounded-full px-6 py-3.5 capitalize cursor-pointer tsf-font-sora text-base font-semibold appearance-none focus:outline-none focus:border-[#FF4900] bg-white"
+          >
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-5 w-5 text-gray-500">
+              <path fillRule="evenodd" d="M10 12a1 1 0 0 1-.7-.29l-4-4a1 1 0 1 1 1.4-1.42L10 9.59l3.3-3.3a1 1 0 0 1 1.4 1.42l-4 4A1 1 0 0 1 10 12Z" clipRule="evenodd" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      {/* Desktop Buttons */}
+      <div className="hidden md:flex justify-center items-center mb-10">
         <div className="w-full">
           <ul className="flex flex-wrap justify-center gap-3 text-center" role="tablist">
             {categories.map((cat) => {
@@ -110,28 +157,7 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                     role="tab"
                     aria-selected={isActive}
                     data-tabs-target={`#styled-${cat.id}`}
-                    onClick={() => {
-                      setActiveCategoryId(cat.id);
-                      // Scroll to products section
-                      setTimeout(() => {
-                        const productHeading = document.querySelector('.tsf-product_heading') as HTMLElement | null;
-                        const headerEl = document.querySelector('header') as HTMLElement | null;
-                        const headerHeight = headerEl?.offsetHeight ?? 0;
-                        
-                        if (productHeading) {
-                          const rect = productHeading.getBoundingClientRect();
-                          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-                          const targetY = rect.top + scrollTop - headerHeight - 20;
-                          
-                          if (rect.top < headerHeight + 50 || rect.top > window.innerHeight) {
-                            window.scrollTo({
-                              top: targetY,
-                              behavior: 'smooth'
-                            });
-                          }
-                        }
-                      }, 100);
-                    }}
+                    onClick={() => handleCategoryChange(cat.id)}
                   >
                     <span className="relative z-10 whitespace-nowrap">{cat.name}</span>
                   </button>
@@ -154,7 +180,7 @@ export default function ProductsCatalog({ categories }: ProductsCatalogProps) {
                   : p.price;
                 return (
                   <div className="tsf-product_list h-full" key={p.id}>
-                    <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
+                    <figure className="tsf-box-shadow tsf-font-bebas h-full flex flex-col">
                       <div className="tsf-wrapper">
                         <div className="tsf-product-img">
                           <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(p); }}>

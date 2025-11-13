@@ -1,95 +1,109 @@
-'use client';
+'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
 
-const HeroCarousel: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+export type HeroSlide = {
+  id: string
+  desktopImage: string
+  mobileImage?: string
+}
 
-  const slides = [
-    {
-      id: 1,
-      src: '/images/hero/hero-1.png',
-      alt: 'Fresh Meat Products'
-    },
-    {
-      id: 2,
-      src: '/images/hero/hero-2.png',
-      alt: 'Quality Food Items'
-    },
-    {
-      id: 3,
-      src: '/images/hero/hero-3.png',
-      alt: 'Best Deals'
-    },
-    {
-      id: 4,
-      src: '/images/hero/hero-4.png',
-      alt: 'Best Deals'
+export interface HeroCarouselProps {
+  slides?: HeroSlide[]
+}
+
+const defaultSlides: HeroSlide[] = [
+  { id: 'slide-1', desktopImage: '/images/hero/hero-1.png' },
+  { id: 'slide-2', desktopImage: '/images/hero/hero-2.png' },
+  { id: 'slide-3', desktopImage: '/images/hero/hero-3.png' },
+  { id: 'slide-4', desktopImage: '/images/hero/hero-4.png' },
+]
+
+export default function HeroCarousel({ slides }: HeroCarouselProps) {
+  const normalizedSlides = useMemo(() => {
+    const filtered = (slides ?? []).filter((slide) => Boolean(slide.desktopImage))
+    if (filtered.length === 0) {
+      return defaultSlides
     }
-  ];
+    return filtered.map((slide, index) => ({
+      id: slide.id || `slide-${index}`,
+      desktopImage: slide.desktopImage,
+      mobileImage: slide.mobileImage || slide.desktopImage,
+    }))
+  }, [slides])
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, [slides.length]);
+    setCurrentSlide((prev) => (prev + 1) % normalizedSlides.length)
+  }, [normalizedSlides.length])
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, [slides.length]);
-
-  // const goToSlide = (index: number) => {
-  //   setCurrentSlide(index);
-  // };
+    setCurrentSlide((prev) => (prev - 1 + normalizedSlides.length) % normalizedSlides.length)
+  }, [normalizedSlides.length])
 
   useEffect(() => {
-    // Auto-play functionality
     intervalRef.current = setInterval(() => {
-      nextSlide();
-    }, 5000);
+      nextSlide()
+    }, 5000)
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+        clearInterval(intervalRef.current)
       }
-    };
-  }, [nextSlide]);
+    }
+  }, [nextSlide])
 
   const handleMouseEnter = () => {
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      clearInterval(intervalRef.current)
     }
-  };
+  }
 
   const handleMouseLeave = () => {
     intervalRef.current = setInterval(() => {
-      nextSlide();
-    }, 5000);
-  };
+      nextSlide()
+    }, 5000)
+  }
 
   return (
     <div 
       ref={carouselRef}
-      className="relative w-full h-full min-h-[542px] overflow-hidden rounded-lg"
+      className="relative w-full h-full min-h-[360px] overflow-hidden rounded-lg"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{ maxWidth: '100%', width: '100%', boxSizing: 'border-box' }}
     >
-      {/* Slides */}
-      {slides.map((slide, index) => (
+      {normalizedSlides.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
+          <div className="absolute inset-0 w-full h-full">
+            <Image
+              src={slide.desktopImage}
+              alt="Banner image"
+              fill
+              priority={index === 0}
+              className="hidden h-full w-full object-cover md:block"
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              style={{ objectFit: 'cover', maxWidth: '100%' }}
+            />
           <Image
-            src={slide.src}
-            alt={slide.alt}
+              src={slide.mobileImage || slide.desktopImage}
+              alt="Banner image"
             fill
-            className="object-cover"
             priority={index === 0}
+              className="block h-full w-full object-cover md:hidden"
+              sizes="100vw"
+              style={{ objectFit: 'cover', maxWidth: '100%' }}
           />
+          </div>
         </div>
       ))}
 
@@ -139,7 +153,5 @@ const HeroCarousel: React.FC = () => {
         ))}
       </div> */}
     </div>
-  );
-};
-
-export default HeroCarousel;
+  )
+}

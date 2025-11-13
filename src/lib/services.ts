@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db'
-import { OrderStatus, CouponType } from '@prisma/client'
+import { Prisma, OrderStatus, CouponType, PageStatus } from '@prisma/client'
 
 export type Coordinates = { lat: number; lng: number } | null | undefined
 
@@ -12,6 +12,10 @@ export type Coordinates = { lat: number; lng: number } | null | undefined
 export class ProductService {
   static async getAllCategories() {
     return prisma.category.findMany({
+      where: {
+        deletedAt: null, // Exclude soft-deleted categories
+        isActive: true
+      },
       include: {
         products: {
           include: {
@@ -23,7 +27,6 @@ export class ProductService {
           orderBy: { sortOrder: 'asc' }
         }
       },
-      where: { isActive: true },
       orderBy: { sortOrder: 'asc' }
     })
   }
@@ -135,6 +138,73 @@ export class ProductService {
         productId,
         quantity
       }
+    })
+  }
+}
+
+// ===========================================
+// PAGE SERVICES
+// ===========================================
+
+export class PageService {
+  static async getAllPages() {
+    return prisma.page.findMany({
+      orderBy: [{ updatedAt: 'desc' }],
+    })
+  }
+
+  static async getPageById(id: string) {
+    return prisma.page.findUnique({
+      where: { id },
+    })
+  }
+
+  static async getPageBySlug(slug: string) {
+    return prisma.page.findUnique({
+      where: { slug },
+    })
+  }
+
+  static async createPage(data: {
+    title: string
+    slug: string
+    template: string
+    content?: Prisma.InputJsonValue
+    seo?: Prisma.InputJsonValue
+    status?: PageStatus
+    publishedAt?: Date | null
+  }) {
+    return prisma.page.create({ data })
+  }
+
+  static async updatePage(id: string, data: Partial<{
+    title: string
+    slug: string
+    template: string
+    content: Prisma.InputJsonValue
+    seo: Prisma.InputJsonValue
+    status: PageStatus
+    publishedAt: Date | null
+  }>) {
+    return prisma.page.update({
+      where: { id },
+      data,
+    })
+  }
+
+  static async deletePage(id: string) {
+    return prisma.page.delete({
+      where: { id },
+    })
+  }
+
+  static async publishPage(id: string) {
+    return prisma.page.update({
+      where: { id },
+      data: {
+        status: PageStatus.PUBLISHED,
+        publishedAt: new Date(),
+      },
     })
   }
 }

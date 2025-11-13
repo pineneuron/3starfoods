@@ -56,7 +56,7 @@ function HomeProductsWithCart({ products }: HomeProductsProps) {
 
           return (
             <div className="tsf-product_list h-full" key={product.id}>
-              <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
+              <figure className="tsf-box-shadow tsf-font-bebas h-full flex flex-col">
                 <div className="tsf-wrapper">
                   <div className="tsf-product-img">
                     <a href="#" onClick={(e) => { e.preventDefault(); handleProductClick(product); }}>
@@ -140,7 +140,7 @@ export default function HomeProducts({ products, type }: HomeProductsProps) {
 
           return (
             <div className="tsf-product_list h-full" key={product.id}>
-              <figure className="tsf-box-shodow tsf-font-bebas h-full flex flex-col">
+              <figure className="tsf-box-shadow tsf-font-bebas h-full flex flex-col">
                 <div className="tsf-wrapper">
                   <div className="tsf-product-img">
                     <Image src={product.image} alt={product.name} width={300} height={200} className="rounded-t-md w-full h-auto" />

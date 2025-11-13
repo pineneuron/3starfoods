@@ -75,7 +75,18 @@ export async function deleteCategory(formData: FormData) {
   await requireAdmin()
   const id = String(formData.get('id') || '')
   if (!id) return
-  await prisma.category.delete({ where: { id } })
+  
+  // Use soft delete instead of hard delete to avoid foreign key constraints
+  // This marks the category as deleted without removing it from the database
+  // This is safer when categories have products that may be referenced in orders
+  await prisma.category.update({
+    where: { id },
+    data: { 
+      deletedAt: new Date(),
+      isActive: false // Also deactivate it
+    }
+  })
+  
   revalidatePath('/admin/categories')
 }
 
@@ -85,5 +96,42 @@ export async function reorderCategories(formData: FormData) {
   const ids = idsCsv.split(',').map(s => s.trim()).filter(Boolean)
   // apply incremental sortOrder
   await Promise.all(ids.map((id, idx) => prisma.category.update({ where: { id }, data: { sortOrder: idx } })))
+  revalidatePath('/admin/categories')
+}
+
+export async function permanentlyDeleteCategory(formData: FormData) {
+  await requireAdmin()
+  const id = String(formData.get('id') || '')
+  if (!id) return
+  
+  // Check if category has products that have been ordered
+  const category = await prisma.category.findUnique({
+    where: { id },
+    include: {
+      products: {
+        include: {
+          _count: {
+            select: {
+              orderItems: true
+            }
+          }
+        }
+      }
+    }
+  })
+
+  if (!category) return
+
+  // Check if any products in this category have been ordered
+  const hasOrderedProducts = category.products.some(product => product._count.orderItems > 0)
+
+  if (hasOrderedProducts) {
+    throw new Error('Cannot permanently delete category: Some products in this category have been ordered. Please delete the orders first.')
+  }
+
+  // Permanently delete the category
+  // This will cascade delete products, product images, variations, inventory, and product category links
+  await prisma.category.delete({ where: { id } })
+  
   revalidatePath('/admin/categories')
 }

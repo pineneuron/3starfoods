@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useCart } from '@/context/CartContext';
+import { useCart, CartProvider } from '@/context/CartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartSidebar from '@/components/CartSidebar';
@@ -1071,5 +1071,9 @@ function CheckoutContent() {
 }
 
 export default function CheckoutPage() {
-  return <CheckoutContent />;
+  return (
+    <CartProvider>
+      <CheckoutContent />
+    </CartProvider>
+  );
 }

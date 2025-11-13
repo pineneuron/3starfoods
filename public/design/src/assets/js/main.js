@@ -48,9 +48,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Mobile menu toggle
   if (menuToggle && navMenu) {
+    const navMenuWrapper = document.querySelector('.nav-menu-wrapper');
     menuToggle.addEventListener('click', function () {
       menuToggle.classList.toggle('active');
       navMenu.classList.toggle('active');
+      if (navMenuWrapper) {
+        navMenuWrapper.classList.toggle('active');
+      }
 
       // Toggle hamburger animation
       const bars = document.querySelectorAll('.bar');
@@ -251,15 +255,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-// counter
-  $('.count').each(function () {
-    $(this).prop('Counter',0).animate({
-        Counter: $(this).text()
-    }, {
-        duration: 6000,
-        easing: 'swing',
-        step: function (now) {
-            $(this).text(Math.ceil(now));
-        }
-    });
-    });

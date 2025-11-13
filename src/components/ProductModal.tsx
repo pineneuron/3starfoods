@@ -100,18 +100,18 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
       className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] relative">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] relative flex flex-col overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute -top-4 -right-4 z-10 text-white hover:text-gray-200 text-2xl font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
+          className="absolute top-4 right-4 z-10 text-white hover:text-gray-200 text-2xl font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
           style={{ backgroundColor: '#030e55' }}
         >
           ×
         </button>
 
         {/* Content */}
-        <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 p-4 h-full">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 p-4 overflow-y-auto">
           {/* Left Side - Image Gallery */}
           <div className="flex-1 lg:w-1/2">
             <div className="relative">
@@ -164,7 +164,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
           </div>
 
           {/* Right Side - Product Details */}
-          <div className="flex-1 lg:w-1/2 flex flex-col justify-between">
+          <div className="flex-1 lg:w-1/2 flex flex-col lg:justify-between">
             <div>
               {/* Product Title */}
               <h1 className="text-3xl font-bold text-gray-900 mb-2">

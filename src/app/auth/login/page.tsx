@@ -56,17 +56,17 @@ function LoginForm() {
       // Check user role and redirect accordingly
       // Wait a bit for session to be updated
       await new Promise(resolve => setTimeout(resolve, 100))
-
+      
       // Fetch session to get user role
       const sessionRes = await fetch('/api/auth/session')
       const session = await sessionRes.json()
-
+      
       // Redirect based on role
       let redirectUrl = params.get("callbackUrl") || "/"
       if (session?.user?.role === 'ADMIN') {
         redirectUrl = '/admin'
       }
-
+      
       router.push(redirectUrl)
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed"
@@ -85,14 +85,14 @@ function LoginForm() {
     setMagicLinkLoading(true)
     setError("")
     setMagicLinkSuccess(false)
-
+    
     try {
       const res = await signIn("email", {
         redirect: false,
         email,
         callbackUrl: params.get("callbackUrl") || "/",
       })
-
+      
       if (res?.error) {
         setError("Failed to send magic link. Please try again.")
         setMagicLinkSuccess(false)
@@ -186,15 +186,15 @@ function LoginForm() {
 
       <div className="flex justify-between items-center my-4">
         <span className="text-gray-500 text-sm">or</span>
-        <button
-          className="text-[#030e55] text-sm underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        <button 
+          className="text-[#030e55] text-sm underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" 
           onClick={handleMagicLink}
           disabled={magicLinkLoading || loading}
         >
           {magicLinkLoading ? 'Sending magic link...' : magicLinkSuccess ? 'Email sent! Check your inbox' : 'Sign in by Email (Magic Link)'}
         </button>
       </div>
-
+      
       {magicLinkSuccess && (
         <div className="bg-green-50 text-green-700 rounded p-3 text-sm border border-green-200">
           <p className="font-medium mb-1">✓ Email sent successfully!</p>

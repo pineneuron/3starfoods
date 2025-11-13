@@ -49,7 +49,7 @@ export default function HomeProductTabs({ bestsellerProducts, featuredProducts }
                 </li>
               </ul>
             </div>
-            <div className="tsf-all_more text-right">
+            <div className="tsf-all_more text-right hidden md:block">
               <Link href="/products" className="text-3xl capitalize tsf-border_bottom tsf-font-bebas">all products</Link>
             </div>
           </div>
