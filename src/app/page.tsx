@@ -458,15 +458,15 @@ export default async function Home() {
 
       <div className="tsf-banner relative py-20">
         <div className="w-full max-w-full mx-auto px-4 md:px-10 2xl:max-w-screen-2xl">
-          <div className="grid grid-cols-12 gap-4 md:gap-10 items-stretch">
+          <div className="grid grid-cols-12 gap-8 md:gap-10 items-stretch">
             {bannerSlides.length > 0 && (
-              <div className="tsf-slider col-span-12 md:col-span-9 h-full overflow-hidden" style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', paddingRight: '0' }}>
+              <div className="tsf-slider col-span-12 lg:col-span-9 h-full overflow-hidden" style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', paddingRight: '0' }}>
                 <div style={{ width: '100%', maxWidth: '100%', height: '100%', overflow: 'hidden' }}>
                   <HeroCarouselWithProps slides={bannerSlides} />
                 </div>
             </div>
             )}
-            <div className={bannerSlides.length > 0 ? 'col-span-12 md:col-span-3 h-full' : 'col-span-12 h-full'}>
+            <div className={bannerSlides.length > 0 ? 'col-span-12 lg:col-span-3 h-full' : 'col-span-12 h-full'}>
               <TodaysDeal />
             </div>
           </div>

@@ -89,7 +89,7 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
 
   return (
     <div className={`tsf-sticky-tabmenu${visible ? ' show' : ''}`} suppressHydrationWarning>
-      <div className="absolute top-1/2 left-4 -translate-y-1/2 z-10">
+      <div className="absolute top-[40%] left-4 -translate-y-1/2 z-10">
         <ul className="flex flex-col gap-3" role="tablist">
           {categories.map((c) => {
             const isActive = activeId === c.id;
@@ -98,7 +98,7 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
                 <button
                   id={`${c.id}-sticky-tab`}
                   className={`
-                    relative w-17 h-17 flex items-center justify-center
+                    relative w-14 h-14 flex items-center justify-center
                     cursor-pointer rounded-full transition-all duration-300
                     ${isActive 
                       ? 'bg-[#FF4900] shadow-lg shadow-[#FF4900]/40 scale-110' 
@@ -116,8 +116,8 @@ export default function StickyTabMenu({ categories }: StickyTabMenuProps) {
                   <Image 
                     src={c.icon} 
                     alt={`${c.id}-tab`} 
-                    width={40} 
-                    height={40}
+                    width={30} 
+                    height={30}
                     className={isActive ? 'brightness-0 invert' : ''}
                   />
                 </button>

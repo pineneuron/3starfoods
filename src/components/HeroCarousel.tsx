@@ -72,7 +72,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
   return (
     <div 
       ref={carouselRef}
-      className="relative w-full h-full min-h-[360px] overflow-hidden rounded-lg"
+      className="relative w-full h-full min-h-[560px] sm:min-h-[660px] md:min-h-[360px] overflow-hidden rounded-lg"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ maxWidth: '100%', width: '100%', boxSizing: 'border-box' }}
@@ -84,7 +84,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <div className="absolute inset-0 w-full h-full">
+          <div className="">
             <Image
               src={slide.desktopImage}
               alt="Banner image"
@@ -101,7 +101,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
             priority={index === 0}
               className="block h-full w-full object-cover md:hidden"
               sizes="100vw"
-              style={{ objectFit: 'cover', maxWidth: '100%' }}
+              style={{ objectFit: 'cover', objectPosition: 'top', maxWidth: '100%' }}
           />
           </div>
         </div>
