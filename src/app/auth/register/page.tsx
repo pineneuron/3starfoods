@@ -242,7 +242,7 @@ export default function RegisterPage() {
           <Image src="/images/google.svg" alt="Google" width={20} height={20} className="mr-2" /> Continue with Google
         </button>
         <button onClick={() => loginWith("facebook")}
-          className="w-full flex items-center justify-center bg-white border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50">
+          className="w-full flex items-center justify-center bg-white border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50 hidden">
           <Image src="/images/facebook.svg" alt="Facebook" width={20} height={20} className="mr-2" /> Continue with Facebook
         </button>
       </div>
