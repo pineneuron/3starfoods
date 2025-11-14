@@ -11,7 +11,7 @@ export default async function AdminCategoriesPage({ searchParams }: { searchPara
   
   const categories = await prisma.category.findMany({
     where: {
-      ...(showDeleted ? {} : { deletedAt: null }), // Show all if showDeleted is true, otherwise only non-deleted
+      ...(showDeleted ? { deletedAt: { not: null } } : { deletedAt: null }), // Show only deleted if showDeleted is true, otherwise only non-deleted
       ...(q
         ? {
             OR: [
@@ -31,7 +31,7 @@ export default async function AdminCategoriesPage({ searchParams }: { searchPara
     orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
   })
   const parents = await prisma.category.findMany({ 
-    where: showDeleted ? {} : { deletedAt: null },
+    where: showDeleted ? { deletedAt: { not: null } } : { deletedAt: null },
     orderBy: { name: 'asc' } 
   })
   type WithParentId = { parentId?: string | null }

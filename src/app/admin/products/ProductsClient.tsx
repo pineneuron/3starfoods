@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { Category, Product, ProductImage } from '@prisma/client'
 import ProductModal from './ProductModal'
-import { Plus, Search, MoreVertical, Pencil, Trash2, ArrowUpDown, ChevronUp, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { Plus, Search, MoreVertical, Pencil, Trash2, ArrowUpDown, ChevronUp, ChevronDown, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import * as Toast from '@radix-ui/react-toast'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -21,6 +21,7 @@ type UIProduct = Omit<Product, 'basePrice' | 'salePrice'> & { basePrice: number;
 
 type Props = {
   q: string
+  showDeleted?: boolean
   categories: Category[]
   products: UIProduct[]
   actions: {
@@ -29,18 +30,31 @@ type Props = {
     deleteProduct: (fd: FormData) => Promise<void>
     toggleProductActive: (fd: FormData) => Promise<void>
     reorderProducts: (fd: FormData) => Promise<void>
+    permanentlyDeleteProduct: (fd: FormData) => Promise<void>
   }
 }
 
-export default function ProductsClient({ q, categories, products, actions }: Props) {
+export default function ProductsClient({ q, showDeleted = false, categories, products, actions }: Props) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<UIProduct | null>(null)
   const [pendingDelete, setPendingDelete] = useState<UIProduct | null>(null)
+  const [pendingPermanentDelete, setPendingPermanentDelete] = useState<UIProduct | null>(null)
   const [toastOpen, setToastOpen] = useState(false)
   const [toastMsg, setToastMsg] = useState('')
+  const [toastError, setToastError] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  
+  const toggleShowDeleted = () => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (showDeleted) {
+      params.delete('showDeleted')
+    } else {
+      params.set('showDeleted', 'true')
+    }
+    router.push(`/admin/products?${params.toString()}`)
+  }
   // Drag-and-drop removed per request
   const [sorting, setSorting] = useState<Array<{ id: string; desc: boolean }>>([])
   const [mounted, setMounted] = useState(false)
@@ -85,6 +99,7 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
     const m = searchParams.get('toast')
     if (m) {
       setToastMsg(decodeURIComponent(m))
+      setToastError(false)
       setToastOpen(true)
       const url = pathname + '?' + Array.from(searchParams.entries()).filter(([k]) => k !== 'toast').map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')
       router.replace(url || pathname)
@@ -111,7 +126,16 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
     {
       accessorKey: 'name',
       header: () => <span className="text-sm">Name</span>,
-      cell: ({ getValue }) => <span className="text-[13px] font-medium text-gray-900">{String(getValue() ?? '')}</span>,
+      cell: ({ row }) => {
+        const p = row.original as UIProduct
+        const isDeleted = !!p.deletedAt
+        return (
+          <div className="flex items-center gap-2">
+            <span className="text-[13px] font-medium text-gray-900">{p.name}</span>
+            {isDeleted && <span className="text-[11px] text-red-600 font-semibold">(Deleted)</span>}
+          </div>
+        )
+      },
       enableSorting: true,
     },
     {
@@ -178,6 +202,7 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
         </div>
         <div className="flex items-center gap-2">
           <form className="hidden md:flex items-center relative" method="get">
+            {showDeleted && <input type="hidden" name="showDeleted" value="true" />}
             <Search className="absolute left-2.5 h-3.5 w-3.5 text-gray-400" />
             <input
               name="q"
@@ -186,6 +211,16 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
               className="h-9 w-64 pl-8 pr-3 border border-[oklch(.922_0_0)] rounded-md text-sm"
             />
           </form>
+          <button
+            type="button"
+            onClick={toggleShowDeleted}
+            className={`h-9 px-3 rounded-md border text-[13px] font-semibold inline-flex items-center gap-1.5 ${
+              showDeleted ? 'bg-gray-100 border-gray-300' : 'border-[oklch(.922_0_0)]'
+            }`}
+          >
+            {showDeleted ? <XCircle className="h-4 w-4" /> : <Trash2 className="h-4 w-4" />}
+            {showDeleted ? 'Hide Deleted' : 'Show Deleted'}
+          </button>
           <button onClick={() => { setEditing(null); setOpen(true) }} className="h-9 px-3 rounded-md bg-[#030e55] text-white text-[13px] font-semibold inline-flex items-center gap-1">
             <Plus className="h-4 w-4" /> Add New
           </button>
@@ -227,8 +262,9 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
             <tbody className="divide-y divide-[oklch(.922_0_0)]">
               {table.getRowModel().rows.map(row => {
                 const p = row.original as UIProduct
+                const isDeleted = !!p.deletedAt
                 return (
-                  <tr key={p.id} className="border-b last:border-0 hover:bg-gray-50">
+                  <tr key={p.id} className={`border-b last:border-0 hover:bg-gray-50 ${isDeleted ? 'opacity-60 bg-gray-50' : ''}`}>
                     {row.getVisibleCells().map(cell => (
                       <td key={cell.id} className="px-3 py-3 text-[13px] align-middle">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -253,29 +289,44 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
                         <DropdownMenu.Portal>
                           <DropdownMenu.Content side="bottom" align="end" sideOffset={6} className="z-50 min-w-[180px] rounded-md bg-white p-2 shadow-md">
                             <div className="px-2 pb-2 text-[13px] font-semibold text-gray-900">Actions</div>
-                            <DropdownMenu.Item asChild className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditing(p)
-                                  setOpen(true)
-                                }}
-                                className="flex items-center gap-2 w-full text-left"
-                              >
-                                <Pencil className="h-4 w-4 text-gray-500 group-hover:text-gray-700" />
-                                <span>Update</span>
-                              </button>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item asChild className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
-                              <button
-                                type="button"
-                                onClick={() => setPendingDelete(p)}
-                                className="flex items-center gap-2 w-full text-left text-red-600"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                                <span>Delete</span>
-                              </button>
-                            </DropdownMenu.Item>
+                            {!isDeleted && (
+                              <DropdownMenu.Item asChild className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditing(p)
+                                    setOpen(true)
+                                  }}
+                                  className="flex items-center gap-2 w-full text-left"
+                                >
+                                  <Pencil className="h-4 w-4 text-gray-500 group-hover:text-gray-700" />
+                                  <span>Update</span>
+                                </button>
+                              </DropdownMenu.Item>
+                            )}
+                            {!isDeleted ? (
+                              <DropdownMenu.Item asChild className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
+                                <button
+                                  type="button"
+                                  onClick={() => setPendingDelete(p)}
+                                  className="flex items-center gap-2 w-full text-left text-red-600"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  <span>Delete</span>
+                                </button>
+                              </DropdownMenu.Item>
+                            ) : (
+                              <DropdownMenu.Item asChild className="group flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-[13px] outline-none hover:bg-gray-100">
+                                <button
+                                  type="button"
+                                  onClick={() => setPendingPermanentDelete(p)}
+                                  className="flex items-center gap-2 w-full text-left text-red-600"
+                                >
+                                  <AlertCircle className="h-4 w-4" />
+                                  <span>Permanently Delete</span>
+                                </button>
+                              </DropdownMenu.Item>
+                            )}
                           </DropdownMenu.Content>
                         </DropdownMenu.Portal>
                       </DropdownMenu.Root>
@@ -352,7 +403,7 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
           <AlertDialog.Content className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-xl focus:outline-none">
             <AlertDialog.Title className="text-[15px] font-semibold">Delete product?</AlertDialog.Title>
             <AlertDialog.Description className="mt-2 text-[13px] text-gray-600">
-              This action cannot be undone. This will permanently delete {pendingDelete?.name}.
+              This will mark {pendingDelete?.name} as deleted. You can restore it later by showing deleted items.
             </AlertDialog.Description>
             <div className="mt-5 flex justify-end gap-2">
               <AlertDialog.Cancel asChild>
@@ -365,9 +416,16 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
                     if (pendingDelete) {
                       const fd = new FormData()
                       fd.append('id', pendingDelete.id)
-                      await actions.deleteProduct(fd)
-                      setPendingDelete(null)
-                      router.replace(`${pathname}?toast=${encodeURIComponent('Product deleted')}`)
+                      try {
+                        await actions.deleteProduct(fd)
+                        setPendingDelete(null)
+                        router.replace(`${pathname}?toast=${encodeURIComponent('Product deleted')}`)
+                      } catch (error) {
+                        setPendingDelete(null)
+                        setToastMsg(error instanceof Error ? error.message : 'Failed to delete product')
+                        setToastError(true)
+                        setToastOpen(true)
+                      }
                     }
                   }}
                 >
@@ -379,13 +437,53 @@ export default function ProductsClient({ q, categories, products, actions }: Pro
         </AlertDialog.Portal>
       </AlertDialog.Root>
 
+      <AlertDialog.Root open={!!pendingPermanentDelete} onOpenChange={(o) => { if (!o) setPendingPermanentDelete(null) }}>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/30" />
+          <AlertDialog.Content className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-xl focus:outline-none">
+            <AlertDialog.Title className="text-[15px] font-semibold">Permanently delete product?</AlertDialog.Title>
+            <AlertDialog.Description className="mt-2 text-[13px] text-gray-600">
+              This action cannot be undone. This will permanently delete {pendingPermanentDelete?.name} from the database.
+            </AlertDialog.Description>
+            <div className="mt-5 flex justify-end gap-2">
+              <AlertDialog.Cancel asChild>
+                <button className="h-9 px-4 rounded-md border text-[13px]">Cancel</button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action asChild>
+                <button
+                  className="h-9 px-4 rounded-md bg-red-600 text-white text-[13px] font-semibold"
+                  onClick={async () => {
+                    if (pendingPermanentDelete) {
+                      const fd = new FormData()
+                      fd.append('id', pendingPermanentDelete.id)
+                      try {
+                        await actions.permanentlyDeleteProduct(fd)
+                        setPendingPermanentDelete(null)
+                        router.replace(`${pathname}?toast=${encodeURIComponent('Product permanently deleted')}`)
+                      } catch (error) {
+                        setPendingPermanentDelete(null)
+                        setToastMsg(error instanceof Error ? error.message : 'Failed to permanently delete product')
+                        setToastError(true)
+                        setToastOpen(true)
+                      }
+                    }
+                  }}
+                >
+                  Permanently Delete
+                </button>
+              </AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog.Root>
+
       <Toast.Provider swipeDirection="right">
-        <Toast.Root open={toastOpen} onOpenChange={setToastOpen} className="fixed top-6 right-6 z-[60] rounded-md bg-white border border-[oklch(.922_0_0)] shadow px-4 py-3 text-[13px] w-[320px] max-w-[92vw]">
+        <Toast.Root open={toastOpen} onOpenChange={setToastOpen} className={`fixed top-6 right-6 z-[60] rounded-md bg-white border border-[oklch(.922_0_0)] shadow px-4 py-3 text-[13px] w-[320px] max-w-[92vw] ${toastError ? 'border-red-200 bg-red-50' : ''}`}>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-            <Toast.Title className="font-semibold text-gray-900">Success</Toast.Title>
+            {toastError ? <AlertCircle className="h-4 w-4 text-red-600" /> : <CheckCircle2 className="h-4 w-4 text-green-600" />}
+            <Toast.Title className={`font-semibold ${toastError ? 'text-red-900' : 'text-gray-900'}`}>{toastError ? 'Error' : 'Success'}</Toast.Title>
           </div>
-          <Toast.Description className="mt-1 text-gray-700">{toastMsg}</Toast.Description>
+          <Toast.Description className={`mt-1 ${toastError ? 'text-red-700' : 'text-gray-600'}`}>{toastMsg}</Toast.Description>
         </Toast.Root>
         <Toast.Viewport className="fixed top-0 right-0 flex flex-col p-6 gap-2 w-[320px] max-w-[100vw] m-0 list-none z-[60] outline-none" />
       </Toast.Provider>

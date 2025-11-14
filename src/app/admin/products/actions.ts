@@ -171,7 +171,49 @@ export async function deleteProduct(formData: FormData) {
   await requireAdmin()
   const id = String(formData.get('id') || '')
   if (!id) return
+  
+  // Use soft delete instead of hard delete to avoid foreign key constraints
+  // This marks the product as deleted without removing it from the database
+  // This is safer when products have been ordered
+  await prisma.product.update({
+    where: { id },
+    data: { 
+      deletedAt: new Date(),
+      isActive: false // Also deactivate it
+    }
+  })
+  
+  revalidatePath('/admin/products')
+}
+
+export async function permanentlyDeleteProduct(formData: FormData) {
+  await requireAdmin()
+  const id = String(formData.get('id') || '')
+  if (!id) return
+  
+  // Check if product has been ordered
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          orderItems: true
+        }
+      }
+    }
+  })
+
+  if (!product) return
+
+  // Check if product has been ordered
+  if (product._count.orderItems > 0) {
+    throw new Error('Cannot permanently delete product: This product has been ordered. Please delete the orders first.')
+  }
+
+  // Permanently delete the product
+  // This will cascade delete product images, variations, inventory, and product category links
   await prisma.product.delete({ where: { id } })
+  
   revalidatePath('/admin/products')
 }
 

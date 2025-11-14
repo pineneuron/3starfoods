@@ -1,23 +1,30 @@
 import { prisma } from '@/lib/db'
-import { createProduct, updateProduct, deleteProduct, toggleProductActive, reorderProducts } from './actions'
+import { createProduct, updateProduct, deleteProduct, toggleProductActive, reorderProducts, permanentlyDeleteProduct } from './actions'
 import ProductsClient from './ProductsClient'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminProductsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function AdminProductsPage({ searchParams }: { searchParams: Promise<{ q?: string; showDeleted?: string }> }) {
   const sp = await searchParams
   const q = (sp?.q || '').trim()
+  const showDeleted = sp?.showDeleted === 'true'
   const [categories, products] = await Promise.all([
-    prisma.category.findMany({ orderBy: { name: 'asc' } }),
+    prisma.category.findMany({ 
+      where: showDeleted ? { deletedAt: { not: null } } : { deletedAt: null },
+      orderBy: { name: 'asc' } 
+    }),
     prisma.product.findMany({
-      where: q
-        ? {
-            OR: [
-              { name: { contains: q, mode: 'insensitive' } },
-              { slug: { contains: q, mode: 'insensitive' } },
-            ],
-          }
-        : undefined,
+      where: {
+        ...(showDeleted ? { deletedAt: { not: null } } : { deletedAt: null }), // Show only deleted if showDeleted is true, otherwise only non-deleted
+        ...(q
+          ? {
+              OR: [
+                { name: { contains: q, mode: 'insensitive' } },
+                { slug: { contains: q, mode: 'insensitive' } },
+              ],
+            }
+          : {}),
+      },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
       include: { images: { orderBy: { sortOrder: 'asc' } }, categories: true },
     }),
@@ -45,9 +52,10 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   return (
     <ProductsClient
       q={q}
+      showDeleted={showDeleted}
       categories={categories}
       products={productsWithCategory}
-      actions={{ createProduct, updateProduct, deleteProduct, toggleProductActive, reorderProducts }}
+      actions={{ createProduct, updateProduct, deleteProduct, toggleProductActive, reorderProducts, permanentlyDeleteProduct }}
     />
   )
 }
