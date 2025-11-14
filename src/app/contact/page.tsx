@@ -58,11 +58,16 @@ export default async function ContactPage() {
   // Parse comma-separated emails
   const emails = email.split(',').map(e => e.trim()).filter(Boolean)
 
+  const headerBackground = typeof cmsContent?.headerBackground === 'string' ? cmsContent.headerBackground : undefined;
+
   return (
     <CartProvider>
       <Header variant="inner" />
 
-      <div className="tsf-breadcrumb relative py-20">
+      <div 
+        className="tsf-breadcrumb relative py-20"
+        style={headerBackground ? { backgroundImage: `url(${headerBackground})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' } : undefined}
+      >
         <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora">Contact Us</h1>

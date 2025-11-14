@@ -138,6 +138,13 @@ export const PAGE_TEMPLATES: Record<string, PageTemplateDefinition> = {
     description: 'Company mission, background, and values content.',
     sections: [
       {
+        key: 'header_background',
+        label: 'Header Background',
+        fields: [
+          { key: 'headerBackground', label: 'Header Background', type: 'image', helperText: 'Background image for the header.' },
+        ],
+      },
+      {
         key: 'video',
         label: 'Video Section',
         fields: [
@@ -198,6 +205,7 @@ export const PAGE_TEMPLATES: Record<string, PageTemplateDefinition> = {
     label: 'Contact Page',
     description: 'Contact details and map information.',
     fields: [
+      { key: 'headerBackground', label: 'Header Background', type: 'image', helperText: 'Background image for the header.' },
       { key: 'heading', label: 'Heading', type: 'text', required: true, defaultValue: "Let's build Together" },
       { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Introductory text for the contact page.' },
       { key: 'phone', label: 'Phone Number(s)', type: 'text', required: true, helperText: 'Comma-separated phone numbers (e.g., +977 14988879, 4963659)' },
@@ -211,6 +219,7 @@ export const PAGE_TEMPLATES: Record<string, PageTemplateDefinition> = {
     label: 'Products Landing Page',
     description: 'Hero content and highlights for the product catalogue.',
     fields: [
+      { key: 'headerBackground', label: 'Header Background', type: 'image', helperText: 'Background image for the header.' },
       { key: 'heading', label: 'Heading', type: 'text', required: true, defaultValue: 'Our Products' },
       { key: 'subheading', label: 'Sub Heading', type: 'textarea', placeholder: 'Brief overview of product catalogue.' },
       { key: 'highlightTitle', label: 'Highlight Title', type: 'text', placeholder: 'E.g. Trending Categories' },
@@ -227,6 +236,7 @@ export const PAGE_TEMPLATES: Record<string, PageTemplateDefinition> = {
         key: 'dealers',
         label: 'Dealers',
         fields: [
+          { key: 'headerBackground', label: 'Header Background', type: 'image', helperText: 'Background image for the header.' },
           { key: 'heading', label: 'Page Heading', type: 'text', defaultValue: 'Find Our Dealers Near You' },
           { key: 'description', label: 'Page Description', type: 'textarea', placeholder: 'Brief description about dealers.' },
           {

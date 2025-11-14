@@ -70,11 +70,16 @@ export default async function OurDealersPage() {
     ? extractDealersContent(cmsContent)
     : { heading: 'Find Our Dealers Near You', description: 'We have authorized dealers across Nepal to serve you with the freshest meat products. Use the map below to find the nearest dealer in your city.', dealers: [] }
 
+  const headerBackground = typeof cmsContent?.headerBackground === 'string' ? cmsContent.headerBackground : undefined;
+
   return (
     <CartProvider>
       <Header variant="inner" />
 
-      <div className="tsf-breadcrumb relative py-20">
+      <div 
+        className="tsf-breadcrumb relative py-20"
+        style={headerBackground ? { backgroundImage: `url(${headerBackground})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' } : undefined}
+      >
         <div className="w-full mx-auto 2xl:container">
           <div className="tsf-breadcrumb-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <h1 className="text-white text-align-center text-4xl font-bold tsf-font-sora capitalize">our dealers</h1>
