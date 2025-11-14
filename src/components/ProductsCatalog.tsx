@@ -28,6 +28,7 @@ export interface ProductItem {
 export interface Category {
   id: string;
   name: string;
+  icon?: string;
   products: ProductItem[];
 }
 

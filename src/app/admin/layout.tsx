@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { LayoutDashboard, Search, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Search, ChevronRight, Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Breadcrumb from './Breadcrumb'
 import { ThemeToggle, AccountMenu } from './TopbarActions'
@@ -64,6 +64,15 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                   className={cn("h-9 w-64 pl-8 pr-3 border border-[oklch(.922_0_0)] rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1")}
                 />
               </form>
+              <Link
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open website"
+                className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-gray-100"
+              >
+                <Globe className="h-4 w-4" />
+              </Link>
               <ThemeToggle />
               <AccountMenu name={session?.user?.name} email={session?.user?.email} />
             </div>

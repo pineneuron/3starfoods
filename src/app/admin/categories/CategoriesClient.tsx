@@ -258,6 +258,8 @@ export default function CategoriesClient({ q, showDeleted = false, categories, p
           parentId: (editing as unknown as { parentId?: string | null }).parentId,
           imageUrl: editing.imageUrl,
           imagePublicId: editing.imagePublicId,
+          iconUrl: editing.iconUrl,
+          iconPublicId: editing.iconPublicId,
         } : undefined}
         action={editing ? actions.updateCategory : actions.createCategory}
         onSuccess={(m) => { setToastMsg(m); setToastOpen(true) }}

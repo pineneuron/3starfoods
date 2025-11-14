@@ -22,6 +22,8 @@ export async function createCategory(formData: FormData) {
   const parentId = String(formData.get('parentId') || '') || null
   const imageUrl = String(formData.get('imageUrl') || '') || null
   const imagePublicId = String(formData.get('imagePublicId') || '') || null
+  const iconUrl = String(formData.get('iconUrl') || '') || null
+  const iconPublicId = String(formData.get('iconPublicId') || '') || null
   if (!name || !rawSlug) return
   // ensure unique slug by suffixing -2, -3 ... if needed
   const base = rawSlug
@@ -31,7 +33,7 @@ export async function createCategory(formData: FormData) {
   while (await prisma.category.findUnique({ where: { slug } })) {
     slug = `${base}-${n++}`
   }
-  await prisma.category.create({ data: { name, slug, sortOrder, isActive: true, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined } })
+  await prisma.category.create({ data: { name, slug, sortOrder, isActive: true, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined, iconUrl: iconUrl || undefined, iconPublicId: iconPublicId || undefined } })
   revalidatePath('/admin/categories')
 }
 
@@ -44,6 +46,8 @@ export async function updateCategory(formData: FormData) {
   const parentId = String(formData.get('parentId') || '') || null
   const imageUrl = String(formData.get('imageUrl') || '') || null
   const imagePublicId = String(formData.get('imagePublicId') || '') || null
+  const iconUrl = String(formData.get('iconUrl') || '') || null
+  const iconPublicId = String(formData.get('iconPublicId') || '') || null
   if (!id) return
   // if slug collides with another record, suffix it
   let slug = rawSlug
@@ -58,7 +62,7 @@ export async function updateCategory(formData: FormData) {
       }
     }
   }
-  await prisma.category.update({ where: { id }, data: { name, slug, sortOrder, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined } })
+  await prisma.category.update({ where: { id }, data: { name, slug, sortOrder, parentId: parentId || undefined, imageUrl: imageUrl || undefined, imagePublicId: imagePublicId || undefined, iconUrl: iconUrl || undefined, iconPublicId: iconPublicId || undefined } })
   revalidatePath('/admin/categories')
 }
 

@@ -11,6 +11,7 @@ function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof getTopLev
     .map(cat => ({
       id: cat.id,
       name: cat.name,
+      icon: cat.iconUrl || '/images/placeholder.png',
       products: cat.products
         .filter(p => p.isActive)
         .map(p => ({
@@ -70,13 +71,10 @@ export default async function ProductsPage() {
       </div>
 
       <StickyTabMenu
-        categories={[
-          { id: 'chicken', icon: '/images/product-tab01.svg' },
-          { id: 'mutton', icon: '/images/product-tab05.svg' },
-          { id: 'pork', icon: '/images/product-tab03.svg' },
-          { id: 'fish', icon: '/images/product-tab04.svg' },
-          { id: 'buff', icon: '/images/product-tab06.svg' }
-        ]}
+        categories={categories.map(cat => ({
+          id: cat.id,
+          icon: cat.icon || '/images/placeholder.png'
+        }))}
       />
 
       <div className="tsf-our-product py-20">
