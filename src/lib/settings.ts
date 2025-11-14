@@ -25,7 +25,7 @@ export type SmtpSettings = {
 const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
   siteTitle: '3 Star Foods',
   tagline: 'Three Star Foods website',
-  siteIcon: '/design/src/assets/img/favi-icon.svg',
+  siteIcon: '/images/favi-icon.svg',
   adminEmail: ''
 }
 

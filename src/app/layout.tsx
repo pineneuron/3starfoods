@@ -12,7 +12,7 @@ const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getGeneralSettings();
-  const faviconHref = settings.siteIcon || '/design/src/assets/img/favi-icon.svg';
+  const faviconHref = settings.siteIcon || '/images/favi-icon.svg';
 
   return {
     title: settings.tagline
@@ -33,7 +33,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getGeneralSettings();
-  const faviconHref = settings.siteIcon || '/design/src/assets/img/favi-icon.svg';
+  const faviconHref = settings.siteIcon || '/images/favi-icon.svg';
 
   return (
     <html lang="en" className={`${sora.variable} ${bebas.variable}`}>

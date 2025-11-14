@@ -87,7 +87,7 @@ export default async function ContactPage() {
               <div className="detail-list pt-8">
                 <div className="detail-list-item pb-5">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/location.svg" alt="location" width={24} height={24} /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/images/location.svg" alt="location" width={24} height={24} /></div>
                     <div className="detail-text pl-5">
                       <p className="text-white line-height-10" dangerouslySetInnerHTML={{ __html: address.replace(/\n/g, '<br />') }} />
                     </div>
@@ -95,7 +95,7 @@ export default async function ContactPage() {
                 </div>
                 <div className="detail-list-item pb-5">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/call.svg" alt="call" width={24} height={24} /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/images/call.svg" alt="call" width={24} height={24} /></div>
                     <div className="detail-text pl-5">
                       <div className="text-white line-height-10">
                         {phoneNumbers.map((phoneNumber, index) => (
@@ -112,7 +112,7 @@ export default async function ContactPage() {
                 </div>
                 <div className="detail-list-item">
                   <div className="flex items-center">
-                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/design/src/assets/img/email.svg" alt="email" width={24} height={24} /></div>
+                    <div className="detail-img p-5 bg-white rounded-full"><Image src="/images/email.svg" alt="email" width={24} height={24} /></div>
                     <div className="detail-text pl-5">
                       <div className="text-white line-height-10">
                         {emails.map((emailAddr, index) => (

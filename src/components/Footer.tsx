@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-3 gap-10">
           <div className="footer-left">
             <Link href="/">
-              <Image className="w-40 h-40" src="/design/src/assets/img/logo.svg" alt="logo" width={160} height={160} />
+              <Image className="w-40 h-40" src="/images/logo.svg" alt="logo" width={160} height={160} />
             </Link>
             <p className="text-white mt-4 line-height-8">
               Three Star Foods Pvt. Ltd. is a premier manufacturer and trader of premium meat products in Kathmandu, Nepal. We combine cutting-edge technology with unwavering dedication to quality and hygiene, delivering excellence in every bite. Building enduring relationships through trust, quality, and reliability.
@@ -95,8 +95,8 @@ export default function Footer() {
           </div>
           <div className="footer-right-certificate">
             <div className="flex items-space-between gap-10">
-              <Image src="/design/src/assets/img/iso.svg" alt="iso" width={120} height={120} />
-              <Image src="/design/src/assets/img/certificate.svg" alt="certificate" width={120} height={120} />
+              <Image src="/images/iso.svg" alt="iso" width={120} height={120} />
+              <Image src="/images/certificate.svg" alt="certificate" width={120} height={120} />
             </div>
           </div>
         </div>
@@ -110,13 +110,13 @@ export default function Footer() {
             <div className="tsf-payment">
               <div className="flex items-center gap-10">
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/esewa.svg" alt="esewa" width={80} height={60} />
+                  <Image src="/images/esewa.svg" alt="esewa" width={80} height={60} />
                 </div>
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/khalti.svg" alt="khalti" width={80} height={60} />
+                  <Image src="/images/khalti.svg" alt="khalti" width={80} height={60} />
                 </div>
                 <div className="tsf-payment-img">
-                  <Image src="/design/src/assets/img/visacard.svg" alt="visacard" width={80} height={60} />
+                  <Image src="/images/visacard.svg" alt="visacard" width={80} height={60} />
                 </div>
               </div>
             </div>
