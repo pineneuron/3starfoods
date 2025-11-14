@@ -143,7 +143,7 @@ export default async function AboutPage() {
       </div>
 
       {(aboutContent.videoUrl || aboutContent.videoThumbnail) && (
-        <div className="tsf-about tsf-bg-lightgreen relative py-20">
+        <div className="tsf-about tsf-bg-lightgreen relative py-10 md:py-20 px-10">
           <div className="w-full md:max-w-5xl mx-auto flex justify-center">
             <VideoPlayer
               src={aboutContent.videoUrl || '/images/video.mp4'}
@@ -158,15 +158,25 @@ export default async function AboutPage() {
       {stats.length > 0 && (
         <div className="tsf-about-video relative py-40 tsf-bg-secondary">
           <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
-            <div className={`grid gap-10 ${stats.length === 1 ? 'grid-cols-1' : stats.length === 2 ? 'grid-cols-2' : stats.length === 3 ? 'grid-cols-3' : stats.length === 4 ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            <div className={`grid grid-cols-1 gap-6 md:gap-10 ${
+              stats.length === 1 
+                ? 'md:grid-cols-1' 
+                : stats.length === 2 
+                ? 'md:grid-cols-2' 
+                : stats.length === 3 
+                ? 'md:grid-cols-3' 
+                : stats.length === 4 
+                ? 'md:grid-cols-2 lg:grid-cols-4' 
+                : 'md:grid-cols-3'
+            }`}>
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <AnimatedCounter
                     target={stat.value}
                     suffix={stat.suffix}
-                    className="tsf-font-sora text-6xl font-bold text-white block"
+                    className="tsf-font-sora text-4xl md:text-6xl font-bold text-white block"
                   />
-                  <p className="tsf-font-sora text-xl text-white mt-2">{stat.label}</p>
+                  <p className="tsf-font-sora text-lg md:text-xl text-white mt-2">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -231,19 +241,19 @@ export default async function AboutPage() {
       )}
 
       {(aboutContent.whyChooseUsHeading || aboutContent.whyChooseUsDescription || aboutContent.whyChooseUsTeamImage || features.length > 0) && (
-        <div className="tsf-choose-us tsf-bg-secondary relative py-20">
+        <div className="tsf-choose-us tsf-bg-secondary relative py-10 md:py-20">
           <div className="w-full max-w-full mx-auto px-10 2xl:max-w-screen-2xl">
-            <div className="grid grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
               <div className="col-span-1">
                 <div className="tsf-choose-us-content">
                   {aboutContent.whyChooseUsHeading && (
-                    <h2 className="tsf-font-sora text-4xl font-bold uppercase text-white">{aboutContent.whyChooseUsHeading}</h2>
+                    <h2 className="tsf-font-sora text-2xl md:text-4xl font-bold uppercase text-white">{aboutContent.whyChooseUsHeading}</h2>
                   )}
                   {aboutContent.whyChooseUsDescription && (
-                    <p className="tsf-font-sora mt-5 text-xl/8 text-white">{aboutContent.whyChooseUsDescription}</p>
+                    <p className="tsf-font-sora mt-3 md:mt-5 text-base md:text-xl/8 text-white">{aboutContent.whyChooseUsDescription}</p>
                   )}
                   {aboutContent.whyChooseUsTeamImage && (
-                    <div className="relative w-full pt-10">
+                    <div className="relative w-full pt-6 md:pt-10">
                       <div className="relative w-full bg-gradient-to-br from-white/10 to-white/5 rounded-xl tsf-box-shadow hover:shadow-xl transition-all duration-300">
                         <div className="relative w-full rounded-lg overflow-hidden border-4 border-white/20 shadow-inner">
                           <Image
@@ -265,26 +275,21 @@ export default async function AboutPage() {
               </div>
               {features.length > 0 && (
                 <div className="col-span-1">
-                  <div className="tsf-choose-us-content space-y-4">
+                  <div className="tsf-choose-us-content space-y-3 md:space-y-4">
                     {features.map((feature, index) => {
                       const isEven = index % 2 === 0;
                       return (
                         <div
                           key={index}
-                          className={`relative group tsf-bg-red tsf-box-shadow flex items-center gap-3 p-3 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${isEven ? 'ml-0' : 'ml-4'
+                          className={`relative group tsf-bg-red tsf-box-shadow flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ${isEven ? 'ml-0' : 'md:ml-4'
                             }`}
                           style={{
                             animationDelay: `${index * 100}ms`,
                           }}
                         >
-                          {/* Number badge */}
-                          <div className="absolute -top-2 -left-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg z-10">
-                            <span className="text-red-600 font-bold text-sm">{index + 1}</span>
-                          </div>
-
                           {/* Icon container with background */}
                           {feature.icon && (
-                            <div className="flex-shrink-0 w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center p-1.5 group-hover:bg-white/30 transition-colors">
+                            <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-lg flex items-center justify-center p-1 md:p-1.5 group-hover:bg-white/30 transition-colors">
                               <Image
                                 src={feature.icon}
                                 className="object-contain"
@@ -297,29 +302,9 @@ export default async function AboutPage() {
 
                           {/* Text content */}
                           <div className="flex-1">
-                            <h4 className="tsf-font-sora text-base font-bold uppercase text-white leading-tight group-hover:text-white/90 transition-colors">
+                            <h4 className="tsf-font-sora text-sm md:text-base font-bold uppercase text-white leading-tight group-hover:text-white/90 transition-colors">
                               {feature.title}
                             </h4>
-                          </div>
-
-                          {/* Hover arrow indicator */}
-                          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="text-white"
-                            >
-                              <path
-                                d="M9 18L15 12L9 6"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
                           </div>
 
                           {/* Decorative gradient overlay on hover */}
@@ -341,4 +326,3 @@ export default async function AboutPage() {
     </CartProvider>
   );
 }
-

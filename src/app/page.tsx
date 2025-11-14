@@ -554,8 +554,8 @@ export default async function Home() {
           <div className="tsf-how-to-order-heading text-left">
             <h2 className="text-white text-4xl font-bold uppercase">{testimonialsSection.heading}</h2>
           </div>
-          <div className="grid grid-cols-1 gap-10 items-stretch md:grid-cols-3">
-            <div className="tsf-testimonial-left col-span-2 pt-10 pr-0 h-full">
+          <div className="grid grid-cols-1 gap-x-0 gap-y-10 items-stretch md:grid-cols-3 md:gap-10">
+            <div className="tsf-testimonial-left col-span-2 pt-10 h-full">
               <div className="grid grid-cols-1 gap-10 h-full items-stretch md:grid-cols-3">
                 <div className="tsf-testimonial-item-img-left h-full hidden md:flex">
                   <Image

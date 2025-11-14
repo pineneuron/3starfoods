@@ -4,7 +4,7 @@ import { Facebook, Instagram, Youtube } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="tsf-footer relative tsf-bg-black lg:pt-40 lg:pb-10 md:pt-20 md:pb-10 sm:pt-20 sm:pb-10" suppressHydrationWarning>
+    <footer className="tsf-footer relative tsf-bg-black pt-12 pb-8 md:pt-20 md:pb-10 lg:pt-40 lg:pb-10" suppressHydrationWarning>
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-3 gap-10">
           <div className="footer-left">

@@ -77,14 +77,14 @@ export default function VideoPlayer({
             priority={false}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-            <div className="bg-white/90 rounded-full p-6 group-hover:bg-white transition-colors">
+            <div className="bg-white/90 rounded-full p-3 md:p-6 group-hover:bg-white transition-colors">
               <svg
-                width="48"
-                height="48"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="text-black"
+                className="text-black md:w-12 md:h-12 w-6 h-6"
               >
                 <path d="M8 5V19L19 12L8 5Z" fill="currentColor" />
               </svg>
