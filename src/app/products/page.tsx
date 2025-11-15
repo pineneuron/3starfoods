@@ -1,7 +1,6 @@
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import ProductsCatalog, { Category } from '../../components/ProductsCatalog';
-import StickyTabMenu from '../../components/StickyTabMenu';
 import CartSidebar from '../../components/CartSidebar';
 import { CartProvider } from '../../context/CartContext';
 import { prisma } from '@/lib/db';
@@ -12,6 +11,7 @@ function transformDbToCategory(dbCategories: Awaited<ReturnType<typeof getTopLev
     .map(cat => ({
       id: cat.id,
       name: cat.name,
+      slug: cat.slug,
       icon: cat.iconUrl || '/images/placeholder.png',
       products: cat.products
         .filter(p => p.isActive)
@@ -56,7 +56,12 @@ async function getTopLevelCategories() {
   });
 }
 
-export default async function ProductsPage() {
+export default async function ProductsPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ category?: string }> 
+}) {
+  const sp = await searchParams;
   const dbCategories = await getTopLevelCategories();
   const categories = transformDbToCategory(dbCategories);
   
@@ -82,16 +87,16 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <StickyTabMenu
+      {/* <StickyTabMenu
         categories={categories.map(cat => ({
           id: cat.id,
           icon: cat.icon || '/images/placeholder.png'
         }))}
-      />
+      /> */}
 
       <div className="tsf-our-product py-20">
-        <div className="container px-4 md:px-6 lg:px-7 mx-auto">
-          <ProductsCatalog categories={categories} />
+        <div className="w-full">
+          <ProductsCatalog categories={categories} initialCategorySlug={sp?.category} />
         </div>
       </div>
 

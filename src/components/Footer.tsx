@@ -1,8 +1,23 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
+import { prisma } from '@/lib/db';
 
-export default function Footer() {
+export default async function Footer() {
+  // Fetch categories without parent, active, and not soft-deleted, ordered by sortOrder
+  const categories = await prisma.category.findMany({
+    where: {
+      parentId: null,
+      deletedAt: null,
+      isActive: true,
+    },
+    orderBy: { sortOrder: 'asc' },
+  });
+
+  // Split categories into two columns
+  const midPoint = Math.ceil(categories.length / 2);
+  const leftColumn = categories.slice(0, midPoint);
+  const rightColumn = categories.slice(midPoint);
   return (
     <footer className="tsf-footer relative tsf-bg-black pt-12 pb-8 md:pt-20 md:pb-10 lg:pt-40 lg:pb-10" suppressHydrationWarning>
       <div className="container mx-auto px-6">
@@ -41,18 +56,22 @@ export default function Footer() {
                 <h3 className="text-xl font-bold text-white tsf-font-sora uppercase">Product Categories</h3>
                 <div className="grid grid-cols-2 gap-10">
                   <ul className="mt-10">
-                    <li className="pb-5 text-white"><Link href="/products">Ham & Cutlet</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Frozen Momo</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Salami</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Sausage</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Mutton Items</Link></li>
+                    {leftColumn.map((category) => (
+                      <li key={category.id} className="pb-5 text-white">
+                        <Link href={`/products?category=${category.slug}`}>
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                   <ul className="mt-10">
-                    <li className="pb-5 text-white"><Link href="/products">Burger Patty</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Chicken Items</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Buff Items</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Pork Items</Link></li>
-                    <li className="pb-5 text-white"><Link href="/products">Ready to Eat</Link></li>
+                    {rightColumn.map((category) => (
+                      <li key={category.id} className="pb-5 text-white">
+                        <Link href={`/products?category=${category.slug}`}>
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
